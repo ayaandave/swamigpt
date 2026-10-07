@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SwamiGPT
 
-## Getting Started
+A calm AI guide to Hindu philosophy, yoga and meditation, for anyone: students, elders, and people of every faith.
 
-First, run the development server:
+## Status
+
+Phase 1: the full frontend with mock data. Answers, voices and progress are placeholders.
+
+- **Ask**: practical help for your situation first, then a verse and what it means for you
+- **Meditate**: guided sessions with a breathing lamp and background sound
+- **Learn**: short lesson paths with mala-bead progress
+- **Today**: a daily verse and reflection
+- **Settings**: three voices, speech speed, text size, simple or deeper answers
+
+The Swami persona (used as the Claude system prompt in Phase 3) is in `src/lib/swami-prompt.ts`.
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Roadmap
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Frontend with mock data (done)
+2. Scripture library in Supabase (pgvector)
+3. Claude answers with citations
+4. ElevenLabs voices
+5. Accounts and saved progress
+6. Full content for paths, meditations and daily verses
+7. Beta and launch

@@ -1,26 +1,144 @@
 @import "tailwindcss";
 
+/*
+  SwamiGPT design tokens
+  sandal  – sandalwood paste, the page itself
+  kajal   – lamp-black ink for text
+  kesar   – saffron, the one warm action colour
+  tulsi   – holy-basil green for progress / done
+  kumkum  – vermilion, used only for tiny marks
+  night   – the meditation room after the lights go down
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --sandal: #f2e3c6;
+  --sandal-deep: #e8d2a8;
+  --sandal-edge: #d6ba86;
+  --kajal: #2b1b10;
+  --kajal-soft: #5a4330;
+  --kesar: #d9741a;
+  --kesar-deep: #9a4a0b;
+  --tulsi: #3f5a34;
+  --kumkum: #a4281f;
+  --night: #17142e;
+  --night-soft: #262247;
+  --flame: #ffb347;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-sandal: var(--sandal);
+  --color-sandal-deep: var(--sandal-deep);
+  --color-sandal-edge: var(--sandal-edge);
+  --color-kajal: var(--kajal);
+  --color-kajal-soft: var(--kajal-soft);
+  --color-kesar: var(--kesar);
+  --color-kesar-deep: var(--kesar-deep);
+  --color-tulsi: var(--tulsi);
+  --color-kumkum: var(--kumkum);
+  --color-night: var(--night);
+  --color-night-soft: var(--night-soft);
+  --color-flame: var(--flame);
+  --font-display: var(--font-tiro), Georgia, serif;
+  --font-sans: var(--font-atkinson), system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Text size: 20px base for easy reading, two larger steps for elders */
+html {
+  font-size: 125%;
+}
+html[data-text="large"] {
+  font-size: 143.75%;
+}
+html[data-text="larger"] {
+  font-size: 162.5%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--sandal);
+  color: var(--kajal);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Paper grain so the sandal never looks like a flat screen */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55  0 0 0 0 .38  0 0 0 0 .18  0 0 0 .18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+:focus-visible {
+  outline: 4px solid var(--kesar-deep);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+::selection {
+  background: var(--kesar);
+  color: var(--kajal);
+}
+
+/* ---------- The diya ---------- */
+@keyframes flame-sway {
+  0%, 100% { transform: rotate(-2deg) scaleY(1); }
+  25% { transform: rotate(1.5deg) scaleY(1.04); }
+  50% { transform: rotate(-1deg) scaleY(0.97); }
+  75% { transform: rotate(2deg) scaleY(1.03); }
+}
+@keyframes flame-speak {
+  0%, 100% { transform: scale(1); }
+  30% { transform: scale(1.08, 1.14); }
+  60% { transform: scale(0.97, 1.02); }
+}
+@keyframes halo-breathe {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.06); }
+}
+.diya-flame {
+  transform-origin: 50% 92%;
+  transform-box: fill-box;
+  animation: flame-sway 3.2s ease-in-out infinite;
+}
+.diya-speaking .diya-flame {
+  animation: flame-speak 0.7s ease-in-out infinite;
+}
+.diya-thinking .diya-flame {
+  animation-duration: 1.4s;
+}
+.diya-halo {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: halo-breathe 5s ease-in-out infinite;
+}
+
+/* ---------- Meditation breath ---------- */
+@keyframes breath {
+  0%, 100% { transform: scale(0.62); }
+  40%, 50% { transform: scale(1); }
+}
+.breath-ring {
+  animation: breath var(--breath-cycle, 10s) ease-in-out infinite;
+}
+
+/* One orchestrated arrival on the home screen */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+.arrive > * {
+  animation: rise 900ms cubic-bezier(.2,.7,.2,1) both;
+}
+.arrive > *:nth-child(2) { animation-delay: 250ms; }
+.arrive > *:nth-child(3) { animation-delay: 450ms; }
+.arrive > *:nth-child(4) { animation-delay: 650ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

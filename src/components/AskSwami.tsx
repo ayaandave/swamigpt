@@ -1,0 +1,268 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { askSwami, STARTER_QUESTIONS, type SwamiAnswer } from "@/lib/mock/answers";
+import { useSettings, type Depth } from "@/lib/settings";
+import { useIsClient } from "@/lib/store";
+import { Diya } from "./Diya";
+import { VerseCard } from "./VerseCard";
+import { ListenButton } from "./ListenButton";
+import { MicIcon, SendIcon } from "./icons";
+
+type Turn = { id: number; question: string; depth: Depth; answer?: SwamiAnswer };
+
+export function AskSwami() {
+  const { depth: defaultDepth } = useSettings();
+  const [turns, setTurns] = useState<Turn[]>([]);
+  const [draft, setDraft] = useState("");
+  const [speakingId, setSpeakingId] = useState<number | null>(null);
+  const thinking = turns.some((t) => !t.answer);
+  const lastRef = useRef<HTMLElement>(null);
+  const nextId = useRef(1);
+
+  useEffect(() => {
+    // Bring each new question to the top so the answer reads from its beginning
+    lastRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [turns.length]);
+
+  const ask = async (question: string, depth: Depth = defaultDepth) => {
+    const q = question.trim();
+    if (!q || thinking) return;
+    const id = nextId.current++;
+    setDraft("");
+    setTurns((t) => [...t, { id, question: q, depth }]);
+    const answer = await askSwami(q, depth);
+    setTurns((t) => t.map((turn) => (turn.id === id ? { ...turn, answer } : turn)));
+  };
+
+  const started = turns.length > 0;
+
+  return (
+    <div className="flex flex-col">
+      {!started ? (
+        <section className="arrive flex flex-col items-center pt-10 text-center sm:pt-16">
+          <Diya size={150} />
+          <h1 className="mt-6 font-display text-[2.6rem] leading-[1.1] sm:text-[3.2rem]">Namaste.</h1>
+          <p className="mt-3 max-w-[30ch] text-[1.1rem] text-kajal-soft">
+            Ask anything about life, the mind or the old teachings. I will answer slowly.
+          </p>
+          <div className="mt-8 w-full text-left">
+            <AskBox draft={draft} setDraft={setDraft} onAsk={ask} disabled={thinking} autoFocus />
+            <p className="mt-8 mb-3 text-[0.9rem] font-semibold text-kajal-soft">Or begin with one of these</p>
+            <ul className="grid gap-3 sm:grid-cols-2">
+              {STARTER_QUESTIONS.map((q) => (
+                <li key={q}>
+                  <button
+                    type="button"
+                    onClick={() => ask(q)}
+                    className="w-full min-h-16 rounded-2xl border-2 border-sandal-edge px-5 py-3 text-left font-display text-[1.1rem] leading-snug hover:border-kesar hover:bg-sandal-deep"
+                  >
+                    {q}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : (
+        <section aria-live="polite" className="flex flex-col gap-12 pt-8">
+          {turns.map((turn, i) => (
+            <article
+              key={turn.id}
+              ref={i === turns.length - 1 ? lastRef : undefined}
+              className="flex scroll-mt-6 flex-col gap-6"
+            >
+              <h2 className="border-l-4 border-kesar pl-5 font-display text-[1.6rem] leading-snug">
+                {turn.question}
+              </h2>
+              <div className="flex items-start gap-4">
+                <div className="shrink-0 pt-1">
+                  <Diya
+                    size={56}
+                    state={!turn.answer ? "thinking" : speakingId === turn.id ? "speaking" : "idle"}
+                  />
+                </div>
+                {!turn.answer ? (
+                  <p className="pt-4 text-[1.05rem] italic text-kajal-soft">Swami is reflecting…</p>
+                ) : (
+                  <Answer
+                    turn={turn as Required<Turn>}
+                    onSpeaking={(s) => setSpeakingId(s ? turn.id : null)}
+                    onReask={(d) => ask(turn.question, d)}
+                    disabled={thinking}
+                  />
+                )}
+              </div>
+            </article>
+          ))}
+          <div className="pt-2">
+            <AskBox draft={draft} setDraft={setDraft} onAsk={ask} disabled={thinking} placeholder="Ask another question" />
+          </div>
+        </section>
+      )}
+      <p className="mt-10 text-center text-[0.8rem] text-kajal-soft">
+        SwamiGPT is an AI guide, not a guru. It quotes real scriptures and can still make mistakes.
+      </p>
+    </div>
+  );
+}
+
+function Answer({
+  turn,
+  onSpeaking,
+  onReask,
+  disabled,
+}: {
+  turn: Required<Turn>;
+  onSpeaking: (s: boolean) => void;
+  onReask: (d: Depth) => void;
+  disabled: boolean;
+}) {
+  const { answer, depth } = turn;
+  // "Bhagavad Gita 2.47" -> "the Bhagavad Gita"
+  const book = (source: string) => `the ${source.replace(/\s[\d.]+$/, "")}`;
+  const spoken = [
+    ...answer.paragraphs,
+    ...answer.verses.map(({ verse, meaning }) => `${book(verse.source)} says it this way. ${verse.translation} ${meaning}`),
+  ].join(" ");
+
+  return (
+    <div className="flex min-w-0 flex-1 flex-col gap-5">
+      {answer.paragraphs.map((p, i) => (
+        <p key={i} className="max-w-[62ch] text-[1.1rem] leading-[1.75]">
+          {p}
+        </p>
+      ))}
+      {answer.help && (
+        <a
+          href={answer.help.href}
+          className="flex min-h-16 flex-col justify-center rounded-2xl bg-tulsi px-6 py-3 text-sandal"
+        >
+          <span className="text-[0.85rem]">{answer.help.text}</span>
+          <span className="text-[1.2rem] font-bold">{answer.help.label}</span>
+        </a>
+      )}
+      {answer.verses.map(({ verse, meaning }) => (
+        <div key={verse.id} className="mt-3 flex flex-col gap-4">
+          <p className="font-display text-[1.15rem] text-kajal-soft">
+            {book(verse.source).replace(/^t/, "T")} says it this way:
+          </p>
+          <VerseCard verse={verse} />
+          <p className="max-w-[62ch] border-l-4 border-tulsi pl-5 text-[1.1rem] font-semibold leading-[1.7] text-tulsi">
+            {meaning}
+          </p>
+        </div>
+      ))}
+      <div className="flex flex-wrap items-center gap-3 pt-1">
+        <ListenButton text={spoken} onSpeakingChange={onSpeaking} />
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={() => onReask(depth === "simpler" ? "deeper" : "simpler")}
+          className="min-h-14 rounded-full border-2 border-sandal-edge px-6 text-[1rem] font-semibold hover:border-kajal disabled:opacity-50"
+        >
+          {depth === "simpler" ? "Go deeper" : "Say it more simply"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+type SpeechRec = {
+  lang: string;
+  interimResults: boolean;
+  onresult: (e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void;
+  onend: () => void;
+  start: () => void;
+  stop: () => void;
+};
+
+function AskBox({
+  draft,
+  setDraft,
+  onAsk,
+  disabled,
+  placeholder = "What is on your mind?",
+  autoFocus,
+}: {
+  draft: string;
+  setDraft: (s: string) => void;
+  onAsk: (q: string) => void;
+  disabled: boolean;
+  placeholder?: string;
+  autoFocus?: boolean;
+}) {
+  const [listening, setListening] = useState(false);
+  const recRef = useRef<SpeechRec | null>(null);
+  const isClient = useIsClient();
+  const canListen = isClient && ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
+
+  const toggleMic = () => {
+    if (listening) {
+      recRef.current?.stop();
+      return;
+    }
+    const w = window as unknown as Record<string, new () => SpeechRec>;
+    const Rec = w.SpeechRecognition || w.webkitSpeechRecognition;
+    const rec = new Rec();
+    rec.lang = "en-US";
+    rec.interimResults = true;
+    rec.onresult = (e) => {
+      setDraft(Array.from(e.results).map((r) => r[0].transcript).join(""));
+    };
+    rec.onend = () => setListening(false);
+    recRef.current = rec;
+    rec.start();
+    setListening(true);
+  };
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onAsk(draft);
+      }}
+      className="flex items-end gap-2 rounded-[1.75rem] border-2 border-kajal bg-[#fbf3e2] p-2 shadow-[0_6px_0_var(--sandal-edge)] focus-within:border-kesar-deep"
+    >
+      <label htmlFor="ask" className="sr-only">
+        Your question
+      </label>
+      <textarea
+        id="ask"
+        rows={2}
+        value={draft}
+        autoFocus={autoFocus}
+        onChange={(e) => setDraft(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            onAsk(draft);
+          }
+        }}
+        placeholder={listening ? "Listening… speak your question" : placeholder}
+        className="min-h-14 flex-1 resize-none bg-transparent px-4 py-3 font-display text-[1.25rem] leading-snug outline-none placeholder:text-kajal-soft/70"
+      />
+      {canListen && (
+        <button
+          type="button"
+          onClick={toggleMic}
+          aria-pressed={listening}
+          aria-label={listening ? "Stop listening" : "Speak your question"}
+          className={`flex size-14 shrink-0 items-center justify-center rounded-full ${
+            listening ? "animate-pulse bg-kumkum text-sandal" : "bg-sandal-deep hover:bg-sandal-edge"
+          }`}
+        >
+          <MicIcon />
+        </button>
+      )}
+      <button
+        type="submit"
+        disabled={disabled || !draft.trim()}
+        className="flex min-h-14 shrink-0 items-center gap-2 rounded-full bg-kesar px-5 font-semibold text-kajal hover:bg-kesar-deep hover:text-sandal disabled:bg-sandal-deep disabled:text-kajal-soft"
+      >
+        <SendIcon className="size-6" />
+        Ask
+      </button>
+    </form>
+  );
+}
