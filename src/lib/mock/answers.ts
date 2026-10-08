@@ -2,15 +2,10 @@
 // using the persona in lib/swami-prompt.ts. These follow the same shape:
 // practical help for the real situation first, then a verse and what it means for them.
 import type { Depth } from "../settings";
-import { VERSES, type Verse } from "./verses";
+import { CRISIS, CRISIS_HELP, type SwamiAnswer } from "../swami";
+import { VERSES } from "./verses";
 
-export type QuotedVerse = { verse: Verse; meaning: string };
-
-export type SwamiAnswer = {
-  paragraphs: string[];
-  verses: QuotedVerse[];
-  help?: { text: string; href: string; label: string };
-};
+export type { SwamiAnswer };
 
 type Ctx = { subject: string };
 type Entry = {
@@ -19,6 +14,7 @@ type Entry = {
   deeper: (c: Ctx) => string[];
   verses: { id: string; meaning: string }[];
   help?: SwamiAnswer["help"];
+  practice?: SwamiAnswer["practice"];
 };
 
 const TALK = { text: "Talking to someone helps", href: "tel:988", label: "Call or text 988" };
@@ -47,6 +43,11 @@ const ENTRIES: Entry[] = [
           "For you, this means: your job is the studying and the effort. The score isn't in your hands, so put it down and focus on the next question.",
       },
     ],
+    practice: {
+      href: "/meditate/first-breath",
+      title: "Your first breath",
+      why: "Five slow minutes before you study tonight calms the panic, so the practice problems actually stick.",
+    },
   },
   // Work, job, career
   {
@@ -204,8 +205,6 @@ const FALLBACK: Entry = {
 const SUBJECTS =
   /(computer science|\bcs\b|coding|programming|math|maths|algebra|calculus|physics|chemistry|biology|history|english|spanish|french|economics|science)/i;
 
-const CRISIS = /suicid|kill myself|end my life|want to die|self.harm|hurt myself/i;
-
 export async function askSwami(question: string, depth: Depth): Promise<SwamiAnswer> {
   // Simulated thinking time so the flame animation can be judged
   await new Promise((r) => setTimeout(r, 1600));
@@ -217,7 +216,7 @@ export async function askSwami(question: string, depth: Depth): Promise<SwamiAns
         "Please call or text 988 (in the US) to reach someone who can listen any time, day or night. If you're outside the US, contact your local emergency number. I'm an AI, and I'll be here after you've spoken with them.",
       ],
       verses: [],
-      help: { text: "Talk to someone now", href: "tel:988", label: "Call or text 988" },
+      help: CRISIS_HELP,
     };
   }
 
@@ -229,6 +228,7 @@ export async function askSwami(question: string, depth: Depth): Promise<SwamiAns
     paragraphs: (depth === "deeper" ? entry.deeper : entry.simpler)({ subject }),
     verses: entry.verses.map((v) => ({ verse: VERSES[v.id], meaning: v.meaning })),
     help: entry.help,
+    practice: entry.practice,
   };
 }
 

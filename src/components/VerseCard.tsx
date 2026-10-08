@@ -1,4 +1,4 @@
-import type { Verse } from "@/lib/mock/verses";
+import type { Verse } from "@/lib/scripture/types";
 
 // Styled after a palm-leaf manuscript: long leaf, two binding holes.
 export function VerseCard({ verse, onDark = false }: { verse: Verse; onDark?: boolean }) {
@@ -36,10 +36,17 @@ export function VerseCard({ verse, onDark = false }: { verse: Verse; onDark?: bo
       <blockquote className="mt-4 font-display text-[1.15rem] leading-relaxed">
         {verse.translation}
       </blockquote>
+      {verse.plain && (
+        <p className={`mt-3 text-[1.05rem] leading-relaxed ${onDark ? "text-sandal/85" : "text-kajal-soft"}`}>
+          <span className="font-semibold">In plain words: </span>
+          {verse.plain}
+        </p>
+      )}
       <figcaption
         className={`mt-4 text-[0.85rem] font-semibold ${onDark ? "text-flame" : "text-kesar-deep"}`}
       >
         {verse.source}
+        {verse.translator && <span className="font-normal"> · tr. {verse.translator}</span>}
       </figcaption>
     </figure>
   );

@@ -1,13 +1,9 @@
 // MOCK scripture library. Phase 2 replaces this with the searchable Supabase library.
 // Translations here are our own plain-English renderings.
 
-export type Verse = {
-  id: string;
-  source: string; // human citation, e.g. "Bhagavad Gita 2.47"
-  sanskrit: string;
-  transliteration: string;
-  translation: string;
-};
+import type { Verse } from "../scripture/types";
+
+export type { Verse };
 
 export const VERSES: Record<string, Verse> = {
   "gita-2-47": {

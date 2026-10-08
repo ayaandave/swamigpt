@@ -1,0 +1,15 @@
+// Shapes shared by the Ask page, the /api/ask route and the mock answers.
+import type { Verse } from "./scripture/types";
+
+export type QuotedVerse = { verse: Verse; meaning: string };
+
+export type SwamiAnswer = {
+  paragraphs: string[];
+  verses: QuotedVerse[];
+  help?: { text: string; href: string; label: string };
+  practice?: { href: string; title: string; why: string }; // a meditation or lesson in the app
+};
+
+// Checked in code as well as by Claude, so the help card never depends on the model noticing
+export const CRISIS = /suicid|kill myself|end my life|want to die|self.harm|hurt myself/i;
+export const CRISIS_HELP = { text: "Talk to someone now", href: "tel:988", label: "Call or text 988" };

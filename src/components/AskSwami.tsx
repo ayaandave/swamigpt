@@ -1,7 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { askSwami, STARTER_QUESTIONS, type SwamiAnswer } from "@/lib/mock/answers";
+import { askSwami } from "@/lib/ask";
+import { STARTER_QUESTIONS } from "@/lib/mock/answers";
+import type { SwamiAnswer } from "@/lib/swami";
 import { useSettings, type Depth } from "@/lib/settings";
 import { useIsClient } from "@/lib/store";
 import { Diya } from "./Diya";
@@ -30,8 +33,9 @@ export function AskSwami() {
     if (!q || thinking) return;
     const id = nextId.current++;
     setDraft("");
+    const history = turns.flatMap((t) => (t.answer ? [{ question: t.question, answer: t.answer }] : []));
     setTurns((t) => [...t, { id, question: q, depth }]);
-    const answer = await askSwami(q, depth);
+    const answer = await askSwami(q, depth, history);
     setTurns((t) => t.map((turn) => (turn.id === id ? { ...turn, answer } : turn)));
   };
 
@@ -124,6 +128,7 @@ function Answer({
   const spoken = [
     ...answer.paragraphs,
     ...answer.verses.map(({ verse, meaning }) => `${book(verse.source)} says it this way. ${verse.translation} ${meaning}`),
+    ...(answer.practice ? [`Try this next: ${answer.practice.title}. ${answer.practice.why}`] : []),
   ].join(" ");
 
   return (
@@ -153,6 +158,16 @@ function Answer({
           </p>
         </div>
       ))}
+      {answer.practice && (
+        <Link
+          href={answer.practice.href}
+          className="mt-2 flex min-h-16 flex-col justify-center rounded-2xl border-2 border-sandal-edge px-6 py-3 hover:border-kesar hover:bg-sandal-deep"
+        >
+          <span className="text-[0.85rem] font-semibold text-kesar-deep">Try this next</span>
+          <span className="font-display text-[1.2rem]">{answer.practice.title}</span>
+          <span className="text-[1rem] text-kajal-soft">{answer.practice.why}</span>
+        </Link>
+      )}
       <div className="flex flex-wrap items-center gap-3 pt-1">
         <ListenButton text={spoken} onSpeakingChange={onSpeaking} />
         <button
