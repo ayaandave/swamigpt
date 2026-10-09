@@ -7,14 +7,14 @@ import { Diya } from "./Diya";
 import { AskIcon, LearnIcon, MeditateIcon, SettingsIcon, TodayIcon } from "./icons";
 
 const SIZES: TextSize[] = ["regular", "large", "larger"];
-const SIZE_LABEL: Record<TextSize, string> = { regular: "A", large: "A+", larger: "A++" };
+const SIZE_LABEL: Record<TextSize, string> = { regular: "Aa", large: "Aa+", larger: "Aa++" };
 
 export function Header() {
   const { textSize, update } = useSettings();
   const next = SIZES[(SIZES.indexOf(textSize) + 1) % SIZES.length];
 
   return (
-    <header className="mx-auto flex w-full max-w-3xl items-center justify-between gap-3 px-4 pt-4 sm:px-6">
+    <header className="mx-auto flex w-full max-w-3xl items-center justify-between gap-3 px-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-6">
       <Link href="/" className="flex items-center gap-2 rounded-full pr-3" aria-label="SwamiGPT home">
         <Diya size={40} />
         <span className="font-display text-[1.3rem] tracking-tight">SwamiGPT</span>

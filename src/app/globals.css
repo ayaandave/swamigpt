@@ -60,6 +60,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* The welcome gate shows only until the age question is answered */
+html[data-welcomed] .welcome-gate {
+  display: none;
+}
+html:not([data-welcomed]) body {
+  overflow: hidden;
+}
+
 /* Paper grain so the sandal never looks like a flat screen */
 body::before {
   content: "";

@@ -15,7 +15,7 @@ import { MicIcon, SendIcon } from "./icons";
 type Turn = { id: number; question: string; depth: Depth; answer?: SwamiAnswer };
 
 export function AskSwami() {
-  const { depth: defaultDepth } = useSettings();
+  const { depth: defaultDepth, ageGroup } = useSettings();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [draft, setDraft] = useState("");
   const [speakingId, setSpeakingId] = useState<number | null>(null);
@@ -35,7 +35,7 @@ export function AskSwami() {
     setDraft("");
     const history = turns.flatMap((t) => (t.answer ? [{ question: t.question, answer: t.answer }] : []));
     setTurns((t) => [...t, { id, question: q, depth }]);
-    const answer = await askSwami(q, depth, history);
+    const answer = await askSwami(q, depth, ageGroup, history);
     setTurns((t) => t.map((turn) => (turn.id === id ? { ...turn, answer } : turn)));
   };
 
@@ -44,15 +44,18 @@ export function AskSwami() {
   return (
     <div className="flex flex-col">
       {!started ? (
-        <section className="arrive flex flex-col items-center pt-10 text-center sm:pt-16">
-          <Diya size={150} />
-          <h1 className="mt-6 font-display text-[2.6rem] leading-[1.1] sm:text-[3.2rem]">Namaste.</h1>
+        <section className="arrive flex flex-col items-center pt-6 text-center sm:pt-16">
+          <div>
+            <Diya size={96} className="sm:hidden" />
+            <Diya size={150} className="hidden sm:block" />
+          </div>
+          <h1 className="mt-4 font-display text-[2.4rem] leading-[1.1] sm:mt-6 sm:text-[3.2rem]">Namaste.</h1>
           <p className="mt-3 max-w-[30ch] text-[1.1rem] text-kajal-soft">
             Ask anything about life, the mind or the old teachings. I will answer slowly.
           </p>
-          <div className="mt-8 w-full text-left">
+          <div className="mt-6 w-full text-left sm:mt-8">
             <AskBox draft={draft} setDraft={setDraft} onAsk={ask} disabled={thinking} autoFocus />
-            <p className="mt-8 mb-3 text-[0.9rem] font-semibold text-kajal-soft">Or begin with one of these</p>
+            <p className="mt-6 mb-3 text-[0.9rem] font-semibold text-kajal-soft sm:mt-8">Or begin with one of these</p>
             <ul className="grid gap-3 sm:grid-cols-2">
               {STARTER_QUESTIONS.map((q) => (
                 <li key={q}>
@@ -79,15 +82,15 @@ export function AskSwami() {
               <h2 className="border-l-4 border-kesar pl-5 font-display text-[1.6rem] leading-snug">
                 {turn.question}
               </h2>
-              <div className="flex items-start gap-4">
-                <div className="shrink-0 pt-1">
+              <div className="flex flex-col items-start gap-3 sm:flex-row sm:gap-4">
+                <div className="shrink-0 sm:pt-1">
                   <Diya
                     size={56}
                     state={!turn.answer ? "thinking" : speakingId === turn.id ? "speaking" : "idle"}
                   />
                 </div>
                 {!turn.answer ? (
-                  <p className="pt-4 text-[1.05rem] italic text-kajal-soft">Swami is reflecting…</p>
+                  <p className="text-[1.05rem] italic text-kajal-soft sm:pt-4">Swami is reflecting…</p>
                 ) : (
                   <Answer
                     turn={turn as Required<Turn>}
@@ -99,8 +102,15 @@ export function AskSwami() {
               </div>
             </article>
           ))}
-          <div className="pt-2">
-            <AskBox draft={draft} setDraft={setDraft} onAsk={ask} disabled={thinking} placeholder="Ask another question" />
+          <div className="sticky bottom-[calc(4.6rem+env(safe-area-inset-bottom))] z-20 -mx-4 bg-sandal/95 px-4 pt-2 pb-3 backdrop-blur sm:-mx-6 sm:px-6">
+            <AskBox
+              draft={draft}
+              setDraft={setDraft}
+              onAsk={ask}
+              disabled={thinking}
+              placeholder="Ask a follow-up"
+              compact
+            />
           </div>
         </section>
       )}
@@ -199,6 +209,7 @@ function AskBox({
   disabled,
   placeholder = "What is on your mind?",
   autoFocus,
+  compact = false,
 }: {
   draft: string;
   setDraft: (s: string) => void;
@@ -206,6 +217,7 @@ function AskBox({
   disabled: boolean;
   placeholder?: string;
   autoFocus?: boolean;
+  compact?: boolean; // one slim row, for the box pinned under a conversation
 }) {
   const [listening, setListening] = useState(false);
   const recRef = useRef<SpeechRec | null>(null);
@@ -237,14 +249,16 @@ function AskBox({
         e.preventDefault();
         onAsk(draft);
       }}
-      className="flex items-end gap-2 rounded-[1.75rem] border-2 border-kajal bg-[#fbf3e2] p-2 shadow-[0_6px_0_var(--sandal-edge)] focus-within:border-kesar-deep"
+      className={`flex rounded-[1.75rem] border-2 border-kajal bg-[#fbf3e2] p-2 shadow-[0_6px_0_var(--sandal-edge)] focus-within:border-kesar-deep ${
+        compact ? "items-end gap-2" : "flex-col gap-1 sm:flex-row sm:items-end sm:gap-2"
+      }`}
     >
       <label htmlFor="ask" className="sr-only">
         Your question
       </label>
       <textarea
         id="ask"
-        rows={2}
+        rows={compact ? 1 : 2}
         value={draft}
         autoFocus={autoFocus}
         onChange={(e) => setDraft(e.target.value)}
@@ -255,29 +269,33 @@ function AskBox({
           }
         }}
         placeholder={listening ? "Listening… speak your question" : placeholder}
-        className="min-h-14 flex-1 resize-none bg-transparent px-4 py-3 font-display text-[1.25rem] leading-snug outline-none placeholder:text-kajal-soft/70"
+        className={`min-h-14 w-full min-w-0 flex-1 resize-none bg-transparent font-display leading-snug outline-none placeholder:text-kajal-soft/70 ${
+          compact ? "px-3 py-3.5 text-[1.1rem] sm:text-[1.25rem]" : "px-4 py-3 text-[1.25rem]"
+        }`}
       />
-      {canListen && (
+      <div className="flex items-center justify-end gap-2">
+        {canListen && (
+          <button
+            type="button"
+            onClick={toggleMic}
+            aria-pressed={listening}
+            aria-label={listening ? "Stop listening" : "Speak your question"}
+            className={`flex size-14 shrink-0 items-center justify-center rounded-full ${
+              listening ? "animate-pulse bg-kumkum text-sandal" : "bg-sandal-deep hover:bg-sandal-edge"
+            }`}
+          >
+            <MicIcon />
+          </button>
+        )}
         <button
-          type="button"
-          onClick={toggleMic}
-          aria-pressed={listening}
-          aria-label={listening ? "Stop listening" : "Speak your question"}
-          className={`flex size-14 shrink-0 items-center justify-center rounded-full ${
-            listening ? "animate-pulse bg-kumkum text-sandal" : "bg-sandal-deep hover:bg-sandal-edge"
-          }`}
+          type="submit"
+          disabled={disabled || !draft.trim()}
+          className="flex min-h-14 shrink-0 items-center gap-2 rounded-full bg-kesar px-5 font-semibold text-kajal hover:bg-kesar-deep hover:text-sandal disabled:bg-sandal-deep disabled:text-kajal-soft"
         >
-          <MicIcon />
+          <SendIcon className="size-6" />
+          <span className={compact ? "sr-only sm:not-sr-only" : undefined}>Ask</span>
         </button>
-      )}
-      <button
-        type="submit"
-        disabled={disabled || !draft.trim()}
-        className="flex min-h-14 shrink-0 items-center gap-2 rounded-full bg-kesar px-5 font-semibold text-kajal hover:bg-kesar-deep hover:text-sandal disabled:bg-sandal-deep disabled:text-kajal-soft"
-      >
-        <SendIcon className="size-6" />
-        Ask
-      </button>
+      </div>
     </form>
   );
 }

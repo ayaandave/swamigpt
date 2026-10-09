@@ -13,6 +13,7 @@ import { CRISIS, CRISIS_HELP, type SwamiAnswer } from "@/lib/swami";
 const Body = z.object({
   question: z.string().trim().min(1).max(2000),
   depth: z.enum(["simpler", "deeper"]).default("simpler"),
+  ageGroup: z.enum(["under13", "13plus"]).nullable().default(null),
   // Earlier turns in this conversation, oldest first, so follow-ups make sense
   history: z
     .array(z.object({ question: z.string().max(2000), answer: z.string().max(8000) }))
@@ -54,6 +55,9 @@ The passages are search results, so some will not fit. Each shows who is speakin
 Meditations and lessons in the app:
 ${PRACTICE_LIST}`;
 
+const KID_NOTE =
+  "\nThe person asking is under 13. Use short sentences and words a child knows, prefer a story (Ramayana, Mahabharata, Panchatantra) to an abstract idea, and be extra gentle.";
+
 const client = new Anthropic();
 
 export async function POST(request: Request) {
@@ -64,7 +68,7 @@ export async function POST(request: Request) {
   if (!parsed.success) {
     return Response.json({ error: "bad_request" }, { status: 400 });
   }
-  const { question, depth, history } = parsed.data;
+  const { question, depth, ageGroup, history } = parsed.data;
 
   // Search on the follow-up plus the previous question, so "what about at work?" still finds something
   const searchText = history.length ? `${history.at(-1)!.question}\n${question}` : question;
@@ -82,7 +86,7 @@ export async function POST(request: Request) {
     ]),
     {
       role: "user",
-      content: `<passages>\n${passageText}\n</passages>\n\nDepth setting: ${depth}\n\n${question}`,
+      content: `<passages>\n${passageText}\n</passages>\n\nDepth setting: ${depth}${ageGroup === "under13" ? KID_NOTE : ""}\n\n${question}`,
     },
   ];
 

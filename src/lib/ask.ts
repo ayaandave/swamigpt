@@ -1,6 +1,6 @@
 // Client side of /api/ask. Until an Anthropic API key is set on the server, falls back to
 // the mock answers so the app keeps working.
-import type { Depth } from "./settings";
+import type { AgeGroup, Depth } from "./settings";
 import { askSwami as mockAnswer } from "./mock/answers";
 import type { SwamiAnswer } from "./swami";
 
@@ -15,7 +15,12 @@ const SORRY: SwamiAnswer = {
 const asText = (a: SwamiAnswer) =>
   [...a.paragraphs, ...a.verses.map((v) => `(Quoted ${v.verse.source}. ${v.meaning})`)].join("\n\n");
 
-export async function askSwami(question: string, depth: Depth, history: PastTurn[] = []): Promise<SwamiAnswer> {
+export async function askSwami(
+  question: string,
+  depth: Depth,
+  ageGroup: AgeGroup | null,
+  history: PastTurn[] = [],
+): Promise<SwamiAnswer> {
   try {
     const res = await fetch("/api/ask", {
       method: "POST",
@@ -23,6 +28,7 @@ export async function askSwami(question: string, depth: Depth, history: PastTurn
       body: JSON.stringify({
         question,
         depth,
+        ageGroup,
         history: history.slice(-3).map((t) => ({ question: t.question, answer: asText(t.answer) })),
       }),
     });
