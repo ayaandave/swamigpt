@@ -5,6 +5,8 @@ import gitaJson from "../../../data/scripture/gita.json";
 import gitaNotes from "../../../data/scripture/gita.notes.json";
 import sutrasJson from "../../../data/scripture/yoga-sutras.json";
 import sutrasNotes from "../../../data/scripture/yoga-sutras.notes.json";
+import upanishadsJson from "../../../data/scripture/upanishads.json";
+import upanishadsNotes from "../../../data/scripture/upanishads.notes.json";
 import { TEXTS, type TextInfo } from "./texts";
 import type { Verse } from "./types";
 
@@ -33,6 +35,9 @@ const gita: Passage[] = (gitaJson as GitaVerse[]).map(({ chapter, verse, chapter
 export const PASSAGES: Passage[] = [
   ...gita.map(withNote(gitaNotes as Notes)),
   ...(sutrasJson as Omit<Passage, "textId">[]).map((p) => ({ ...p, textId: "yoga-sutras" })).map(withNote(sutrasNotes as Notes)),
+  ...(upanishadsJson as Omit<Passage, "textId">[])
+    .map((p) => ({ ...p, textId: "upanishads" }))
+    .map(withNote(upanishadsNotes as Notes)),
 ];
 
 const BY_ID = new Map(PASSAGES.map((p) => [p.id, p]));
@@ -65,6 +70,9 @@ export function getPassage(textId: string, section: string, number: string) {
 }
 
 export const passageHref = (p: Passage) => `/read/${p.textId}/${p.section}/${p.number}`;
+
+// The citation number on its own: "2.47", "1.2", "1.2.18"
+export const shortRef = (p: Passage) => p.source.split(" ").at(-1)!;
 
 // Who each Gita speaker is talking to, in the frame story
 const LISTENER: Record<string, string> = {

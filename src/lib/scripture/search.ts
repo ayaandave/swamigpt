@@ -12,8 +12,16 @@ const VECTORS = new Float32Array(new Uint8Array(Buffer.from(index.vectors, "base
 let embedder: Promise<FeatureExtractionPipeline> | undefined;
 const getEmbedder = () => (embedder ??= pipeline("feature-extraction", index.model, { dtype: "fp32" }));
 
-// "Gita 2.47", "chapter 2 verse 47", "Yoga Sutras 1.2" -> asked-for passages go in regardless of score
+const UPANISHADS = ["isha", "kena", "katha", "mundaka", "prashna", "chandogya"];
+
+// "Gita 2.47", "chapter 2 verse 47", "Yoga Sutras 1.2", "Katha 1.2.18" -> asked-for passages go in regardless of score
 function referencedPassages(question: string): Passage[] {
+  const upanishad = UPANISHADS.find((u) => new RegExp(`\\b${u}`, "i").test(question));
+  if (upanishad) {
+    return [...question.matchAll(/\b(\d{1,2}(?:\.\d{1,2}){0,2})\b/g)]
+      .map(([, ref]) => getPassageById(`upanishads-${upanishad}-${ref.replaceAll(".", "-")}`))
+      .filter((p) => p !== undefined);
+  }
   const text = /sutra/i.test(question) ? "yoga-sutras" : "gita";
   const refs = [
     ...question.matchAll(/\b(\d{1,2})\s*[.:]\s*(\d{1,2})\b/g),

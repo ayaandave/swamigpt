@@ -25,14 +25,14 @@ export default async function TextPage(props: PageProps<"/read/[text]">) {
       <p className="mt-2 max-w-[48ch] text-[1.1rem] text-kajal-soft">{t.description}</p>
 
       <ol className="mt-8 flex flex-col gap-3">
-        {t.sections.map((s) => (
+        {t.sections.map((s, i) => (
           <li key={s.key}>
             <Link
               href={`/read/${t.id}/${s.key}`}
               className="flex min-h-16 items-center gap-4 rounded-2xl border-2 border-sandal-edge px-5 py-3 hover:border-kesar hover:bg-sandal-deep/60"
             >
               <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-sandal-deep font-display text-[1.2rem]">
-                {s.key}
+                {i + 1}
               </span>
               <span className="min-w-0">
                 <span className="block font-display text-[1.25rem] leading-snug">{s.name}</span>

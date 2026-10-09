@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { PASSAGES, attribution, getPassage, getText, passageHref } from "@/lib/scripture/library";
+import { PASSAGES, attribution, getPassage, getText, passageHref, shortRef } from "@/lib/scripture/library";
 import { VerseCard } from "@/components/VerseCard";
 import { ListenButton } from "@/components/ListenButton";
 
@@ -83,9 +83,7 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
             className="flex min-h-16 flex-col justify-center rounded-2xl border-2 border-sandal-edge px-5 py-3 hover:border-kesar"
           >
             <span className="text-[0.85rem] text-kajal-soft">← Previous</span>
-            <span className="font-display text-[1.15rem]">
-              {prev.section}.{prev.number}
-            </span>
+            <span className="font-display text-[1.15rem]">{shortRef(prev)}</span>
           </Link>
         ) : (
           <span />
@@ -96,9 +94,7 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
             className="flex min-h-16 flex-col items-end justify-center rounded-2xl border-2 border-sandal-edge px-5 py-3 text-right hover:border-kesar"
           >
             <span className="text-[0.85rem] text-kajal-soft">Next →</span>
-            <span className="font-display text-[1.15rem]">
-              {next.section}.{next.number}
-            </span>
+            <span className="font-display text-[1.15rem]">{shortRef(next)}</span>
           </Link>
         )}
       </nav>

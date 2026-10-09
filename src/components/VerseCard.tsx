@@ -23,17 +23,21 @@ export function VerseCard({ verse, onDark = false }: { verse: Verse; onDark?: bo
         } shadow-[inset_0_1px_2px_rgba(43,27,16,.35)]`}
       />
 
-      <p lang="sa" className="font-display whitespace-pre-line text-[1.35rem] leading-[1.9]">
-        {verse.sanskrit}
-      </p>
-      <p
-        className={`mt-3 whitespace-pre-line text-[0.85rem] italic leading-relaxed ${
-          onDark ? "text-sandal/70" : "text-kajal-soft"
-        }`}
-      >
-        {verse.transliteration}
-      </p>
-      <blockquote className="mt-4 font-display text-[1.15rem] leading-relaxed">
+      {verse.sanskrit && (
+        <p lang="sa" className="mb-4 font-display whitespace-pre-line text-[1.35rem] leading-[1.9]">
+          {verse.sanskrit}
+        </p>
+      )}
+      {verse.transliteration && (
+        <p
+          className={`-mt-1 mb-4 whitespace-pre-line text-[0.85rem] italic leading-relaxed ${
+            onDark ? "text-sandal/70" : "text-kajal-soft"
+          }`}
+        >
+          {verse.transliteration}
+        </p>
+      )}
+      <blockquote className="font-display text-[1.15rem] leading-relaxed">
         {verse.translation}
       </blockquote>
       {verse.plain && (

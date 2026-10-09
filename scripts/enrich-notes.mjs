@@ -9,7 +9,7 @@ import fs from "fs";
 import { z } from "zod";
 
 const TEXT = process.argv[2];
-const TITLES = { gita: "Bhagavad Gita", "yoga-sutras": "Yoga Sutras of Patanjali" };
+const TITLES = { gita: "Bhagavad Gita", "yoga-sutras": "Yoga Sutras of Patanjali", upanishads: "Upanishads" };
 if (!TITLES[TEXT]) {
   console.error(`Usage: node scripts/enrich-notes.mjs <${Object.keys(TITLES).join(" | ")}>`);
   process.exit(1);

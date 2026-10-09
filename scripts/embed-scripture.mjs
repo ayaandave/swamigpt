@@ -9,7 +9,7 @@ import fs from "fs";
 const MODEL = "Xenova/bge-small-en-v1.5";
 // bge models expect this prefix on queries (not on the passages)
 const QUERY_PREFIX = "Represent this sentence for searching relevant passages: ";
-const TEXTS = ["gita", "yoga-sutras"]; // data/scripture/<id>.json, plus <id>.notes.json
+const TEXTS = ["gita", "yoga-sutras", "upanishads"]; // data/scripture/<id>.json, plus <id>.notes.json
 
 const read = (path, fallback) => (fs.existsSync(path) ? JSON.parse(fs.readFileSync(path, "utf8")) : fallback);
 

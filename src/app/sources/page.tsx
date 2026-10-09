@@ -20,6 +20,10 @@ const SOURCES = [
     from: "Swami Vivekananda, Raja-Yoga (1896), from the proofread Complete Works on Wikisource; public domain. Sutra numbers follow his edition (195 sutras; some editions count 196). Transliteration generated from the Sanskrit.",
   },
   {
+    text: "The Upanishads (Isha, Kena, Katha, Mundaka, Prashna, Chandogya): English",
+    from: "F. Max Müller, The Upanishads, Sacred Books of the East volumes 1 (1879) and 15 (1884); public domain, from the proofread edition on Wikisource. His bracketed narration, essays and footnotes are left out, and three verse numbers in the Katha (1.3.15–17) follow the standard numbering. Müller spells some names the old way, e.g. Nakiketas for Nachiketa.",
+  },
+  {
     text: "“In plain words” notes",
     from: "Written for SwamiGPT with the help of AI, to put each verse in everyday English. The translation above each note is the original.",
   },
@@ -60,7 +64,7 @@ export default function SourcesPage() {
           ))}
         </ul>
         <p className="mt-3 text-[0.95rem] text-kajal-soft">
-          More texts (the Upanishads and Swami Vivekananda&apos;s talks) will be listed here as they are added.
+          More texts (Swami Vivekananda&apos;s talks, and more Upanishads) will be listed here as they are added.
         </p>
       </section>
 
