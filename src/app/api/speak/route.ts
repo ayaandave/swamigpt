@@ -9,6 +9,8 @@ const VOICE_IDS: Record<string, string | undefined> = {
   sakshi: process.env.ELEVENLABS_VOICE_SAKSHI,
 };
 const MAX_CHARS = 5000; // every character costs credits
+// Eleven v4 sounds best for SwamiGPT; Multilingual v2 is the fallback if v4 is refused
+const MODELS = [process.env.ELEVENLABS_MODEL ?? "eleven_v4", "eleven_multilingual_v2"];
 
 export async function GET(request: Request) {
   const key = process.env.ELEVENLABS_API_KEY;
@@ -27,20 +29,26 @@ export async function GET(request: Request) {
   const slider = Number(params.get("s") ?? 0.8);
   const speed = Math.min(1.0, Math.max(0.7, 0.7 + ((slider - 0.65) / 0.3) * 0.3));
 
-  const upstream = await fetch(
-    `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream?output_format=mp3_44100_128`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "xi-api-key": key },
-      body: JSON.stringify({
-        text,
-        model_id: "eleven_multilingual_v2", // handles Sanskrit names well
-        voice_settings: { stability: 0.6, similarity_boost: 0.75, speed },
-      }),
-    },
-  );
-  if (!upstream.ok || !upstream.body) {
-    console.error("ElevenLabs failed", upstream.status, await upstream.text().catch(() => ""));
+  let upstream: Response | undefined;
+  for (const model of MODELS) {
+    upstream = await fetch(
+      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream?output_format=mp3_44100_128`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "xi-api-key": key },
+        body: JSON.stringify({
+          text,
+          model_id: model,
+          voice_settings: { stability: 0.6, similarity_boost: 0.75, speed },
+        }),
+      },
+    );
+    if (upstream.ok && upstream.body) break;
+    console.error(`ElevenLabs ${model} failed`, upstream.status, await upstream.text().catch(() => ""));
+    // Only a refused request (bad model or settings) is worth retrying on the other model
+    if (upstream.status !== 400 && upstream.status !== 422) break;
+  }
+  if (!upstream?.ok || !upstream.body) {
     return new Response("voice unavailable", { status: 502 });
   }
 
