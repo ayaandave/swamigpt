@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSettings, type TextSize } from "@/lib/settings";
+import { accountsEnabled, useAuth } from "@/lib/supabase";
 import { Diya } from "./Diya";
-import { AskIcon, LearnIcon, MeditateIcon, SettingsIcon, TodayIcon } from "./icons";
+import { AskIcon, LearnIcon, MeditateIcon, PersonIcon, SettingsIcon, TodayIcon } from "./icons";
 
 const SIZES: TextSize[] = ["regular", "large", "larger"];
 const SIZE_LABEL: Record<TextSize, string> = { regular: "Aa", large: "Aa+", larger: "Aa++" };
@@ -36,6 +37,7 @@ export function Header() {
           <SettingsIcon className="size-6" />
           <span className="hidden sm:inline">Voice &amp; settings</span>
         </Link>
+        {accountsEnabled && <AccountButton />}
       </div>
     </header>
   );
@@ -81,5 +83,32 @@ export function BottomNav() {
         })}
       </ul>
     </nav>
+  );
+}
+
+// "Sign in" when signed out; the first letter of their email when signed in
+function AccountButton() {
+  const { ready, user } = useAuth();
+  if (!ready) return <span className="size-12" />;
+  if (user) {
+    return (
+      <Link
+        href="/account"
+        aria-label={`Your account (${user.email})`}
+        className="flex size-12 items-center justify-center rounded-full bg-tulsi font-display text-[1.2rem] text-sandal hover:bg-kajal"
+      >
+        {(user.email ?? "?")[0].toUpperCase()}
+      </Link>
+    );
+  }
+  return (
+    <Link
+      href="/login"
+      className="flex min-h-12 items-center gap-2 rounded-full bg-kajal px-4 text-[0.85rem] font-semibold text-sandal hover:bg-kajal-soft"
+    >
+      <PersonIcon className="size-6" />
+      <span className="hidden sm:inline">Sign in</span>
+      <span className="sr-only sm:hidden">Sign in</span>
+    </Link>
   );
 }
