@@ -42,10 +42,10 @@ export function Header() {
 }
 
 const TABS = [
-  { href: "/", label: "Ask", Icon: AskIcon },
-  { href: "/meditate", label: "Meditate", Icon: MeditateIcon },
-  { href: "/learn", label: "Learn", Icon: LearnIcon },
-  { href: "/today", label: "Today", Icon: TodayIcon },
+  { href: "/", label: "Ask", Icon: AskIcon, also: [] as string[] },
+  { href: "/meditate", label: "Meditate", Icon: MeditateIcon, also: [] },
+  { href: "/learn", label: "Learn", Icon: LearnIcon, also: ["/read"] }, // the scripture library lives under Learn
+  { href: "/today", label: "Today", Icon: TodayIcon, also: [] },
 ];
 
 export function BottomNav() {
@@ -56,8 +56,8 @@ export function BottomNav() {
       className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-sandal-edge bg-sandal/95 pb-[env(safe-area-inset-bottom)] backdrop-blur"
     >
       <ul className="mx-auto grid max-w-3xl grid-cols-4">
-        {TABS.map(({ href, label, Icon }) => {
-          const active = href === "/" ? path === "/" : path.startsWith(href);
+        {TABS.map(({ href, label, Icon, also }) => {
+          const active = href === "/" ? path === "/" : [href, ...also].some((p) => path.startsWith(p));
           return (
             <li key={href}>
               <Link

@@ -5,7 +5,9 @@ import { useState } from "react";
 import type { LearningPath } from "@/lib/mock/content";
 import { VERSES } from "@/lib/mock/verses";
 import { useProgress } from "@/lib/progress";
-import { Mala } from "./Mala";
+import { MalaRing } from "./MalaRing";
+import { MalaCelebration } from "./MalaCelebration";
+import { playChime } from "@/lib/sounds";
 import { VerseCard } from "./VerseCard";
 import { ListenButton } from "./ListenButton";
 import { BackIcon, CheckIcon } from "./icons";
@@ -17,6 +19,17 @@ export function LessonView({ path }: { path: LearningPath }) {
   // Opens at the first unfinished lesson until the reader picks one
   const [chosen, setIndex] = useState<number | null>(null);
   const index = chosen ?? Math.max(firstOpen, 0);
+  const [celebrating, setCelebrating] = useState<number | null>(null);
+
+  const goTo = (i: number) => {
+    setIndex(i);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const finish = () => {
+    markDone(path.slug, index);
+    setCelebrating(index);
+    playChime(0.8); // rings as the bead lands on the string
+  };
 
   const lesson = path.lessons[index];
   const verse = lesson.verseId ? VERSES[lesson.verseId] : undefined;
@@ -35,8 +48,16 @@ export function LessonView({ path }: { path: LearningPath }) {
       </Link>
 
       <p className="mt-6 text-[0.95rem] font-semibold text-kajal-soft">{path.title}</p>
-      <div className="mt-2">
-        <Mala total={path.totalLessons} done={done} />
+      <div className="mt-2 flex flex-col items-center">
+        <MalaRing
+          total={path.totalLessons}
+          done={done}
+          size={200}
+          interactive
+          onBead={goTo}
+          canOpen={(i) => i < path.lessons.length}
+        />
+        <p className="text-[0.85rem] text-kajal-soft">Spin the mala, or tap a bead to open its lesson</p>
       </div>
 
       <article className="mt-8">
@@ -71,7 +92,7 @@ export function LessonView({ path }: { path: LearningPath }) {
           ) : (
             <button
               type="button"
-              onClick={() => markDone(path.slug, index)}
+              onClick={finish}
               className="flex min-h-14 items-center gap-2 rounded-full bg-kesar px-7 text-[1.05rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
             >
               <CheckIcon /> Mark lesson done
@@ -80,10 +101,7 @@ export function LessonView({ path }: { path: LearningPath }) {
           {hasNext && (
             <button
               type="button"
-              onClick={() => {
-                setIndex(index + 1);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
+              onClick={() => goTo(index + 1)}
               className="min-h-14 rounded-full border-2 border-kajal px-7 text-[1.05rem] font-semibold hover:bg-kajal hover:text-sandal"
             >
               Next lesson
@@ -105,6 +123,23 @@ export function LessonView({ path }: { path: LearningPath }) {
           </p>
         )}
       </article>
+
+      {celebrating !== null && (
+        <MalaCelebration
+          total={path.totalLessons}
+          done={done}
+          fresh={celebrating}
+          onNext={
+            celebrating + 1 < path.lessons.length
+              ? () => {
+                  setCelebrating(null);
+                  goTo(celebrating + 1);
+                }
+              : undefined
+          }
+          onClose={() => setCelebrating(null)}
+        />
+      )}
     </div>
   );
 }

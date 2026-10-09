@@ -76,9 +76,13 @@ export function startAmbient(kind: string): Stop {
     timers.push(window.setInterval(ring, 9000));
   }
 
+  let stopped = false;
   return () => {
+    // Can be called twice (the player's stop and the page closing), so only fade out once
+    if (stopped) return;
+    stopped = true;
     timers.forEach(clearInterval);
     master.gain.linearRampToValueAtTime(0, ctx.currentTime + 1);
-    setTimeout(() => ctx.close(), 1100);
+    setTimeout(() => ctx.state !== "closed" && void ctx.close().catch(() => {}), 1100);
   };
 }

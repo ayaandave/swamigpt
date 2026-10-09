@@ -132,6 +132,116 @@ body::before {
   animation: breath var(--breath-cycle, 10s) ease-in-out infinite;
 }
 
+/* ---------- The mala ---------- */
+.mala-bead,
+.mala-ripple,
+.mala-halo,
+.mala-wave,
+.mala-spark,
+.mala-tassel {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.mala-bead {
+  transition: transform 180ms ease;
+}
+.mala-bead-open:hover .mala-bead,
+.mala-bead-open:focus-visible .mala-bead {
+  transform: scale(1.18);
+}
+.mala-bead-open:focus-visible .mala-bead circle:first-child {
+  stroke: var(--kesar-deep);
+  stroke-width: 3;
+}
+
+/* A new bead falls onto the string, bounces and settles */
+@keyframes mala-drop {
+  0% { transform: translateY(-46px) scale(0.2); opacity: 0; }
+  55% { transform: translateY(4px) scale(1.3); opacity: 1; }
+  75% { transform: translateY(-2px) scale(0.92); }
+  100% { transform: none; opacity: 1; }
+}
+.mala-drop {
+  animation: mala-drop 900ms cubic-bezier(.3,.7,.4,1) 250ms both;
+}
+
+/* ...then a ripple, a warm halo and a burst of sparks where it lands */
+@keyframes mala-ripple {
+  0% { transform: scale(1); opacity: 0.9; }
+  100% { transform: scale(3.4); opacity: 0; }
+}
+.mala-ripple {
+  opacity: 0;
+  animation: mala-ripple 1.1s ease-out 750ms both;
+}
+@keyframes mala-halo {
+  0%, 100% { opacity: 0; }
+  30% { opacity: 1; }
+}
+.mala-halo {
+  opacity: 0;
+  animation: mala-halo 2.2s ease-in-out 750ms both;
+}
+@keyframes mala-spark {
+  0% { transform: translate(0, 0) scale(1.2); opacity: 1; }
+  100% { transform: translate(var(--x), var(--y)) scale(0.3); opacity: 0; }
+}
+.mala-spark {
+  opacity: 0;
+  animation: mala-spark 1s cubic-bezier(.1,.8,.3,1) 780ms both;
+}
+
+/* A whole path finished: a glow runs round every bead */
+@keyframes mala-wave {
+  0% { opacity: 0; }
+  40% { opacity: 1; }
+  100% { opacity: 0.35; }
+}
+.mala-wave {
+  opacity: 0;
+  animation: mala-wave 1.4s ease-out both;
+}
+
+/* The mala sways when a bead lands, and the tassel swings */
+@keyframes mala-sway {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-4deg); }
+  50% { transform: rotate(3deg); }
+  75% { transform: rotate(-1.5deg); }
+}
+.mala-sway {
+  transform-origin: 50% 10%;
+  animation: mala-sway 1.6s ease-in-out 750ms both;
+}
+@keyframes tassel-idle {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+@keyframes tassel-swing {
+  0%, 100% { transform: rotate(0); }
+  20% { transform: rotate(16deg); }
+  45% { transform: rotate(-11deg); }
+  70% { transform: rotate(6deg); }
+  88% { transform: rotate(-2deg); }
+}
+.mala-tassel {
+  transform-origin: 50% 0;
+  animation: tassel-idle 5s ease-in-out infinite;
+}
+.mala-tassel-swing {
+  animation: tassel-swing 2.2s ease-in-out 800ms both;
+}
+
+/* Marigold petals for a finished path */
+@keyframes petal-fall {
+  0% { transform: translateY(-10vh) rotate(0); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translateY(110vh) rotate(540deg); opacity: 0.8; }
+}
+.petal {
+  animation: petal-fall var(--t, 4s) linear var(--delay, 0s) both;
+}
+
 /* One orchestrated arrival on the home screen */
 @keyframes rise {
   from { opacity: 0; transform: translateY(12px); }

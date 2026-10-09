@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useSettings, type Depth, type TextSize } from "@/lib/settings";
 import { VOICES } from "@/lib/voices";
@@ -109,6 +110,14 @@ export default function SettingsPage() {
         value={s.depth}
         onChange={(v) => s.update({ depth: v as Depth })}
       />
+
+      <Link
+        href="/sources"
+        className="mt-10 flex min-h-16 items-center justify-between rounded-2xl border-2 border-sandal-edge px-5 py-3 font-semibold hover:border-kajal"
+      >
+        Sources &amp; safety
+        <span aria-hidden="true">→</span>
+      </Link>
     </div>
   );
 }
