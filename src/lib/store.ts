@@ -43,7 +43,15 @@ export function createLocalStore<T extends object>(key: string, defaults: T) {
 
   const useStore = () => useSyncExternalStore(subscribe, get, () => defaults);
 
-  return { get, set, useStore };
+  // Plain change listener for code outside React (account sync)
+  const onChange = (l: () => void) => {
+    listeners.add(l);
+    return () => {
+      listeners.delete(l);
+    };
+  };
+
+  return { get, set, useStore, onChange };
 }
 
 const noop = () => () => {};

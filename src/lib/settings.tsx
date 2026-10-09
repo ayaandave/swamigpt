@@ -29,6 +29,13 @@ const store = createLocalStore<Settings>(KEY, {
 // and returning visitors never see the welcome gate flash.
 export const settingsScript = `try{var s=JSON.parse(localStorage.getItem("${KEY}")||"{}"),d=document.documentElement.dataset;if(s.textSize&&s.textSize!=="regular")d.text=s.textSize;if(s.ageGroup)d.welcomed="1"}catch(e){}`;
 
+export const getSettings = store.get;
+export const onSettingsChange = store.onChange;
+
+export function updateSettings(patch: Partial<Settings>) {
+  update(patch);
+}
+
 function update(patch: Partial<Settings>) {
   const next = { ...store.get(), ...patch };
   if (next.textSize === "regular") delete document.documentElement.dataset.text;

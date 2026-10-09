@@ -44,6 +44,12 @@ export default function AccountPage() {
 
       <div className="mt-8 flex flex-col gap-3">
         <Link
+          href="/account/history"
+          className="flex min-h-16 items-center justify-between rounded-2xl border-2 border-sandal-edge px-5 font-semibold hover:border-kajal"
+        >
+          Your conversations <span aria-hidden="true">→</span>
+        </Link>
+        <Link
           href="/settings"
           className="flex min-h-16 items-center justify-between rounded-2xl border-2 border-sandal-edge px-5 font-semibold hover:border-kajal"
         >

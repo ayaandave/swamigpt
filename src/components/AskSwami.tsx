@@ -6,6 +6,8 @@ import { askSwami } from "@/lib/ask";
 import { STARTER_QUESTIONS } from "@/lib/mock/answers";
 import type { SwamiAnswer } from "@/lib/swami";
 import { useSettings, type Depth } from "@/lib/settings";
+import { saveTurn } from "@/lib/history";
+import { useAuth } from "@/lib/supabase";
 import { useIsClient } from "@/lib/store";
 import { Diya } from "./Diya";
 import { VerseCard } from "./VerseCard";
@@ -23,6 +25,8 @@ export function AskSwami({ initialDraft = "" }: { initialDraft?: string }) {
   const thinking = turns.some((t) => !t.answer);
   const lastRef = useRef<HTMLElement>(null);
   const nextId = useRef(1);
+  const { user } = useAuth();
+  const conversation = useRef<string | null>(null); // saved-history conversation, when signed in
 
   useEffect(() => {
     // Bring each new question to the top so the answer reads from its beginning
@@ -38,6 +42,7 @@ export function AskSwami({ initialDraft = "" }: { initialDraft?: string }) {
     setTurns((t) => [...t, { id, question: q, depth }]);
     const answer = await askSwami(q, depth, ageGroup, history);
     setTurns((t) => t.map((turn) => (turn.id === id ? { ...turn, answer } : turn)));
+    if (user && !answer.notice) conversation.current = await saveTurn(user.id, conversation.current, q, answer);
   };
 
   const started = turns.length > 0;
@@ -160,6 +165,14 @@ function Answer({
           <span className="text-[0.85rem]">{answer.help.text}</span>
           <span className="text-[1.2rem] font-bold">{answer.help.label}</span>
         </a>
+      )}
+      {answer.signInPrompt && (
+        <Link
+          href="/login"
+          className="flex min-h-14 w-fit items-center rounded-full bg-kesar px-7 text-[1.05rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+        >
+          Sign in for more questions
+        </Link>
       )}
       {answer.verses.map(({ verse, meaning }) => (
         <div key={verse.id} className="mt-3 flex flex-col gap-4">

@@ -10,6 +10,7 @@ import { attribution } from "@/lib/scripture/library";
 import { searchPassages } from "@/lib/scripture/search";
 import { SWAMI_SYSTEM_PROMPT } from "@/lib/swami-prompt";
 import { CRISIS, CRISIS_HELP, type SwamiAnswer } from "@/lib/swami";
+import { takeQuestion } from "@/lib/limits";
 
 const Body = z.object({
   question: z.string().trim().min(1).max(2000),
@@ -70,6 +71,12 @@ export async function POST(request: Request) {
     return Response.json({ error: "bad_request" }, { status: 400 });
   }
   const { question, depth, ageGroup, history } = parsed.data;
+
+  // Each real answer costs money, so count it against today's allowance first
+  const left = await takeQuestion(request);
+  if (left === -1) {
+    return Response.json({ error: "limit" }, { status: 429 });
+  }
 
   // Search on the follow-up plus the previous question, so "what about at work?" still finds something
   const searchText = history.length ? `${history.at(-1)!.question}\n${question}` : question;

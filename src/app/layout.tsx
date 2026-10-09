@@ -3,6 +3,7 @@ import { Atkinson_Hyperlegible_Next, Tiro_Devanagari_Sanskrit } from "next/font/
 import { settingsScript } from "@/lib/settings";
 import { BottomNav, Header } from "@/components/Chrome";
 import { WelcomeGate } from "@/components/WelcomeGate";
+import { AccountSync } from "@/components/AccountSync";
 import "./globals.css";
 
 const tiro = Tiro_Devanagari_Sanskrit({
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main className="mx-auto w-full max-w-3xl px-4 pb-40 sm:px-6">{children}</main>
         <BottomNav />
         <WelcomeGate />
+        <AccountSync />
       </body>
     </html>
   );
