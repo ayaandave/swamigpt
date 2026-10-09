@@ -1,10 +1,10 @@
-// Scripture search: finds the verses whose meaning is closest to a question.
+// Scripture search: finds the passages, from every text, whose meaning is closest to a question.
 // Server only. The vectors come from scripts/embed-scripture.mjs; the query is embedded
 // here with the same small local model, so no API call is needed to search.
 import "server-only";
 import { pipeline, type FeatureExtractionPipeline } from "@huggingface/transformers";
-import index from "../../../data/scripture/gita.vectors.json";
-import { getVerseById, type LibraryVerse } from "./library";
+import index from "../../../data/scripture/vectors.json";
+import { getPassageById, type Passage } from "./library";
 
 // Copy into a fresh buffer: a Node Buffer can sit at an unaligned offset in a shared pool
 const VECTORS = new Float32Array(new Uint8Array(Buffer.from(index.vectors, "base64")).buffer);
@@ -12,16 +12,17 @@ const VECTORS = new Float32Array(new Uint8Array(Buffer.from(index.vectors, "base
 let embedder: Promise<FeatureExtractionPipeline> | undefined;
 const getEmbedder = () => (embedder ??= pipeline("feature-extraction", index.model, { dtype: "fp32" }));
 
-// "Gita 2.47", "chapter 2 verse 47", "BG 2:47" -> asked-for verses go in regardless of score
-function referencedVerses(question: string): LibraryVerse[] {
+// "Gita 2.47", "chapter 2 verse 47", "Yoga Sutras 1.2" -> asked-for passages go in regardless of score
+function referencedPassages(question: string): Passage[] {
+  const text = /sutra/i.test(question) ? "yoga-sutras" : "gita";
   const refs = [
     ...question.matchAll(/\b(\d{1,2})\s*[.:]\s*(\d{1,2})\b/g),
-    ...question.matchAll(/chapter\s+(\d{1,2}),?\s+verse\s+(\d{1,2})/gi),
+    ...question.matchAll(/(?:chapter|book)\s+(\d{1,2}),?\s+(?:verse|sutra)\s+(\d{1,2})/gi),
   ];
-  return refs.map(([, ch, n]) => getVerseById(`gita-${Number(ch)}-${Number(n)}`)).filter((v) => v !== undefined);
+  return refs.map(([, a, b]) => getPassageById(`${text}-${Number(a)}-${Number(b)}`)).filter((p) => p !== undefined);
 }
 
-export async function searchVerses(question: string, k = 8): Promise<LibraryVerse[]> {
+export async function searchPassages(question: string, k = 8): Promise<Passage[]> {
   const embed = await getEmbedder();
   const out = await embed(index.queryPrefix + question, { pooling: "mean", normalize: true });
   const q = out.data as Float32Array;
@@ -34,10 +35,10 @@ export async function searchVerses(question: string, k = 8): Promise<LibraryVers
   });
   scored.sort((a, b) => b.dot - a.dot);
 
-  const picked = new Map(referencedVerses(question).map((v) => [v.id, v]));
+  const picked = new Map(referencedPassages(question).map((v) => [v.id, v]));
   for (const { id } of scored) {
     if (picked.size >= k) break;
-    picked.set(id, getVerseById(id)!);
+    picked.set(id, getPassageById(id)!);
   }
   return [...picked.values()];
 }

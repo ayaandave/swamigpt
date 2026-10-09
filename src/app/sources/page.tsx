@@ -16,6 +16,10 @@ const SOURCES = [
     from: "Annie Besant, The Bhagavad-Gita, 4th edition (1922). In the public domain; text from the proofread edition on Wikisource.",
   },
   {
+    text: "Yoga Sutras of Patanjali: Sanskrit, translation and explanation",
+    from: "Swami Vivekananda, Raja-Yoga (1896), from the proofread Complete Works on Wikisource; public domain. Sutra numbers follow his edition (195 sutras; some editions count 196). Transliteration generated from the Sanskrit.",
+  },
+  {
     text: "“In plain words” notes",
     from: "Written for SwamiGPT with the help of AI, to put each verse in everyday English. The translation above each note is the original.",
   },
@@ -56,8 +60,7 @@ export default function SourcesPage() {
           ))}
         </ul>
         <p className="mt-3 text-[0.95rem] text-kajal-soft">
-          More texts (the Upanishads, Yoga Sutras and Swami Vivekananda&apos;s Complete Works) will be listed here as
-          they are added.
+          More texts (the Upanishads and Swami Vivekananda&apos;s talks) will be listed here as they are added.
         </p>
       </section>
 

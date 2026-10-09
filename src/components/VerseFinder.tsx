@@ -4,9 +4,17 @@ import Link from "next/link";
 import { useState } from "react";
 import { SendIcon } from "./icons";
 
-type Result = { id: string; source: string; speaker: string; translation: string; plain: string | null; href: string };
+type Result = {
+  id: string;
+  source: string;
+  speaker: string | null;
+  by: string;
+  translation: string;
+  plain: string | null;
+  href: string;
+};
 
-const IDEAS = ["anger", "fear of failure", "losing someone", "a restless mind"];
+const IDEAS = ["anger", "fear of failure", "losing someone", "a restless mind", "how to meditate"];
 
 // "Find verses about…": the same meaning search the Swami uses, free and instant
 export function VerseFinder() {
@@ -104,7 +112,7 @@ export function VerseFinder() {
                       className="block rounded-2xl border-2 border-sandal-edge px-5 py-4 hover:border-kesar hover:bg-sandal-deep/60"
                     >
                       <span className="font-display text-[1.1rem] text-kesar-deep">{r.source}</span>
-                      <span className="ml-2 text-[0.85rem] text-kajal-soft">{r.speaker}</span>
+                      <span className="ml-2 text-[0.85rem] text-kajal-soft">{r.speaker ?? r.by}</span>
                       <span className="mt-1 line-clamp-3 block text-[1.05rem] leading-relaxed">
                         {r.plain ?? r.translation}
                       </span>

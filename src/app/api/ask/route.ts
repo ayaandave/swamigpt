@@ -6,7 +6,8 @@ import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { z } from "zod";
 import { MEDITATIONS, PATHS } from "@/lib/mock/content";
-import { searchVerses } from "@/lib/scripture/search";
+import { attribution } from "@/lib/scripture/library";
+import { searchPassages } from "@/lib/scripture/search";
 import { SWAMI_SYSTEM_PROMPT } from "@/lib/swami-prompt";
 import { CRISIS, CRISIS_HELP, type SwamiAnswer } from "@/lib/swami";
 
@@ -46,11 +47,11 @@ const OUTPUT_RULES = `
 
 Output format:
 - paragraphs: your answer as short plain-text paragraphs (no markdown, no headings, no bullet characters). Do not quote verse text here; the app shows quoted verses on their own.
-- verses: zero to two verses you quote, each by its id exactly as given in the passages, with "meaning": one plain sentence starting "For you, this means" that connects it to their situation. The translations are Annie Besant's 1922 English, so the meaning line also does the job of putting it in today's words.
+- verses: zero to two passages you quote, each by its id exactly as given, with "meaning": one plain sentence starting "For you, this means" that connects it to their situation. The translations are over a century old, so the meaning line also does the job of putting it in today's words.
 - practice: the slug of one meditation or lesson from the list below that helps right now, with "why": one short line saying why, written to them. null if none fits.
 - crisis: true only if the person may be at risk of harming themselves or others.
 
-The passages are search results, so some will not fit. Each shows who is speaking.
+The passages are search results from several texts, so some will not fit. Each shows where it comes from and who is speaking.
 
 Meditations and lessons in the app:
 ${PRACTICE_LIST}`;
@@ -72,11 +73,21 @@ export async function POST(request: Request) {
 
   // Search on the follow-up plus the previous question, so "what about at work?" still finds something
   const searchText = history.length ? `${history.at(-1)!.question}\n${question}` : question;
-  const passages = await searchVerses(searchText);
+  const passages = await searchPassages(searchText);
   const allowed = new Map(passages.map((v) => [v.id, v]));
 
   const passageText = passages
-    .map((v) => `[${v.id}] ${v.source} (${v.speaker} speaking)\n${v.translation}${v.plain ? `\nPlain meaning: ${v.plain}` : ""}`)
+    .map((p) =>
+      [
+        `[${p.id}] ${p.source} (${attribution(p)})`,
+        p.translation,
+        p.plain && `Plain meaning: ${p.plain}`,
+        // A teacher's explanation helps pick and explain the passage; it is not for quoting
+        p.commentary?.length && `Vivekananda's explanation (context, do not quote): ${p.commentary.join(" ").slice(0, 500)}`,
+      ]
+        .filter(Boolean)
+        .join("\n"),
+    )
     .join("\n\n");
 
   const messages: Anthropic.Beta.BetaMessageParam[] = [
@@ -110,8 +121,20 @@ export async function POST(request: Request) {
       paragraphs: reply.paragraphs.filter((p) => p.trim()),
       // Never show a verse the model didn't get from the library
       verses: reply.verses.flatMap(({ id, meaning }) => {
-        const verse = allowed.get(id);
-        return verse ? [{ verse, meaning }] : [];
+        const p = allowed.get(id);
+        if (!p) return [];
+        // The card only needs the text itself, not the long commentary
+        const verse = {
+          id: p.id,
+          source: p.source,
+          sanskrit: p.sanskrit,
+          transliteration: p.transliteration,
+          translation: p.translation,
+          translator: p.translator,
+          speaker: p.speaker,
+          plain: p.plain,
+        };
+        return [{ verse, meaning }];
       }),
       help: reply.crisis || CRISIS.test(question) ? CRISIS_HELP : undefined,
     };

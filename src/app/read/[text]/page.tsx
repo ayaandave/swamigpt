@@ -1,0 +1,49 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { allTexts, getText } from "@/lib/scripture/library";
+
+export function generateStaticParams() {
+  return allTexts().map((t) => ({ text: t.id }));
+}
+
+export async function generateMetadata(props: PageProps<"/read/[text]">): Promise<Metadata> {
+  const t = getText((await props.params).text);
+  return t ? { title: `${t.title} · SwamiGPT`, description: t.description } : {};
+}
+
+export default async function TextPage(props: PageProps<"/read/[text]">) {
+  const t = getText((await props.params).text);
+  if (!t) notFound();
+
+  return (
+    <div className="pt-8">
+      <Link href="/learn" className="text-[0.95rem] font-semibold text-kesar-deep hover:underline">
+        ← Learn
+      </Link>
+      <h1 className="mt-3 font-display text-[2.4rem] leading-tight">{t.title}</h1>
+      <p className="mt-2 max-w-[48ch] text-[1.1rem] text-kajal-soft">{t.description}</p>
+
+      <ol className="mt-8 flex flex-col gap-3">
+        {t.sections.map((s) => (
+          <li key={s.key}>
+            <Link
+              href={`/read/${t.id}/${s.key}`}
+              className="flex min-h-16 items-center gap-4 rounded-2xl border-2 border-sandal-edge px-5 py-3 hover:border-kesar hover:bg-sandal-deep/60"
+            >
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-sandal-deep font-display text-[1.2rem]">
+                {s.key}
+              </span>
+              <span className="min-w-0">
+                <span className="block font-display text-[1.25rem] leading-snug">{s.name}</span>
+                <span className="text-[0.9rem] text-kajal-soft">
+                  {s.passages.length} {t.passageLabel}s
+                </span>
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}

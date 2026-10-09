@@ -1,0 +1,38 @@
+// The texts in the library. Small and safe to import anywhere (the passages themselves are server only).
+
+export type TextInfo = {
+  id: string; // also the URL segment: /read/<id>
+  title: string;
+  short: string; // for citations, e.g. "Yoga Sutras 1.2"
+  description: string;
+  sectionLabel: string; // "Chapter", "Book"
+  passageLabel: string; // "verse", "sutra"
+  attribution: string; // shown on every passage page
+  commentaryBy?: string; // whose explanation is printed with each passage, if any
+};
+
+export const TEXTS: TextInfo[] = [
+  {
+    id: "gita",
+    title: "The Bhagavad Gita",
+    short: "Bhagavad Gita",
+    description:
+      "A conversation on a battlefield between the warrior Arjuna and Krishna, his friend and guide. 18 chapters, 701 verses.",
+    sectionLabel: "Chapter",
+    passageLabel: "verse",
+    attribution: "English by Annie Besant (1922)",
+  },
+  {
+    id: "yoga-sutras",
+    title: "The Yoga Sutras of Patanjali",
+    short: "Yoga Sutras",
+    description:
+      "Short sayings on calming the mind and the path of meditation, with Swami Vivekananda's translation and explanation. 4 books, 195 sutras.",
+    sectionLabel: "Book",
+    passageLabel: "sutra",
+    attribution: "Patanjali, translated and explained by Swami Vivekananda (1896)",
+    commentaryBy: "Swami Vivekananda",
+  },
+];
+
+export const getTextInfo = (id: string) => TEXTS.find((t) => t.id === id);
