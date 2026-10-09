@@ -551,3 +551,6 @@ export const PATHS: LearningPath[] = [
     lessons: RAMAYANA,
   },
 ];
+
+// Lessons are numbered from 1 in the address: /learn/gita-18-days/4
+export const lessonHref = (slug: string, index: number) => `/learn/${slug}/${index + 1}`;

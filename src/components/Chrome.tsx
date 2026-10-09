@@ -14,27 +14,28 @@ export function Header() {
   const { textSize, update } = useSettings();
   const next = SIZES[(SIZES.indexOf(textSize) + 1) % SIZES.length];
 
+  // Sizes here are in px, not rem, so the header still fits a phone at the largest text size
   return (
-    <header className="mx-auto flex w-full max-w-3xl items-center justify-between gap-3 px-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-6">
-      <Link href="/" className="flex items-center gap-2 rounded-full pr-3" aria-label="SwamiGPT home">
-        <Diya size={40} />
-        <span className="font-display text-[1.3rem] tracking-tight">SwamiGPT</span>
+    <header className="mx-auto flex w-full max-w-3xl items-center justify-between gap-2 px-[16px] pt-[max(16px,env(safe-area-inset-top))] sm:px-6">
+      <Link href="/" className="flex min-w-0 items-center gap-1.5 rounded-full" aria-label="SwamiGPT home">
+        <Diya size={34} />
+        <span className="font-display text-[20px] tracking-tight sm:text-[24px]">SwamiGPT</span>
       </Link>
-      <div className="flex items-center gap-2">
+      <div className="flex shrink-0 items-center gap-[6px] sm:gap-2">
         <button
           type="button"
           onClick={() => update({ textSize: next })}
-          className="flex min-h-12 items-center gap-2 rounded-full border-2 border-sandal-edge px-4 text-[0.85rem] font-semibold hover:border-kajal"
+          className="flex h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full border-2 border-sandal-edge text-[14px] font-semibold hover:border-kajal sm:px-4"
           aria-label={`Text size: ${textSize}. Tap to make text ${next === "regular" ? "regular" : "bigger"}.`}
         >
-          <span className="font-display text-[1.1rem] leading-none">{SIZE_LABEL[textSize]}</span>
+          <span className="font-display text-[17px] leading-none">{SIZE_LABEL[textSize]}</span>
           <span className="hidden sm:inline">Text size</span>
         </button>
         <Link
           href="/settings"
-          className="flex min-h-12 items-center gap-2 rounded-full border-2 border-sandal-edge px-4 text-[0.85rem] font-semibold hover:border-kajal"
+          className="flex h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full border-2 border-sandal-edge text-[14px] font-semibold hover:border-kajal sm:px-4"
         >
-          <SettingsIcon className="size-6" />
+          <SettingsIcon className="size-[24px]" />
           <span className="hidden sm:inline">Voice &amp; settings</span>
         </Link>
         {accountsEnabled && <AccountButton />}
@@ -89,13 +90,13 @@ export function BottomNav() {
 // "Sign in" when signed out; the first letter of their email when signed in
 function AccountButton() {
   const { ready, user } = useAuth();
-  if (!ready) return <span className="size-12" />;
+  if (!ready) return <span className="size-[44px]" />;
   if (user) {
     return (
       <Link
         href="/account"
         aria-label={`Your account (${user.email})`}
-        className="flex size-12 items-center justify-center rounded-full bg-tulsi font-display text-[1.2rem] text-sandal hover:bg-kajal"
+        className="flex size-[44px] items-center justify-center rounded-full bg-tulsi font-display text-[18px] text-sandal hover:bg-kajal"
       >
         {(user.email ?? "?")[0].toUpperCase()}
       </Link>
@@ -104,9 +105,9 @@ function AccountButton() {
   return (
     <Link
       href="/login"
-      className="flex min-h-12 items-center gap-2 rounded-full bg-kajal px-4 text-[0.85rem] font-semibold text-sandal hover:bg-kajal-soft"
+      className="flex h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full bg-kajal text-[14px] font-semibold text-sandal hover:bg-kajal-soft sm:px-4"
     >
-      <PersonIcon className="size-6" />
+      <PersonIcon className="size-[24px]" />
       <span className="hidden sm:inline">Sign in</span>
       <span className="sr-only sm:hidden">Sign in</span>
     </Link>
