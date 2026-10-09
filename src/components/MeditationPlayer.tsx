@@ -29,14 +29,27 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
   const timers = useRef<number[]>([]);
   const done = elapsed >= total;
 
+  // The clock below runs for the whole session, so it reads the voice and speed from here:
+  // a voice picked mid-session is used from the very next line
+  const latest = useRef({ voice: meditationVoice, speed });
+  useEffect(() => {
+    latest.current = { voice: meditationVoice, speed };
+  });
+
   // Meditation is read a little slower than everything else
   const say = (text: string, delay = 0) => {
     timers.current.push(
       window.setTimeout(() => {
         setLine(text);
-        speak(text, meditationVoice, speed * 0.9);
+        speak(text, latest.current.voice, latest.current.speed * 0.9);
       }, delay),
     );
+  };
+
+  // Switching voice mid-session re-reads the current line, so the change is heard right away
+  const chooseVoice = (voice: VoiceId) => {
+    update({ meditationVoice: voice });
+    if (running && line) speak(line, voice, speed * 0.9);
   };
 
   // Clock: each cue is spoken at its second; the session ends with a bell and a closing line
@@ -57,8 +70,6 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
       if (cue) say(cue.text);
     }, 1000);
     return () => clearInterval(t);
-    // say only reads the latest voice and speed, so it isn't a dependency
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [running, meditation, total]);
 
   // Background sound follows play/pause and the chosen sound
@@ -161,7 +172,7 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
                   name="voice"
                   value={v.id}
                   checked={meditationVoice === v.id}
-                  onChange={() => update({ meditationVoice: v.id as VoiceId })}
+                  onChange={() => chooseVoice(v.id as VoiceId)}
                   className="sr-only"
                 />
                 {v.name}
