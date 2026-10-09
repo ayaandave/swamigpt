@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { SOUNDS, type Meditation } from "@/lib/mock/content";
+import { SOUNDS, type Meditation } from "@/lib/meditations";
 import { startAmbient } from "@/lib/ambient";
+import { logSession } from "@/lib/meditation-log";
 import { speak, stopSpeaking } from "@/lib/speak";
-import { useSettings } from "@/lib/settings";
+import { playChime } from "@/lib/sounds";
+import { useSettings, type VoiceId } from "@/lib/settings";
+import { VOICES } from "@/lib/voices";
 import { Diya } from "./Diya";
 import { BackIcon, PauseIcon, PlayIcon } from "./icons";
 
@@ -15,7 +18,7 @@ function fmt(s: number) {
 }
 
 export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
-  const { voice, speed } = useSettings();
+  const { meditationVoice, speed, update } = useSettings();
   const total = meditation.minutes * 60;
   const [running, setRunning] = useState(false);
   const [elapsed, setElapsed] = useState(0);
@@ -23,32 +26,40 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
   const [line, setLine] = useState<string | null>(null);
   const stopAmbient = useRef<() => void>(() => {});
   const elapsedRef = useRef(0);
+  const timers = useRef<number[]>([]);
   const done = elapsed >= total;
 
-  const say = (text: string) => {
-    setLine(text);
-    speak(text, voice, speed * 0.9);
+  // Meditation is read a little slower than everything else
+  const say = (text: string, delay = 0) => {
+    timers.current.push(
+      window.setTimeout(() => {
+        setLine(text);
+        speak(text, meditationVoice, speed * 0.9);
+      }, delay),
+    );
   };
 
-  // Clock, plus spoken guidance spread evenly across the session
+  // Clock: each cue is spoken at its second; the session ends with a bell and a closing line
   useEffect(() => {
     if (!running) return;
-    const lines = meditation.script;
-    const gap = Math.floor(total / lines.length);
     const t = window.setInterval(() => {
       const e = ++elapsedRef.current;
       setElapsed(e);
       if (e >= total) {
         setRunning(false);
-        setLine("The session is complete. Carry this stillness with you.");
-        speak("The session is complete. Carry this stillness with you.", voice, speed * 0.9);
-      } else if (e % gap === 0 && e / gap < lines.length) {
-        setLine(lines[e / gap]);
-        speak(lines[e / gap], voice, speed * 0.9);
+        logSession(meditation.minutes);
+        if (meditation.quietEnd) return; // the sleep session ends in silence
+        playChime();
+        if (meditation.closing) say(meditation.closing, 2500);
+        return;
       }
+      const cue = meditation.cues.find((c) => c.at === e);
+      if (cue) say(cue.text);
     }, 1000);
     return () => clearInterval(t);
-  }, [running, meditation.script, total, voice, speed]);
+    // say only reads the latest voice and speed, so it isn't a dependency
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [running, meditation, total]);
 
   // Background sound follows play/pause and the chosen sound
   useEffect(() => {
@@ -57,18 +68,28 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
     return () => stopAmbient.current();
   }, [running, sound]);
 
-  useEffect(() => () => stopSpeaking(), []);
+  useEffect(
+    () => () => {
+      timers.current.forEach(clearTimeout);
+      stopSpeaking();
+    },
+    [],
+  );
 
   const toggle = () => {
     if (running) {
+      timers.current.forEach(clearTimeout);
       stopSpeaking();
       setRunning(false);
       return;
     }
     if (done || elapsedRef.current === 0) {
+      // A fresh start: bell first, then the first words once it has rung out
       elapsedRef.current = 0;
       setElapsed(0);
-      say(meditation.script[0]);
+      playChime();
+      const first = meditation.cues.find((c) => c.at === 0);
+      if (first) say(first.text, 2500);
     }
     setRunning(true);
   };
@@ -105,9 +126,11 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
         </div>
 
         <p className="mt-4 min-h-[2.6rem] font-display text-[2rem] leading-tight text-flame" aria-live="polite">
-          {running ? breath : done ? "Om shanti" : "When you are ready"}
+          {running ? breath : done ? "Om shanti" : elapsed ? "Paused" : "When you are ready"}
         </p>
-        <p className="mt-3 min-h-[3.5rem] max-w-[34ch] text-[1.05rem] text-sandal/80">{line ?? meditation.description}</p>
+        <p className="mt-3 min-h-[3.5rem] max-w-[36ch] text-[1.05rem] leading-relaxed text-sandal/80">
+          {line ?? meditation.description}
+        </p>
 
         <button
           type="button"
@@ -122,29 +145,55 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
         </p>
       </div>
 
-      <fieldset className="relative mx-auto mb-8 w-full max-w-3xl px-4 sm:px-6">
-        <legend className="mb-3 px-1 text-[0.9rem] font-semibold text-sandal/80">Background sound</legend>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {SOUNDS.map((s) => (
-            <label
-              key={s.id}
-              className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border-2 px-3 text-center text-[0.95rem] font-semibold ${
-                sound === s.id ? "border-flame bg-flame/15 text-flame" : "border-sandal/20 hover:border-sandal/50"
-              }`}
-            >
-              <input
-                type="radio"
-                name="sound"
-                value={s.id}
-                checked={sound === s.id}
-                onChange={() => setSound(s.id)}
-                className="sr-only"
-              />
-              {s.name}
-            </label>
-          ))}
-        </div>
-      </fieldset>
+      <div className="relative mx-auto mb-8 flex w-full max-w-3xl flex-col gap-6 px-4 sm:px-6">
+        <fieldset>
+          <legend className="mb-3 px-1 text-[0.9rem] font-semibold text-sandal/80">Voice</legend>
+          <div className="grid grid-cols-3 gap-2">
+            {VOICES.map((v) => (
+              <label
+                key={v.id}
+                className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border-2 px-3 text-center text-[0.95rem] font-semibold ${
+                  meditationVoice === v.id ? "border-flame bg-flame/15 text-flame" : "border-sandal/20 hover:border-sandal/50"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="voice"
+                  value={v.id}
+                  checked={meditationVoice === v.id}
+                  onChange={() => update({ meditationVoice: v.id as VoiceId })}
+                  className="sr-only"
+                />
+                {v.name}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend className="mb-3 px-1 text-[0.9rem] font-semibold text-sandal/80">Background sound</legend>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {SOUNDS.map((s) => (
+              <label
+                key={s.id}
+                className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border-2 px-3 text-center text-[0.95rem] font-semibold ${
+                  sound === s.id ? "border-flame bg-flame/15 text-flame" : "border-sandal/20 hover:border-sandal/50"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="sound"
+                  value={s.id}
+                  checked={sound === s.id}
+                  onChange={() => setSound(s.id)}
+                  className="sr-only"
+                />
+                {s.name}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { MEDITATIONS } from "@/lib/mock/content";
+import { MEDITATIONS } from "@/lib/meditations";
 import { MeditationPlayer } from "@/components/MeditationPlayer";
 
 export function generateStaticParams() {

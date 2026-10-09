@@ -13,6 +13,7 @@ export type Settings = {
   speed: number; // 0.65 – 0.95
   depth: Depth;
   ageGroup: AgeGroup | null; // answered once on the welcome gate
+  meditationVoice: VoiceId; // meditations are read by Sakshi unless changed in the player
 };
 
 const KEY = "swamigpt.settings";
@@ -23,6 +24,7 @@ const store = createLocalStore<Settings>(KEY, {
   speed: 0.8,
   depth: "simpler",
   ageGroup: null,
+  meditationVoice: "sakshi",
 });
 
 // Runs in <head> before first paint so the chosen text size never flickers
