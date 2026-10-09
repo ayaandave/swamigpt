@@ -11,6 +11,7 @@ import { useAuth } from "@/lib/supabase";
 import { useIsClient } from "@/lib/store";
 import { Diya } from "./Diya";
 import { VerseCard } from "./VerseCard";
+import { whoSays } from "@/lib/scripture/who";
 import { ListenButton } from "./ListenButton";
 import { MicIcon, SendIcon } from "./icons";
 
@@ -142,11 +143,9 @@ function Answer({
   disabled: boolean;
 }) {
   const { answer, depth } = turn;
-  // "Bhagavad Gita 2.47" -> "the Bhagavad Gita"
-  const book = (source: string) => `the ${source.replace(/\s[\d.]+$/, "")}`;
   const spoken = [
     ...answer.paragraphs,
-    ...answer.verses.map(({ verse, meaning }) => `${book(verse.source)} says it this way. ${verse.translation} ${meaning}`),
+    ...answer.verses.map(({ verse, meaning }) => `${whoSays(verse)}: ${verse.translation} ${meaning}`),
     ...(answer.practice ? [`Try this next: ${answer.practice.title}. ${answer.practice.why}`] : []),
   ].join(" ");
 
@@ -177,7 +176,7 @@ function Answer({
       {answer.verses.map(({ verse, meaning }) => (
         <div key={verse.id} className="mt-3 flex flex-col gap-4">
           <p className="font-display text-[1.15rem] text-kajal-soft">
-            {book(verse.source).replace(/^t/, "T")} says it this way:
+            {whoSays(verse)}:
           </p>
           <VerseCard verse={verse} />
           <p className="max-w-[62ch] border-l-4 border-tulsi pl-5 text-[1.1rem] font-semibold leading-[1.7] text-tulsi">

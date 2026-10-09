@@ -9,6 +9,7 @@ import type { SwamiAnswer } from "@/lib/swami";
 import { useAuth } from "@/lib/supabase";
 import { Diya } from "./Diya";
 import { VerseCard } from "./VerseCard";
+import { whoSays } from "@/lib/scripture/who";
 import { SendIcon } from "./icons";
 
 const QUICK = ["Explain it more simply", "Give me an example", "How does this fit my life?"];
@@ -144,6 +145,7 @@ function InlineAnswer({ answer }: { answer: SwamiAnswer }) {
       )}
       {answer.verses.map(({ verse, meaning }) => (
         <div key={verse.id} className="flex flex-col gap-3">
+          <p className="font-display text-[1.1rem] text-kajal-soft">{whoSays(verse)}:</p>
           <VerseCard verse={verse} />
           <p className="border-l-4 border-tulsi pl-4 font-semibold leading-[1.6] text-tulsi">{meaning}</p>
         </div>

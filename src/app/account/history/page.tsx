@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { VerseCard } from "@/components/VerseCard";
+import { whoSays } from "@/lib/scripture/who";
 import {
   deleteConversation,
   listConversations,
@@ -67,6 +68,7 @@ export default function HistoryPage() {
               ))}
               {t.answer.verses.map(({ verse, meaning }) => (
                 <div key={verse.id} className="flex flex-col gap-4">
+                  <p className="font-display text-[1.15rem] text-kajal-soft">{whoSays(verse)}:</p>
                   <VerseCard verse={verse} />
                   <p className="max-w-[62ch] border-l-4 border-tulsi pl-5 text-[1.1rem] font-semibold leading-[1.7] text-tulsi">
                     {meaning}
