@@ -24,6 +24,10 @@ const SOURCES = [
     from: "F. Max Müller, The Upanishads, Sacred Books of the East volumes 1 (1879) and 15 (1884); public domain, from the proofread edition on Wikisource. His bracketed narration, essays and footnotes are left out, and three verse numbers in the Katha (1.3.15–17) follow the standard numbering. Müller spells some names the old way, e.g. Nakiketas for Nachiketa.",
   },
   {
+    text: "Swami Vivekananda: Chicago addresses, Karma-Yoga, Raja-Yoga, Bhakti-Yoga, Jnana-Yoga",
+    from: "His own books and speeches (1893–1899), from The Complete Works of Swami Vivekananda on Wikisource; public domain. Later volumes and material first published after his death are not included, because they may still be in copyright. Each chapter is divided into short passages; chapter headings and editors' notes are left out.",
+  },
+  {
     text: "“In plain words” notes",
     from: "Written for SwamiGPT with the help of AI, to put each verse in everyday English. The translation above each note is the original.",
   },
@@ -64,7 +68,7 @@ export default function SourcesPage() {
           ))}
         </ul>
         <p className="mt-3 text-[0.95rem] text-kajal-soft">
-          More texts (Swami Vivekananda&apos;s talks, and more Upanishads) will be listed here as they are added.
+          More texts (including more Upanishads) will be listed here as they are added.
         </p>
       </section>
 

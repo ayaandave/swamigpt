@@ -47,6 +47,17 @@ export const TEXTS: TextInfo[] = [
     passageLabel: "verse",
     attribution: "English by Max Müller (1879–1884)",
   },
+  {
+    id: "vivekananda",
+    title: "Swami Vivekananda",
+    short: "Vivekananda",
+    description:
+      "His own books on the four paths of yoga, and the 1893 Chicago speeches that brought Vedanta to the West. 899 passages.",
+    sectionLabel: "Book",
+    numberedSections: false,
+    passageLabel: "passage",
+    attribution: "Swami Vivekananda, in his own words",
+  },
 ];
 
 export const getTextInfo = (id: string) => TEXTS.find((t) => t.id === id);

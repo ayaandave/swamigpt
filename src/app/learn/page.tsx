@@ -36,7 +36,6 @@ export default function LearnPage() {
             </li>
           ))}
         </ul>
-        <p className="mt-3 text-[0.9rem] text-kajal-soft">Swami Vivekananda&apos;s talks are coming.</p>
         <div className="mt-6">
           <VerseFinder />
         </div>

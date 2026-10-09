@@ -40,13 +40,18 @@ export default async function SectionPage(props: PageProps<"/read/[text]/[sectio
 
       <ol className="mt-8 flex flex-col gap-3">
         {s.passages.map((p, i) => {
-          // Upanishads have parts within parts: label each new one ("Part 1.2")
+          // Upanishads and prose books have parts within a section: label each new one
+          // ("Part 1.2", or the chapter title when there is one)
           const part = p.number.includes(".") ? p.number.slice(0, p.number.lastIndexOf(".")) : "";
           const prev = s.passages[i - 1];
           const newPart = part && !prev?.number.startsWith(part + ".");
           return (
             <li key={p.id}>
-              {newPart && <h2 className="mt-6 mb-3 font-display text-[1.3rem] text-kajal-soft">Part {part}</h2>}
+              {newPart && (
+                <h2 className="mt-6 mb-3 font-display text-[1.3rem] text-kajal-soft">
+                  {p.partName ? `${part}. ${p.partName}` : `Part ${part}`}
+                </h2>
+              )}
               <Link
                 href={passageHref(p)}
                 className="flex gap-4 rounded-2xl border-2 border-sandal-edge px-5 py-4 hover:border-kesar hover:bg-sandal-deep/60"

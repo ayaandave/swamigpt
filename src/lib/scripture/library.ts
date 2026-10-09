@@ -7,6 +7,7 @@ import sutrasJson from "../../../data/scripture/yoga-sutras.json";
 import sutrasNotes from "../../../data/scripture/yoga-sutras.notes.json";
 import upanishadsJson from "../../../data/scripture/upanishads.json";
 import upanishadsNotes from "../../../data/scripture/upanishads.notes.json";
+import vivekanandaJson from "../../../data/scripture/vivekananda.json";
 import { TEXTS, type TextInfo } from "./texts";
 import type { Verse } from "./types";
 
@@ -16,6 +17,7 @@ export type Passage = Verse & {
   sectionName: string;
   number: string; // verse or sutra number within the section
   speaker?: string; // Gita only: who is talking
+  partName?: string; // chapter title within a section, for prose books ("The Secret of Work")
   commentary?: string[]; // a teacher's explanation printed with the text (Vivekananda on the sutras)
 };
 
@@ -38,6 +40,8 @@ export const PASSAGES: Passage[] = [
   ...(upanishadsJson as Omit<Passage, "textId">[])
     .map((p) => ({ ...p, textId: "upanishads" }))
     .map(withNote(upanishadsNotes as Notes)),
+  // Already in plain English, so no notes
+  ...(vivekanandaJson as Omit<Passage, "textId">[]).map((p) => ({ ...p, textId: "vivekananda" })),
 ];
 
 const BY_ID = new Map(PASSAGES.map((p) => [p.id, p]));

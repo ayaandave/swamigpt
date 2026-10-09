@@ -44,9 +44,16 @@ export async function searchPassages(question: string, k = 8): Promise<Passage[]
   scored.sort((a, b) => b.dot - a.dot);
 
   const picked = new Map(referencedPassages(question).map((v) => [v.id, v]));
+  // No single text takes more than half the results: Vivekananda's modern English matches
+  // questions so well that he would otherwise crowd out the scriptures
+  const perText = new Map<string, number>();
   for (const { id } of scored) {
     if (picked.size >= k) break;
-    picked.set(id, getPassageById(id)!);
+    const p = getPassageById(id)!;
+    const n = perText.get(p.textId) ?? 0;
+    if (n >= Math.ceil(k / 2)) continue;
+    perText.set(p.textId, n + 1);
+    picked.set(id, p);
   }
   return [...picked.values()];
 }
