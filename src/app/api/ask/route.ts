@@ -69,6 +69,29 @@ const lessonNote = (lesson: { title: string; text: string }) =>
 
 const client = new Anthropic();
 
+// Testing mode (SWAMI_TEST_MODE=1): a cheaper model and less thinking, to save credits while
+// building. Off at launch, so real users always get the best model.
+const TEST_MODE = process.env.SWAMI_TEST_MODE === "1";
+const MODEL = TEST_MODE ? "claude-sonnet-5-5" : "claude-opus-5-5";
+const EFFORT = TEST_MODE ? "low" : "medium";
+
+// Dollars per million tokens, for the cost log
+const PRICES: Record<string, { input: number; output: number; cacheRead: number }> = {
+  "claude-opus-5-5": { input: 4, output: 20, cacheRead: 0.2 },
+  "claude-sonnet-5-5": { input: 2, output: 10, cacheRead: 0.2 },
+};
+
+function logCost(usage: Anthropic.Beta.BetaUsage, model: string) {
+  const p = PRICES[model] ?? PRICES[MODEL];
+  const read = usage.cache_read_input_tokens ?? 0;
+  const write = usage.cache_creation_input_tokens ?? 0;
+  const dollars =
+    (usage.input_tokens * p.input + write * p.input * 1.25 + read * p.cacheRead + usage.output_tokens * p.output) / 1e6;
+  console.log(
+    `[ask] ${model}: ${usage.input_tokens} in, ${read} cached, ${write} cache-written, ${usage.output_tokens} out = $${dollars.toFixed(4)}`,
+  );
+}
+
 export async function POST(request: Request) {
   if (!process.env.ANTHROPIC_API_KEY) {
     return Response.json({ error: "not_configured" }, { status: 503 });
@@ -117,15 +140,16 @@ export async function POST(request: Request) {
 
   try {
     const res = await client.beta.messages.parse({
-      model: "claude-opus-5-5",
+      model: MODEL,
       max_tokens: 16000,
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
-      output_config: { effort: "medium", format: betaZodOutputFormat(Reply) },
+      output_config: { effort: EFFORT, format: betaZodOutputFormat(Reply) },
       system: [{ type: "text", text: SWAMI_SYSTEM_PROMPT + OUTPUT_RULES, cache_control: { type: "ephemeral" } }],
       messages,
     });
 
+    logCost(res.usage, res.model);
     const reply = res.stop_reason === "refusal" ? null : res.parsed_output;
     if (!reply) {
       return Response.json({ error: "no_answer" }, { status: 502 });
