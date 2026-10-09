@@ -24,6 +24,9 @@ export async function GET(request: Request) {
 
   const text = params.get("t")?.trim() ?? "";
   if (!text || text.length > MAX_CHARS) return new Response("bad text", { status: 400 });
+  // When text is read in pieces, a sentence either side keeps the voice flowing between them
+  const previous = params.get("p")?.slice(-200) || undefined;
+  const next = params.get("n")?.slice(0, 200) || undefined;
 
   // The app's speed slider (0.65-0.95) mapped onto ElevenLabs' gentler range (0.7-1.0)
   const slider = Number(params.get("s") ?? 0.8);
@@ -38,6 +41,8 @@ export async function GET(request: Request) {
         headers: { "Content-Type": "application/json", "xi-api-key": key },
         body: JSON.stringify({
           text,
+          previous_text: previous,
+          next_text: next,
           model_id: model,
           voice_settings: { stability: 0.6, similarity_boost: 0.75, speed },
         }),

@@ -57,8 +57,14 @@ export function speak(text: string, voiceId: VoiceId, speed: number, handlers: H
 
   const id = ++session;
   const parts = chunks(text);
+  // One sentence either side of each piece, so the voice keeps the same flow and mood across pieces
+  const lastSentence = (t: string) => (t.match(/[^.!?]+[.!?]+["')\]]*\s*$/)?.[0] ?? t).trim().slice(-150);
+  const firstSentence = (t: string) => (t.match(/^[^.!?]+[.!?]+["')\]]*/)?.[0] ?? t).trim().slice(0, 150);
   const audioFor = (i: number) => {
-    const audio = new Audio(`/api/speak?${new URLSearchParams({ v: voiceId, s: String(speed), t: parts[i] })}`);
+    const q = new URLSearchParams({ v: voiceId, s: String(speed), t: parts[i] });
+    if (i > 0) q.set("p", lastSentence(parts[i - 1]));
+    if (i + 1 < parts.length) q.set("n", firstSentence(parts[i + 1]));
+    const audio = new Audio(`/api/speak?${q}`);
     audio.preload = "auto";
     return audio;
   };
