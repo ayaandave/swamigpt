@@ -14,34 +14,7 @@ export default function LearnPage() {
     <div className="pt-10">
       <h1 className="font-display text-[2.4rem] leading-tight">Learn</h1>
 
-      <section aria-labelledby="read-title" className="mt-8">
-        <h2 id="read-title" className="font-display text-[1.6rem] leading-tight">
-          Read the scriptures
-        </h2>
-        <ul className="mt-4 flex flex-col gap-3">
-          {TEXTS.map((t) => (
-            <li key={t.id}>
-              <Link
-                href={`/read/${t.id}`}
-                className="flex items-center justify-between gap-4 rounded-[2rem] bg-sandal-deep px-6 py-5 hover:bg-sandal-edge/60 sm:px-8"
-              >
-                <span>
-                  <span className="block font-display text-[1.45rem] leading-tight">{t.title}</span>
-                  <span className="mt-1 block text-[0.95rem] leading-snug text-kajal-soft">{t.description}</span>
-                </span>
-                <span aria-hidden="true" className="font-display text-[1.6rem] text-kesar-deep">
-                  →
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <div className="mt-6">
-          <VerseFinder />
-        </div>
-      </section>
-
-      <h2 className="mt-12 font-display text-[1.6rem] leading-tight">Learning paths</h2>
+      <h2 className="mt-8 font-display text-[1.6rem] leading-tight">Learning paths</h2>
       <p className="mt-2 max-w-[44ch] text-[1.1rem] text-kajal-soft">
         Short lessons, a few minutes each. Every lesson you finish adds a bead to your mala, a string of prayer beads.
       </p>
@@ -71,6 +44,33 @@ export default function LearnPage() {
           );
         })}
       </ul>
+
+      <section aria-labelledby="read-title" className="mt-12">
+        <h2 id="read-title" className="font-display text-[1.6rem] leading-tight">
+          Read the scriptures
+        </h2>
+        <ul className="mt-4 flex flex-col gap-3">
+          {TEXTS.map((t) => (
+            <li key={t.id}>
+              <Link
+                href={`/read/${t.id}`}
+                className="flex items-center justify-between gap-4 rounded-[2rem] bg-sandal-deep px-6 py-5 hover:bg-sandal-edge/60 sm:px-8"
+              >
+                <span>
+                  <span className="block font-display text-[1.45rem] leading-tight">{t.title}</span>
+                  <span className="mt-1 block text-[0.95rem] leading-snug text-kajal-soft">{t.description}</span>
+                </span>
+                <span aria-hidden="true" className="font-display text-[1.6rem] text-kesar-deep">
+                  →
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-6">
+          <VerseFinder />
+        </div>
+      </section>
     </div>
   );
 }
