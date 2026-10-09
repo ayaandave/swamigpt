@@ -17,11 +17,14 @@ const SORRY: SwamiAnswer = {
 const asText = (a: SwamiAnswer) =>
   [...a.paragraphs, ...a.verses.map((v) => `(Quoted ${v.verse.source}. ${v.meaning})`)].join("\n\n");
 
+export type LessonContext = { title: string; text: string };
+
 export async function askSwami(
   question: string,
   depth: Depth,
   ageGroup: AgeGroup | null,
   history: PastTurn[] = [],
+  lesson?: LessonContext, // when asked from inside a lesson
 ): Promise<SwamiAnswer> {
   try {
     // Signed-in people are counted by their account for the daily limit
@@ -33,10 +36,20 @@ export async function askSwami(
         question,
         depth,
         ageGroup,
+        lesson,
         history: history.slice(-3).map((t) => ({ question: t.question, answer: asText(t.answer) })),
       }),
     });
-    if (res.status === 503) return mockAnswer(question, depth);
+    if (res.status === 503) {
+      // No API key yet: the practice answers are about general topics, not lessons, so be honest
+      return lesson
+        ? {
+            paragraphs: ["The Swami can't answer questions about lessons just yet. This will switch on very soon."],
+            verses: [],
+            notice: "error",
+          }
+        : mockAnswer(question, depth);
+    }
     if (res.status === 429) {
       const { error } = (await res.json().catch(() => ({}))) as { error?: string };
       if (error === "limit") {

@@ -10,6 +10,7 @@ import { MalaCelebration } from "./MalaCelebration";
 import { playChime } from "@/lib/sounds";
 import { VerseCard } from "./VerseCard";
 import { ListenButton } from "./ListenButton";
+import { LessonAsk } from "./LessonAsk";
 import { BackIcon, CheckIcon } from "./icons";
 
 // One lesson of a path. The path's timeline (PathTimeline) is one tap back.
@@ -63,6 +64,16 @@ export function LessonView({ path, index, verse }: { path: LearningPath; index: 
           <p className="text-[0.9rem] font-semibold text-sandal/80">Sit with this</p>
           <p className="mt-1 font-display text-[1.35rem] leading-snug">{lesson.reflect}</p>
         </aside>
+
+        <LessonAsk
+          key={index}
+          lesson={{
+            title: lesson.title,
+            text: [...lesson.body, verse ? `Verse: ${verse.source}: ${verse.translation}` : "", `Reflect: ${lesson.reflect}`]
+              .filter(Boolean)
+              .join("\n\n"),
+          }}
+        />
 
         <div className="mt-8">
           {isDone ? (

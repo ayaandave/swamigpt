@@ -18,6 +18,8 @@ const Body = z.object({
   depth: z.enum(["simpler", "deeper"]).default("simpler"),
   ageGroup: z.enum(["under13", "13plus"]).nullable().default(null),
   // Earlier turns in this conversation, oldest first, so follow-ups make sense
+  // The lesson someone is reading when they ask from inside it
+  lesson: z.object({ title: z.string().max(200), text: z.string().max(6000) }).optional(),
   history: z
     .array(z.object({ question: z.string().max(2000), answer: z.string().max(8000) }))
     .max(6)
@@ -61,6 +63,10 @@ ${PRACTICE_LIST}`;
 const KID_NOTE =
   "\nThe person asking is under 13. Use short sentences and words a child knows, prefer a story (Ramayana, Mahabharata, Panchatantra) to an abstract idea, and be extra gentle.";
 
+// Questions asked from inside a lesson: answer about that lesson, briefly, since it's shown inline
+const lessonNote = (lesson: { title: string; text: string }) =>
+  `<lesson title="${lesson.title.replace(/"/g, "'")}">\n${lesson.text}\n</lesson>\nThe person is reading this lesson in the app and asks a follow-up question about it. Answer about the lesson itself, in two or three short paragraphs, at the same reading level. Quote a passage only if it adds something the lesson didn't. The practice suggestion is optional here.\n\n`;
+
 const client = new Anthropic();
 
 export async function POST(request: Request) {
@@ -71,7 +77,7 @@ export async function POST(request: Request) {
   if (!parsed.success) {
     return Response.json({ error: "bad_request" }, { status: 400 });
   }
-  const { question, depth, ageGroup, history } = parsed.data;
+  const { question, depth, ageGroup, history, lesson } = parsed.data;
 
   // Each real answer costs money, so count it against today's allowance first
   const left = await takeQuestion(request);
@@ -80,7 +86,7 @@ export async function POST(request: Request) {
   }
 
   // Search on the follow-up plus the previous question, so "what about at work?" still finds something
-  const searchText = history.length ? `${history.at(-1)!.question}\n${question}` : question;
+  const searchText = [lesson?.title, history.at(-1)?.question, question].filter(Boolean).join("\n");
   const passages = await searchPassages(searchText);
   const allowed = new Map(passages.map((v) => [v.id, v]));
 
@@ -105,7 +111,7 @@ export async function POST(request: Request) {
     ]),
     {
       role: "user",
-      content: `<passages>\n${passageText}\n</passages>\n\nDepth setting: ${depth}${ageGroup === "under13" ? KID_NOTE : ""}\n\n${question}`,
+      content: `<passages>\n${passageText}\n</passages>\n\n${lesson ? lessonNote(lesson) : ""}Depth setting: ${depth}${ageGroup === "under13" ? KID_NOTE : ""}\n\n${question}`,
     },
   ];
 
