@@ -13,7 +13,7 @@ export type Settings = {
   speed: number; // 0.65 – 0.95
   depth: Depth;
   ageGroup: AgeGroup | null; // answered once on the welcome gate
-  meditationVoice: VoiceId; // meditations are read by Sakshi unless changed in the player
+  meditationVoice: VoiceId; // meditations are read by Dhyan ("sakshi") unless changed in the player
 };
 
 const KEY = "swamigpt.settings";

@@ -28,9 +28,9 @@ export const VOICES: Voice[] = [
     prefer: "female",
   },
   {
-    id: "sakshi",
-    name: "Sakshi",
-    description: "A clear, even narrator. Calm without a strong character.",
+    id: "sakshi", // internal id kept so saved settings still work; shown as Dhyan
+    name: "Dhyan",
+    description: "A calm meditation guide. His name means meditation.",
     sample: "Let us begin. Breathe in slowly, and let the breath go.",
     pitch: 0.95,
     prefer: "any",
