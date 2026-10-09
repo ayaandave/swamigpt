@@ -15,11 +15,10 @@ const QUICK = ["Explain it more simply", "Give me an example", "How does this fi
 
 type Turn = { id: number; question: string; answer?: SwamiAnswer };
 
-// A dropdown at the end of a lesson: ask the Swami about it without leaving the page.
+// A section at the end of a lesson: ask the Swami about it without leaving the page.
 export function LessonAsk({ lesson }: { lesson: LessonContext }) {
   const { depth, ageGroup } = useSettings();
   const { user } = useAuth();
-  const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
   const nextId = useRef(1);
@@ -44,89 +43,79 @@ export function LessonAsk({ lesson }: { lesson: LessonContext }) {
 
   return (
     <section className="mt-8 overflow-hidden rounded-[2rem] border-2 border-sandal-edge bg-[#fbf3e2]">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        className="flex min-h-16 w-full items-center gap-3 px-5 py-3 text-left hover:bg-sandal-deep/50"
-      >
+      <div className="flex items-center gap-3 px-5 pt-4">
         <Diya size={34} state={thinking ? "thinking" : "idle"} />
-        <span className="flex-1">
-          <span className="block font-display text-[1.2rem] leading-snug">Ask the Swami about this lesson</span>
-          <span className="text-[0.9rem] text-kajal-soft">A quick question while you read</span>
-        </span>
-        <span aria-hidden="true" className={`text-[1.4rem] text-kesar-deep transition-transform ${open ? "rotate-180" : ""}`}>
-          ▾
-        </span>
-      </button>
+        <div>
+          <h2 className="font-display text-[1.2rem] leading-snug">Ask the Swami about this lesson</h2>
+          <p className="text-[0.9rem] text-kajal-soft">A quick question while you read</p>
+        </div>
+      </div>
 
-      {open && (
-        <div className="border-t-2 border-sandal-edge px-5 pt-4 pb-5">
-          {turns.length === 0 && (
-            <div className="mb-4 flex flex-wrap gap-2">
-              {QUICK.map((q) => (
-                <button
-                  key={q}
-                  type="button"
-                  onClick={() => ask(q)}
-                  className="min-h-11 rounded-full border-2 border-sandal-edge bg-sandal px-4 text-[0.95rem] hover:border-kesar"
-                >
-                  {q}
-                </button>
-              ))}
-            </div>
-          )}
-
-          <div aria-live="polite" className="flex flex-col gap-8">
-            {turns.map((t) => (
-              <article key={t.id} className="flex flex-col gap-4">
-                <p className="border-l-4 border-kesar pl-4 font-display text-[1.2rem] leading-snug">{t.question}</p>
-                {!t.answer ? (
-                  <p className="italic text-kajal-soft">Swami is reflecting…</p>
-                ) : (
-                  <InlineAnswer answer={t.answer} />
-                )}
-              </article>
+      <div className="px-5 pt-4 pb-5">
+        {turns.length === 0 && (
+          <div className="mb-4 flex flex-wrap gap-2">
+            {QUICK.map((q) => (
+              <button
+                key={q}
+                type="button"
+                onClick={() => ask(q)}
+                className="min-h-11 rounded-full border-2 border-sandal-edge bg-sandal px-4 text-[0.95rem] hover:border-kesar"
+              >
+                {q}
+              </button>
             ))}
           </div>
+        )}
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              void ask(draft);
-            }}
-            className={`flex items-end gap-2 rounded-[1.5rem] border-2 border-kajal bg-sandal p-1.5 focus-within:border-kesar-deep ${
-              turns.length ? "mt-6" : ""
-            }`}
-          >
-            <label htmlFor="lesson-ask" className="sr-only">
-              Your question about this lesson
-            </label>
-            <textarea
-              id="lesson-ask"
-              rows={1}
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  void ask(draft);
-                }
-              }}
-              placeholder={turns.length ? "Ask a follow-up" : "Your question"}
-              className="min-h-12 min-w-0 flex-1 resize-none bg-transparent px-3 py-2.5 font-display text-[1.1rem] leading-snug outline-none placeholder:text-kajal-soft/70"
-            />
-            <button
-              type="submit"
-              disabled={thinking || !draft.trim()}
-              aria-label="Ask"
-              className="flex size-12 shrink-0 items-center justify-center rounded-full bg-kesar text-kajal hover:bg-kesar-deep hover:text-sandal disabled:bg-sandal-deep disabled:text-kajal-soft"
-            >
-              <SendIcon className="size-6" />
-            </button>
-          </form>
+        <div aria-live="polite" className="flex flex-col gap-8">
+          {turns.map((t) => (
+            <article key={t.id} className="flex flex-col gap-4">
+              <p className="border-l-4 border-kesar pl-4 font-display text-[1.2rem] leading-snug">{t.question}</p>
+              {!t.answer ? (
+                <p className="italic text-kajal-soft">Swami is reflecting…</p>
+              ) : (
+                <InlineAnswer answer={t.answer} />
+              )}
+            </article>
+          ))}
         </div>
-      )}
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            void ask(draft);
+          }}
+          className={`flex items-end gap-2 rounded-[1.5rem] border-2 border-kajal bg-sandal p-1.5 focus-within:border-kesar-deep ${
+            turns.length ? "mt-6" : ""
+          }`}
+        >
+          <label htmlFor="lesson-ask" className="sr-only">
+            Your question about this lesson
+          </label>
+          <textarea
+            id="lesson-ask"
+            rows={1}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                void ask(draft);
+              }
+            }}
+            placeholder={turns.length ? "Ask a follow-up" : "Your question"}
+            className="min-h-12 min-w-0 flex-1 resize-none bg-transparent px-3 py-2.5 font-display text-[1.1rem] leading-snug outline-none placeholder:text-kajal-soft/70"
+          />
+          <button
+            type="submit"
+            disabled={thinking || !draft.trim()}
+            aria-label="Ask"
+            className="flex size-12 shrink-0 items-center justify-center rounded-full bg-kesar text-kajal hover:bg-kesar-deep hover:text-sandal disabled:bg-sandal-deep disabled:text-kajal-soft"
+          >
+            <SendIcon className="size-6" />
+          </button>
+        </form>
+      </div>
     </section>
   );
 }
