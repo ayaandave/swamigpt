@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import type { LearningPath } from "@/lib/mock/content";
-import { VERSES } from "@/lib/mock/verses";
+import type { LearningPath } from "@/lib/lessons";
+import type { Verse } from "@/lib/scripture/types";
 import { useProgress } from "@/lib/progress";
 import { MalaRing } from "./MalaRing";
 import { MalaCelebration } from "./MalaCelebration";
@@ -12,7 +12,7 @@ import { VerseCard } from "./VerseCard";
 import { ListenButton } from "./ListenButton";
 import { BackIcon, CheckIcon } from "./icons";
 
-export function LessonView({ path }: { path: LearningPath }) {
+export function LessonView({ path, verses }: { path: LearningPath; verses: Record<string, Verse> }) {
   const { progress, markDone } = useProgress();
   const done = progress[path.slug] ?? [];
   const firstOpen = path.lessons.findIndex((_, i) => !done.includes(i));
@@ -32,7 +32,7 @@ export function LessonView({ path }: { path: LearningPath }) {
   };
 
   const lesson = path.lessons[index];
-  const verse = lesson.verseId ? VERSES[lesson.verseId] : undefined;
+  const verse = lesson.verseId ? verses[lesson.verseId] : undefined;
   const isDone = done.includes(index);
   const hasNext = index + 1 < path.lessons.length;
   const spoken = [lesson.title, ...lesson.body, verse ? `${verse.source}. ${verse.translation}` : "", lesson.reflect].join(" ");

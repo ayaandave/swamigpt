@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { PATHS } from "@/lib/mock/content";
+import { PATHS } from "@/lib/lessons";
 import { TEXTS } from "@/lib/scripture/texts";
 import { useProgress } from "@/lib/progress";
 import { MalaRing } from "@/components/MalaRing";
@@ -43,7 +43,7 @@ export default function LearnPage() {
 
       <h2 className="mt-12 font-display text-[1.6rem] leading-tight">Learning paths</h2>
       <p className="mt-2 max-w-[44ch] text-[1.1rem] text-kajal-soft">
-        Short lessons, about five minutes each. Every lesson you finish adds a bead to your mala.
+        Short lessons, a few minutes each. Every lesson you finish adds a bead to your mala, a string of prayer beads.
       </p>
 
       <ul className="mt-6 flex flex-col gap-5">

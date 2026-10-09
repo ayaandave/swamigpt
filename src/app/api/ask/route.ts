@@ -5,7 +5,8 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { z } from "zod";
-import { MEDITATIONS, PATHS } from "@/lib/mock/content";
+import { MEDITATIONS } from "@/lib/mock/content";
+import { PATHS } from "@/lib/lessons";
 import { attribution } from "@/lib/scripture/library";
 import { searchPassages } from "@/lib/scripture/search";
 import { SWAMI_SYSTEM_PROMPT } from "@/lib/swami-prompt";

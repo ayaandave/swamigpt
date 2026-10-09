@@ -29,6 +29,8 @@ DEV = str.maketrans("०१२३४५६७८९", "0123456789")
 SPEAKER_LINE = re.compile(r"^(śhrī[- ]bhagavān|arjuna|sañjaya|dhṛitarāśhtra) uvācha$")
 SPEAKERS = {"śhrī bhagavān": "Krishna", "śhrī-bhagavān": "Krishna", "arjuna": "Arjuna",
             "sañjaya": "Sanjaya", "dhṛitarāśhtra": "Dhritarashtra"}
+# Words the printed edition broke across a line, which Wikisource kept split
+SPLIT_WORDS = {"griev ed": "grieved", "investiga tion": "investigation"}
 OUT = os.path.join(os.path.dirname(__file__), "..", "data", "scripture", "gita.json")
 
 
@@ -126,6 +128,8 @@ def main(cache):
         english = besant[ch].get(n)
         if not english:
             sys.exit(f"no English for {ch}.{n}")
+        for split, word in SPLIT_WORDS.items():
+            english = english.replace(split, word)
         out.append(
             {
                 "id": f"gita-{ch}-{n}",
