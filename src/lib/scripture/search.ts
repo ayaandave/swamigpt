@@ -36,7 +36,11 @@ export async function searchPassages(question: string, k = 8): Promise<Passage[]
   const scored = ids.map((id, i) => {
     let dot = 0;
     for (let d = 0; d < dims; d++) dot += VECTORS[i * dims + d] * q[d];
-    return { id, dot };
+    // Story lines (Arjuna's panic, the narrator describing the battle) describe feelings well, so
+    // they match questions closely; nudge them just below the teachings they lead into
+    const p = getPassageById(id);
+    const story = p?.speaker && p.speaker !== "Krishna";
+    return { id, dot: story ? dot - 0.03 : dot };
   });
   scored.sort((a, b) => b.dot - a.dot);
 
