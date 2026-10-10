@@ -11,6 +11,27 @@ const VECTORS = new Float32Array(new Uint8Array(Buffer.from(index.vectors, "base
 
 const UPANISHADS = ["isha", "kena", "katha", "mundaka", "prashna", "chandogya"];
 
+// Famous Sanskrit phrases people ask about by name. The old English translations don't contain
+// the Sanskrit, so meaning-search can miss the very verse being asked about; these always go in.
+const FAMOUS: [RegExp, string[]][] = [
+  [/tat\s*tvam\s*asi|thou art that|you are that/i, ["upanishads-chandogya-6-8-7", "upanishads-chandogya-6-12-3", "upanishads-chandogya-6-13-3"]],
+  [/karma?n?ye\s*vadhikaras|right to (?:your|the) (?:work|action) (?:alone|only)/i, ["gita-2-47"]],
+  [/chitta\s*vritti|citta\s*vrtti/i, ["yoga-sutras-1-2"]],
+  [/two birds/i, ["upanishads-mundaka-3-1-1"]],
+  [/isha?\s*vasyam|isavasyam/i, ["upanishads-isha-1"]],
+  [/uttishthata|arise,? awake|rise,? awake/i, ["upanishads-katha-1-3-14"]],
+  [/sarva\s*dharman|abandon all (?:duties|dharmas)/i, ["gita-18-66"]],
+  [/yada\s*yada\s*hi\s*dharmasya|whenever (?:there is )?(?:a )?(?:decline|decay) of (?:dharma|righteousness)/i, ["gita-4-7"]],
+  [/patram\s*pushpam|leaf,? a flower/i, ["gita-9-26"]],
+  [/(?:one )?clod of clay|vacarambhanam|vacharambhanam/i, ["upanishads-chandogya-6-1-4"]],
+];
+
+function famousPassages(question: string): Passage[] {
+  return FAMOUS.filter(([re]) => re.test(question))
+    .flatMap(([, ids]) => ids.map(getPassageById))
+    .filter((p) => p !== undefined);
+}
+
 // "Gita 2.47", "chapter 2 verse 47", "Yoga Sutras 1.2", "Katha 1.2.18" -> asked-for passages go in regardless of score
 function referencedPassages(question: string): Passage[] {
   const upanishad = UPANISHADS.find((u) => new RegExp(`\\b${u}`, "i").test(question));
@@ -44,7 +65,7 @@ export async function searchPassages(question: string, k = 8): Promise<Passage[]
   });
   scored.sort((a, b) => b.dot - a.dot);
 
-  const picked = new Map(referencedPassages(question).map((v) => [v.id, v]));
+  const picked = new Map([...famousPassages(question), ...referencedPassages(question)].map((v) => [v.id, v]));
   // No single text takes more than half the results: Vivekananda's modern English matches
   // questions so well that he would otherwise crowd out the scriptures
   const perText = new Map<string, number>();

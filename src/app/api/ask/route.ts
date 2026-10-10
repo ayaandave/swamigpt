@@ -51,7 +51,7 @@ const OUTPUT_RULES = `
 
 Output format:
 - paragraphs: your answer as short plain-text paragraphs (no markdown, no headings, no bullet characters). Do not quote verse text here; the app shows quoted verses on their own.
-- verses: zero to two passages you quote, each by its id exactly as given, with "meaning": one plain sentence starting "For you, this means" that connects it to their situation. The translations are over a century old, so the meaning line also does the job of putting it in today's words.
+- verses: the passages you quote (up to two in simpler mode, up to four in deeper mode), each by its id exactly as given, with "meaning": one sentence. In simpler mode it starts "For you, this means" and connects it to their situation; in deeper mode it says what the passage shows about the question. The translations are over a century old, so this line also puts it in today's words.
 - practice: the slug of one meditation or lesson from the list below that helps right now, with "why": one short line saying why, written to them. null if none fits.
 - crisis: true only if the person may be at risk of harming themselves or others.
 
@@ -73,7 +73,10 @@ const client = new Anthropic();
 // building. Off at launch, so real users always get the best model.
 const TEST_MODE = process.env.SWAMI_TEST_MODE === "1";
 const MODEL = TEST_MODE ? "claude-sonnet-5-5" : "claude-opus-5-5";
-const EFFORT = TEST_MODE ? "low" : "medium";
+const EFFORT: "low" | "medium" = TEST_MODE ? "low" : "medium";
+// Deeper study is for serious students: think hard and read more, even while testing
+const DEEPER = { effort: "high" as const, passages: 14, commentary: 1200, maxVerses: 4 };
+const SIMPLER = { effort: EFFORT, passages: 8, commentary: 500, maxVerses: 2 };
 
 // Dollars per million tokens, for the cost log
 const PRICES: Record<string, { input: number; output: number; cacheRead: number }> = {
@@ -110,7 +113,8 @@ export async function POST(request: Request) {
 
   // Search on the follow-up plus the previous question, so "what about at work?" still finds something
   const searchText = [lesson?.title, history.at(-1)?.question, question].filter(Boolean).join("\n");
-  const passages = await searchPassages(searchText);
+  const mode = depth === "deeper" ? DEEPER : SIMPLER;
+  const passages = await searchPassages(searchText, mode.passages);
   const allowed = new Map(passages.map((v) => [v.id, v]));
 
   const passageText = passages
@@ -120,7 +124,7 @@ export async function POST(request: Request) {
         p.translation,
         p.plain && `Plain meaning: ${p.plain}`,
         // A teacher's explanation helps pick and explain the passage; it is not for quoting
-        p.commentary?.length && `Vivekananda's explanation (context, do not quote): ${p.commentary.join(" ").slice(0, 500)}`,
+        p.commentary?.length && `Vivekananda's explanation (context, do not quote): ${p.commentary.join(" ").slice(0, mode.commentary)}`,
       ]
         .filter(Boolean)
         .join("\n"),
@@ -144,7 +148,7 @@ export async function POST(request: Request) {
       max_tokens: 16000,
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
-      output_config: { effort: EFFORT, format: betaZodOutputFormat(Reply) },
+      output_config: { effort: mode.effort, format: betaZodOutputFormat(Reply) },
       system: [{ type: "text", text: SWAMI_SYSTEM_PROMPT + OUTPUT_RULES, cache_control: { type: "ephemeral" } }],
       messages,
     });
@@ -158,7 +162,7 @@ export async function POST(request: Request) {
     const answer: SwamiAnswer = {
       paragraphs: reply.paragraphs.filter((p) => p.trim()),
       // Never show a verse the model didn't get from the library
-      verses: reply.verses.flatMap(({ id, meaning }) => {
+      verses: reply.verses.slice(0, mode.maxVerses).flatMap(({ id, meaning }) => {
         const p = allowed.get(id);
         if (!p) return [];
         // The card only needs the text itself, not the long commentary

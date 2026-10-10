@@ -13,6 +13,8 @@ const SALT = process.env.GUEST_KEY_SALT ?? "swamigpt-guests";
 // Returns the number left today, -1 if they had none left, or null when limits aren't on.
 export async function takeQuestion(request: Request): Promise<number | null> {
   if (!url || !key) return null;
+  // No limits while developing on this Mac (next dev); the live site always counts
+  if (process.env.NODE_ENV !== "production") return null;
   const auth = request.headers.get("authorization");
   // Acting as the person who asked: the database reads who they are from their own token
   const sb = createClient(url, key, {
