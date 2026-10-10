@@ -30,6 +30,17 @@ type Handlers = { onStart?: () => void; onEnd?: () => void };
 let playing: HTMLAudioElement | null = null;
 let loading: HTMLAudioElement | null = null;
 let session = 0;
+// Set once ElevenLabs fails (out of credits, down), so later reads go straight to the browser's voice
+let elevenDown = false;
+
+// Phones only let speech start from a tap. If ElevenLabs fails after the tap, the browser's voice
+// would be blocked, so it is woken up now, silently, while the tap still counts.
+function unlockBrowserSpeech() {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+  const u = new SpeechSynthesisUtterance(" ");
+  u.volume = 0;
+  window.speechSynthesis.speak(u);
+}
 
 // Splits text into pieces of whole sentences. ElevenLabs charges for every character it's
 // sent, so asking for one piece at a time means stopping early only costs what was heard.
@@ -52,11 +63,12 @@ function chunks(text: string): string[] {
 // audio and replay it for free next time. Chat answers are one-offs and aren't saved.
 export function speak(text: string, voiceId: VoiceId, speed: number, handlers: Handlers = {}, save = false) {
   stopSpeaking();
-  if (!ELEVENLABS) {
+  if (!ELEVENLABS || elevenDown) {
     browserSpeak(text, voiceId, speed, handlers);
     return;
   }
 
+  unlockBrowserSpeech();
   const id = ++session;
   const parts = chunks(text);
   // One sentence either side of each piece, so the voice keeps the same flow and mood across pieces
@@ -97,6 +109,7 @@ export function speak(text: string, voiceId: VoiceId, speed: number, handlers: H
     audio.onerror = () => {
       if (id !== session) return;
       // ElevenLabs unavailable: read the rest with the browser's voice instead
+      elevenDown = true;
       stopSpeaking();
       browserSpeak(parts.slice(i).join(" "), voiceId, speed, started ? { onEnd: handlers.onEnd } : handlers);
     };
