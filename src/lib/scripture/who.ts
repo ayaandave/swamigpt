@@ -10,3 +10,12 @@ export function whoSays(verse: Verse): string {
   if (id.startsWith("vivekananda-")) return "Vivekananda says";
   return "The scriptures say";
 }
+
+// The small caption under a verse card: the reference people know, never a translator's name.
+// "Bhagavad Gita 2.47", "Yoga Sutras 1.2", "Katha Upanishad", "Swami Vivekananda, Karma-Yoga"
+export function caption(verse: Verse): string {
+  const name = verse.source.replace(/\s[\d.]+$/, ""); // the source without its numbers
+  if (verse.id.startsWith("upanishads-")) return name;
+  if (verse.id.startsWith("vivekananda-")) return `Swami Vivekananda, ${name}`;
+  return verse.source;
+}

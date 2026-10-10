@@ -8,7 +8,7 @@ export type TextInfo = {
   sectionLabel: string; // "Chapter", "Book", "Upanishad"
   numberedSections: boolean; // "Chapter 2" makes sense; "Upanishad 3" doesn't
   passageLabel: string; // "verse", "sutra"
-  attribution: string; // shown on every passage page
+  attribution: string; // shown under a passage's title, if any (translators are credited on Sources)
   commentaryBy?: string; // whose explanation is printed with each passage, if any
 };
 
@@ -22,7 +22,7 @@ export const TEXTS: TextInfo[] = [
     sectionLabel: "Chapter",
     numberedSections: true,
     passageLabel: "verse",
-    attribution: "English by Annie Besant (1922)",
+    attribution: "",
   },
   {
     id: "yoga-sutras",
@@ -33,7 +33,7 @@ export const TEXTS: TextInfo[] = [
     sectionLabel: "Book",
     numberedSections: true,
     passageLabel: "sutra",
-    attribution: "Patanjali, translated and explained by Swami Vivekananda (1896)",
+    attribution: "Patanjali, explained by Swami Vivekananda",
     commentaryBy: "Swami Vivekananda",
   },
   {
@@ -45,7 +45,7 @@ export const TEXTS: TextInfo[] = [
     sectionLabel: "Upanishad",
     numberedSections: false,
     passageLabel: "verse",
-    attribution: "English by Max Müller (1879–1884)",
+    attribution: "",
   },
   {
     id: "vivekananda",

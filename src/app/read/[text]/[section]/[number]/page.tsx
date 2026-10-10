@@ -35,7 +35,7 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
         ← {p.sectionName}
       </Link>
       <h1 className="mt-3 font-display text-[2.2rem] leading-tight">{p.source}</h1>
-      <p className="mt-1 text-[1rem] text-kajal-soft">{attribution(p)}</p>
+      {attribution(p) && <p className="mt-1 text-[1rem] text-kajal-soft">{attribution(p)}</p>}
 
       <div className="mt-6">
         <VerseCard verse={p} />

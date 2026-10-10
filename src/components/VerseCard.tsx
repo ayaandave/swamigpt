@@ -1,4 +1,5 @@
 import type { Verse } from "@/lib/scripture/types";
+import { caption } from "@/lib/scripture/who";
 
 // Styled after a palm-leaf manuscript: long leaf, two binding holes.
 export function VerseCard({ verse, onDark = false }: { verse: Verse; onDark?: boolean }) {
@@ -49,8 +50,7 @@ export function VerseCard({ verse, onDark = false }: { verse: Verse; onDark?: bo
       <figcaption
         className={`mt-4 text-[0.85rem] font-semibold ${onDark ? "text-flame" : "text-kesar-deep"}`}
       >
-        {verse.source}
-        {verse.translator && <span className="font-normal"> · tr. {verse.translator}</span>}
+        {caption(verse)}
       </figcaption>
     </figure>
   );

@@ -14,7 +14,7 @@ export async function GET(request: Request) {
       translation: p.translation,
       plain: p.plain ?? null,
       href: passageHref(p),
-      by: attribution(p),
+      by: attribution(p) || p.sectionName,
     })),
   });
 }
