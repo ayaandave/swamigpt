@@ -59,8 +59,8 @@ function chunks(text: string): string[] {
   return out;
 }
 
-// save: the text never changes (a lesson, a verse, a meditation line), so the server may keep the
-// audio and replay it for free next time. Chat answers are one-offs and aren't saved.
+// save: the server keeps the audio and replays it for free next time (lessons, verses, meditation
+// lines, and chat answers, which people often play more than once).
 export function speak(text: string, voiceId: VoiceId, speed: number, handlers: Handlers = {}, save = false) {
   stopSpeaking();
   if (!ELEVENLABS || elevenDown) {

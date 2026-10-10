@@ -195,7 +195,7 @@ function Answer({
         </Link>
       )}
       <div className="flex flex-wrap items-center gap-3 pt-1">
-        <ListenButton text={spoken} onSpeakingChange={onSpeaking} />
+        <ListenButton text={spoken} onSpeakingChange={onSpeaking} save />
         <button
           type="button"
           disabled={disabled}
