@@ -48,7 +48,7 @@ export function LessonView({ path, index, verse }: { path: LearningPath; index: 
         <h1 className="mt-1 font-display text-[2.2rem] leading-tight">{lesson.title}</h1>
 
         <div className="mt-5">
-          <ListenButton text={spoken} />
+          <ListenButton text={spoken} save />
         </div>
 
         <div className="mt-6 flex flex-col gap-5">

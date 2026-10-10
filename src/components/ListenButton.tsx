@@ -8,11 +8,12 @@ import { SpeakerIcon, StopIcon } from "./icons";
 
 type Props = {
   text: string;
+  save?: boolean; // fixed text (lesson, verse): keep the audio so replays cost nothing
   onSpeakingChange?: (speaking: boolean) => void;
   onDark?: boolean;
 };
 
-export function ListenButton({ text, onSpeakingChange, onDark = false }: Props) {
+export function ListenButton({ text, onSpeakingChange, onDark = false, save = false }: Props) {
   const { voice, speed } = useSettings();
   const [playing, setPlaying] = useState(false);
 
@@ -29,7 +30,7 @@ export function ListenButton({ text, onSpeakingChange, onDark = false }: Props) 
       set(false);
       return;
     }
-    speak(text, voice, speed, { onStart: () => set(true), onEnd: () => set(false) });
+    speak(text, voice, speed, { onStart: () => set(true), onEnd: () => set(false) }, save);
     set(true);
   };
 

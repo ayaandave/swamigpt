@@ -35,7 +35,7 @@ export default function SettingsPage() {
       setSampling(null);
       return;
     }
-    speak(text, id, s.speed, { onEnd: () => setSampling(null) });
+    speak(text, id, s.speed, { onEnd: () => setSampling(null) }, true);
     setSampling(id);
   };
 

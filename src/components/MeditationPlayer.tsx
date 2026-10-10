@@ -41,7 +41,7 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
     timers.current.push(
       window.setTimeout(() => {
         setLine(text);
-        speak(text, latest.current.voice, latest.current.speed * 0.9);
+        speak(text, latest.current.voice, latest.current.speed * 0.9, {}, true);
       }, delay),
     );
   };
@@ -49,7 +49,7 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
   // Switching voice mid-session re-reads the current line, so the change is heard right away
   const chooseVoice = (voice: VoiceId) => {
     update({ meditationVoice: voice });
-    if (running && line) speak(line, voice, speed * 0.9);
+    if (running && line) speak(line, voice, speed * 0.9, {}, true);
   };
 
   // Clock: each cue is spoken at its second; the session ends with a bell and a closing line

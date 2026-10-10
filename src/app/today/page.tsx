@@ -3,6 +3,7 @@
 import { getDaily } from "@/lib/mock/content";
 import { useIsClient } from "@/lib/store";
 import { VerseCard } from "@/components/VerseCard";
+import { whoSays } from "@/lib/scripture/who";
 import { ListenButton } from "@/components/ListenButton";
 
 export default function TodayPage() {
@@ -30,7 +31,8 @@ export default function TodayPage() {
 
       <div className="mt-6">
         <ListenButton
-          text={`${daily.verse.source}. ${daily.verse.translation} ${daily.reflection} ${daily.question}`}
+          save
+          text={`${whoSays(daily.verse)}: ${daily.verse.translation} ${daily.reflection} ${daily.question}`}
         />
       </div>
 

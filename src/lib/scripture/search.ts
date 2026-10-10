@@ -2,15 +2,12 @@
 // Server only. The vectors come from scripts/embed-scripture.mjs; the query is embedded
 // here with the same small local model, so no API call is needed to search.
 import "server-only";
-import { pipeline, type FeatureExtractionPipeline } from "@huggingface/transformers";
 import index from "../../../data/scripture/vectors.json";
+import { getEmbedder, QUERY_PREFIX } from "./embedder";
 import { getPassageById, type Passage } from "./library";
 
 // Copy into a fresh buffer: a Node Buffer can sit at an unaligned offset in a shared pool
 const VECTORS = new Float32Array(new Uint8Array(Buffer.from(index.vectors, "base64")).buffer);
-
-let embedder: Promise<FeatureExtractionPipeline> | undefined;
-const getEmbedder = () => (embedder ??= pipeline("feature-extraction", index.model, { dtype: "fp32" }));
 
 const UPANISHADS = ["isha", "kena", "katha", "mundaka", "prashna", "chandogya"];
 
@@ -32,7 +29,7 @@ function referencedPassages(question: string): Passage[] {
 
 export async function searchPassages(question: string, k = 8): Promise<Passage[]> {
   const embed = await getEmbedder();
-  const out = await embed(index.queryPrefix + question, { pooling: "mean", normalize: true });
+  const out = await embed(QUERY_PREFIX + question, { pooling: "mean", normalize: true });
   const q = out.data as Float32Array;
   const { dims, ids } = index;
 

@@ -48,7 +48,9 @@ function chunks(text: string): string[] {
   return out;
 }
 
-export function speak(text: string, voiceId: VoiceId, speed: number, handlers: Handlers = {}) {
+// save: the text never changes (a lesson, a verse, a meditation line), so the server may keep the
+// audio and replay it for free next time. Chat answers are one-offs and aren't saved.
+export function speak(text: string, voiceId: VoiceId, speed: number, handlers: Handlers = {}, save = false) {
   stopSpeaking();
   if (!ELEVENLABS) {
     browserSpeak(text, voiceId, speed, handlers);
@@ -62,6 +64,7 @@ export function speak(text: string, voiceId: VoiceId, speed: number, handlers: H
   const firstSentence = (t: string) => (t.match(/^[^.!?]+[.!?]+["')\]]*/)?.[0] ?? t).trim().slice(0, 150);
   const audioFor = (i: number) => {
     const q = new URLSearchParams({ v: voiceId, s: String(speed), t: parts[i] });
+    if (save) q.set("c", "1");
     if (i > 0) q.set("p", lastSentence(parts[i - 1]));
     if (i + 1 < parts.length) q.set("n", firstSentence(parts[i + 1]));
     const audio = new Audio(`/api/speak?${q}`);

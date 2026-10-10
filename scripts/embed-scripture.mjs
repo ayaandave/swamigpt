@@ -3,10 +3,15 @@
 // Writes data/scripture/vectors.json, read by src/lib/scripture/search.ts.
 //
 // Usage: node scripts/embed-scripture.mjs   (re-run after any text or notes file changes)
-import { pipeline } from "@huggingface/transformers";
+import { env, pipeline } from "@huggingface/transformers";
 import fs from "fs";
 
+// Same model and settings as src/lib/scripture/embedder.ts, loaded from data/models
 const MODEL = "Xenova/bge-small-en-v1.5";
+const DTYPE = "q8";
+env.localModelPath = "data/models/";
+env.allowRemoteModels = false;
+const OUT = process.argv[2] ?? "data/scripture/vectors.json";
 // bge models expect this prefix on queries (not on the passages)
 const QUERY_PREFIX = "Represent this sentence for searching relevant passages: ";
 const TEXTS = ["gita", "yoga-sutras", "upanishads", "vivekananda"]; // data/scripture/<id>.json, plus <id>.notes.json
@@ -32,7 +37,7 @@ for (const id of TEXTS) {
   }
 }
 
-const embed = await pipeline("feature-extraction", MODEL, { dtype: "fp32" });
+const embed = await pipeline("feature-extraction", MODEL, { dtype: DTYPE });
 const vectors = [];
 for (let i = 0; i < passages.length; i += 64) {
   const out = await embed(passages.slice(i, i + 64).map((p) => p.text), { pooling: "mean", normalize: true });
@@ -41,9 +46,10 @@ for (let i = 0; i < passages.length; i += 64) {
 
 const flat = Float32Array.from(vectors.flat());
 fs.writeFileSync(
-  "data/scripture/vectors.json",
+  OUT,
   JSON.stringify({
     model: MODEL,
+    dtype: DTYPE,
     queryPrefix: QUERY_PREFIX,
     dims: vectors[0].length,
     ids: passages.map((p) => p.id),

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { PASSAGES, attribution, getPassage, getText, passageHref, shortRef } from "@/lib/scripture/library";
 import { VerseCard } from "@/components/VerseCard";
+import { whoSays } from "@/lib/scripture/who";
 import { ListenButton } from "@/components/ListenButton";
 
 export function generateStaticParams() {
@@ -43,7 +44,8 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
 
       <div className="mt-6 flex flex-wrap gap-3">
         <ListenButton
-          text={[`${p.source}.`, p.translation, p.plain && `In plain words: ${p.plain}`, ...(p.commentary ?? [])]
+          save
+          text={[`${whoSays(p)}:`, p.translation, p.plain && `In plain words: ${p.plain}`, ...(p.commentary ?? [])]
             .filter(Boolean)
             .join(" ")}
         />
