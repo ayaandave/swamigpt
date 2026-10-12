@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { setPendingQuestion } from "@/lib/pending-question";
 import { SendIcon } from "../icons";
 
 const EXAMPLES = ["I'm stressed about a test", "What is karma?", "How do I find my passion?", "Who is Krishna?"];
@@ -12,7 +13,10 @@ export function HomeAsk() {
   const [draft, setDraft] = useState("");
   const go = (q: string) => {
     const question = q.trim();
-    if (question) router.push(`/ask?q=${encodeURIComponent(question.slice(0, 500))}`);
+    if (!question) return;
+    // Handed over out of sight so it's asked once; if storage is blocked, it arrives typed in instead
+    if (setPendingQuestion(question.slice(0, 500))) router.push("/ask");
+    else router.push(`/ask?ask=${encodeURIComponent(question.slice(0, 500))}`);
   };
 
   return (
