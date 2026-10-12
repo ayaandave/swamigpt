@@ -40,3 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 data/scripture/.*.batch.json
+
+# Claude Code personal settings
+.claude/settings.local.json
