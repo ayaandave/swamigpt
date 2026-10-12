@@ -57,7 +57,7 @@ const line = (v) =>
     .filter(Boolean)
     .join("\n");
 
-function request(batch) {
+function request(batch, index) {
   const first = verses.indexOf(batch[0]);
   const last = verses.indexOf(batch.at(-1));
   const before = verses.slice(Math.max(0, first - 3), first);
@@ -71,7 +71,7 @@ function request(batch) {
     .filter(Boolean)
     .join("\n\n");
   return {
-    custom_id: `${batch[0].id}--${batch.at(-1).id}`,
+    custom_id: `part-${index + 1}`, // the API allows 64 characters; each note carries its passage's id
     params: {
       model: MODEL,
       max_tokens: 16000,
@@ -95,7 +95,7 @@ if (!batchId) {
     process.exit(0);
   }
   const requests = [];
-  for (let i = 0; i < todo.length; i += BATCH) requests.push(request(todo.slice(i, i + BATCH)));
+  for (let i = 0; i < todo.length; i += BATCH) requests.push(request(todo.slice(i, i + BATCH), requests.length));
   const batch = await client.messages.batches.create({ requests });
   batchId = batch.id;
   fs.writeFileSync(PENDING, JSON.stringify({ id: batchId, passages: todo.length }));

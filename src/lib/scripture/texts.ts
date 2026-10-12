@@ -41,7 +41,7 @@ export const TEXTS: TextInfo[] = [
     title: "The Upanishads",
     short: "Upanishads",
     description:
-      "The ancient dialogues on the Self, death and what is real: the Isha, Kena, Katha, Mundaka, Prashna and Chandogya. 923 verses.",
+      "The ancient dialogues on the Self, death and what is real: ten of the principal Upanishads, from the Isha and Katha to the Mandukya on Om and the great Brihadaranyaka. 1,494 verses.",
     sectionLabel: "Upanishad",
     numberedSections: false,
     passageLabel: "verse",
