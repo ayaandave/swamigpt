@@ -50,7 +50,7 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
             .join(" ")}
         />
         <Link
-          href={`/?ask=${encodeURIComponent(question)}`}
+          href={`/ask?ask=${encodeURIComponent(question)}`}
           className="inline-flex min-h-14 items-center rounded-full border-2 border-kajal px-6 text-[1rem] font-semibold hover:bg-sandal-deep"
         >
           Ask the Swami about this

@@ -111,3 +111,21 @@ export const PersonIcon = ({ className }: P) => (
     <path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5" />
   </svg>
 );
+
+// A house with a lamp's flame in the doorway
+export const HomeIcon = ({ className }: P) => (
+  <svg {...base} className={className}>
+    <path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z" />
+    <path d="M12 12.2c1 1.2 1.6 2.2 1.6 3.1a1.6 1.6 0 0 1-3.2 0c0-.9.6-1.9 1.6-3.1z" />
+  </svg>
+);
+
+// A rolled scroll
+export const ReadIcon = ({ className }: P) => (
+  <svg {...base} className={className}>
+    <path d="M7 4h11a2 2 0 0 1 2 2v1h-4" />
+    <path d="M16 7v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1h10" />
+    <path d="M7 4a2 2 0 0 0-2 2v11" />
+    <path d="M9 9h4M9 12h4" />
+  </svg>
+);

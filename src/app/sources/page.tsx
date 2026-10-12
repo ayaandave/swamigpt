@@ -70,6 +70,17 @@ export default function SourcesPage() {
         <p className="mt-3 text-[0.95rem] text-kajal-soft">
           More texts (including more Upanishads) will be listed here as they are added.
         </p>
+        <p className="mt-6 text-[0.95rem] text-kajal-soft">
+          Home photo of the ghats of Varanasi by{" "}
+          <a href="https://unsplash.com/@aimanness" className="font-semibold underline underline-offset-4">
+            Aimanness Harun
+          </a>{" "}
+          on{" "}
+          <a href="https://unsplash.com/photos/_rxWnmOZ4YA" className="font-semibold underline underline-offset-4">
+            Unsplash
+          </a>
+          .
+        </p>
       </section>
 
       <section className="mt-10 rounded-[2rem] bg-tulsi px-7 py-6 text-sandal">
@@ -97,7 +108,7 @@ export default function SourcesPage() {
 
       <p className="mt-10">
         <Link href="/" className="font-semibold text-kesar-deep hover:underline">
-          ← Back to Ask
+          ← Back home
         </Link>
       </p>
     </div>

@@ -1,13 +1,16 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useSettings, type AgeGroup } from "@/lib/settings";
 import { Diya } from "./Diya";
 
 // First-visit gate: a quiet greeting and one question. Hidden by CSS before first paint once
-// answered (see settingsScript), so returning visitors go straight to the app.
+// answered (see settingsScript), so returning visitors go straight to the app. Never on the home
+// screen: newcomers see what SwamiGPT is first, and are asked when they go further in.
 export function WelcomeGate() {
   const { ageGroup, update } = useSettings();
-  if (ageGroup) return null;
+  const path = usePathname();
+  if (ageGroup || path === "/") return null;
 
   // Under-13s are let in for now; parent approval arrives with accounts.
   const choose = (age: AgeGroup) => update({ ageGroup: age });

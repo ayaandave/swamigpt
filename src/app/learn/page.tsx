@@ -45,7 +45,7 @@ export default function LearnPage() {
         })}
       </ul>
 
-      <section aria-labelledby="read-title" className="mt-12">
+      <section id="read" aria-labelledby="read-title" className="mt-12 scroll-mt-6">
         <h2 id="read-title" className="font-display text-[1.6rem] leading-tight">
           Read the scriptures
         </h2>

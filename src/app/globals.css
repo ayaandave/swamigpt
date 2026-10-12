@@ -53,6 +53,7 @@ html[data-text="larger"] {
 }
 
 body {
+  overflow-x: clip; /* the full-width home scene must never cause sideways scrolling */
   background: var(--sandal);
   color: var(--kajal);
   font-family: var(--font-sans);
@@ -64,7 +65,7 @@ body {
 html[data-welcomed] .welcome-gate {
   display: none;
 }
-html:not([data-welcomed]) body {
+html:not([data-welcomed]) body:has(.welcome-gate) {
   overflow: hidden;
 }
 
@@ -121,6 +122,94 @@ body::before {
   transform-origin: center;
   transform-box: fill-box;
   animation: halo-breathe 5s ease-in-out infinite;
+}
+
+@keyframes core-flicker {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  40% { opacity: 0.85; transform: scale(0.94, 1.05); }
+  70% { opacity: 0.95; transform: scale(1.04, 0.97); }
+}
+@keyframes glint {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.95; }
+}
+.diya-core {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: core-flicker 1.6s ease-in-out infinite;
+}
+.diya-glint {
+  animation: glint 3.2s ease-in-out infinite;
+}
+
+/* ---------- Home hero ---------- */
+/* Full screen, edge to edge: it reaches up behind the header and down to the tab bar */
+.hero {
+  --px: 0;
+  --py: 0;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-top: calc(-44px - max(16px, env(safe-area-inset-top)));
+  height: calc(100svh - 4.5rem - env(safe-area-inset-bottom));
+  min-height: 30rem;
+}
+.hero-content {
+  padding-top: calc(44px + max(16px, env(safe-area-inset-top)) + 5svh);
+}
+/* The photo: framed on the ghats for phones, breathing in very slowly, leaning with the pointer */
+.hero-photo {
+  object-position: 22% 62%;
+  scale: 1.06;
+  translate: calc(var(--px) * -10px) calc(var(--py) * -8px);
+  transition: translate 600ms ease-out;
+  animation: photo-breathe 40s ease-in-out infinite alternate;
+}
+@keyframes photo-breathe {
+  from { scale: 1.06; }
+  to { scale: 1.13; }
+}
+@media (min-width: 640px) {
+  .hero-photo {
+    object-position: 50% 62%;
+  }
+}
+/* Soft light over the sky, so the header and the words read clearly */
+.hero-veil {
+  background: linear-gradient(180deg, rgba(246, 236, 220, 0.7) 0%, rgba(246, 236, 220, 0.35) 30%, rgba(246, 236, 220, 0) 52%);
+}
+.hero-fog {
+  background: radial-gradient(ellipse at 50% 50%, rgba(246, 234, 214, 0.5) 0%, rgba(246, 234, 214, 0.22) 45%, transparent 70%);
+  filter: blur(14px);
+  animation: fog-drift 30s ease-in-out infinite alternate;
+}
+.hero-fog-2 {
+  opacity: 0.8;
+  animation-duration: 42s;
+  animation-direction: alternate-reverse;
+}
+@keyframes fog-drift {
+  from { transform: translateX(-10%); }
+  to { transform: translateX(10%); }
+}
+.hero-floor {
+  background: linear-gradient(180deg, transparent 0%, rgba(60, 42, 24, 0.12) 45%, rgba(242, 227, 198, 0.55) 82%, var(--sandal) 100%);
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Home tiles lift and tilt toward the finger or pointer */
+.tile {
+  transition: transform 250ms ease, box-shadow 250ms ease;
+}
+.tile:hover,
+.tile:focus-visible {
+  transform: translateY(-4px) rotateX(4deg);
+  box-shadow: 0 22px 40px -20px rgba(43, 27, 16, 0.45);
 }
 
 /* ---------- Meditation breath ---------- */

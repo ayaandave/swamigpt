@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useSettings, type TextSize } from "@/lib/settings";
 import { accountsEnabled, useAuth } from "@/lib/supabase";
 import { Diya } from "./Diya";
-import { AskIcon, LearnIcon, MeditateIcon, PersonIcon, SettingsIcon, TodayIcon } from "./icons";
+import { AskIcon, HomeIcon, LearnIcon, MeditateIcon, PersonIcon, SettingsIcon } from "./icons";
 
 const SIZES: TextSize[] = ["regular", "large", "larger"];
 const SIZE_LABEL: Record<TextSize, string> = { regular: "Aa", large: "Aa+", larger: "Aa++" };
@@ -16,7 +16,7 @@ export function Header() {
 
   // Sizes here are in px, not rem, so the header still fits a phone at the largest text size
   return (
-    <header className="mx-auto flex w-full max-w-3xl items-center justify-between gap-2 px-[16px] pt-[max(16px,env(safe-area-inset-top))] sm:px-6">
+    <header className="relative z-10 mx-auto flex w-full max-w-3xl items-center justify-between gap-2 px-[16px] pt-[max(16px,env(safe-area-inset-top))] sm:px-6">
       <Link href="/" className="flex min-w-0 items-center gap-1.5 rounded-full" aria-label="SwamiGPT home">
         <Diya size={34} />
         <span className="font-display text-[20px] tracking-tight sm:text-[24px]">SwamiGPT</span>
@@ -45,10 +45,10 @@ export function Header() {
 }
 
 const TABS = [
-  { href: "/", label: "Ask", Icon: AskIcon, also: [] as string[] },
-  { href: "/meditate", label: "Meditate", Icon: MeditateIcon, also: [] },
+  { href: "/", label: "Home", Icon: HomeIcon, also: ["/today"] }, // today's verse is reached from home
+  { href: "/ask", label: "Ask", Icon: AskIcon, also: [] as string[] },
   { href: "/learn", label: "Learn", Icon: LearnIcon, also: ["/read"] }, // the scripture library lives under Learn
-  { href: "/today", label: "Today", Icon: TodayIcon, also: [] },
+  { href: "/meditate", label: "Meditate", Icon: MeditateIcon, also: [] },
 ];
 
 export function BottomNav() {
@@ -60,7 +60,7 @@ export function BottomNav() {
     >
       <ul className="mx-auto grid max-w-3xl grid-cols-4">
         {TABS.map(({ href, label, Icon, also }) => {
-          const active = href === "/" ? path === "/" : [href, ...also].some((p) => path.startsWith(p));
+          const active = href === "/" ? path === "/" || also.some((p) => path.startsWith(p)) : [href, ...also].some((p) => path.startsWith(p));
           return (
             <li key={href}>
               <Link
