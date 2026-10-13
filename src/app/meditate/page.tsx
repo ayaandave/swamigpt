@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { GROUPS, MEDITATIONS } from "@/lib/meditations";
+import { MANTRAS } from "@/lib/mantras";
 import { MeditationStats } from "@/components/MeditationStats";
 import { PlayIcon } from "@/components/icons";
 
@@ -45,6 +46,29 @@ export default function MeditatePage() {
           </ul>
         </section>
       ))}
+
+      <section aria-labelledby="group-mantras" className="mt-10">
+        <h2 id="group-mantras" className="font-display text-[1.6rem] leading-tight">
+          Mantras
+        </h2>
+        <p className="text-[1rem] text-kajal-soft">Sacred words to say aloud or in your mind</p>
+        <ul className="mt-4 grid gap-4 sm:grid-cols-2">
+          {MANTRAS.map((m) => (
+            <li key={m.slug}>
+              <Link
+                href={`/meditate/mantra/${m.slug}`}
+                className="tile flex h-full flex-col rounded-[2rem] border-2 border-sandal-edge bg-sandal-deep px-6 py-5 hover:border-kesar"
+              >
+                <span lang="sa" className="font-display text-[1.5rem] leading-tight text-kesar-deep">
+                  {m.sanskritName}
+                </span>
+                <span className="mt-1 block font-display text-[1.35rem] leading-tight">{m.title}</span>
+                <span className="mt-1 block text-[0.95rem] leading-snug text-kajal-soft">{m.short}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { z } from "zod";
 import { MEDITATIONS } from "@/lib/meditations";
+import { MANTRAS } from "@/lib/mantras";
 import { PATHS } from "@/lib/lessons";
 import { attribution } from "@/lib/scripture/library";
 import { searchPassages } from "@/lib/scripture/search";
@@ -39,6 +40,10 @@ const PRACTICES = new Map<string, Practice>([
   ...MEDITATIONS.map((m): [string, Practice] => [
     m.slug,
     { href: `/meditate/${m.slug}`, title: m.title, about: `${m.minutes}-minute meditation. ${m.description}` },
+  ]),
+  ...MANTRAS.map((m): [string, Practice] => [
+    `mantra-${m.slug}`,
+    { href: `/meditate/mantra/${m.slug}`, title: m.title, about: `Mantra to say or think, with its meaning. ${m.short}` },
   ]),
   ...PATHS.map((p): [string, Practice] => [
     p.slug,
