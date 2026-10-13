@@ -9,7 +9,6 @@ export type Meditation = {
   minutes: number;
   group: "quick" | "daily" | "sleep";
   description: string;
-  breathSeconds: number; // one full in + out cycle for the breathing ring
   cues: Cue[];
   closing?: string; // spoken at the end, after the bell
   quietEnd?: boolean; // for sleep: no bell or closing words to wake anyone
@@ -35,7 +34,6 @@ export const MEDITATIONS: Meditation[] = [
     minutes: 3,
     group: "quick",
     description: "For stress, before a test, or after an argument. Slow down in three minutes.",
-    breathSeconds: 10,
     cues: [
       { at: 0, text: "Wherever you are, stop for a moment. You don't need to go anywhere. Let your shoulders drop." },
       { at: 15, text: "Breathe in slowly through your nose, for a count of four. Now breathe out, even slower." },
@@ -54,7 +52,6 @@ export const MEDITATIONS: Meditation[] = [
     minutes: 5,
     group: "daily",
     description: "For anyone who has never meditated. Just breathing, nothing more.",
-    breathSeconds: 10,
     cues: [
       { at: 0, text: "Welcome. Sit comfortably, on a chair or on the floor. Let your hands rest in your lap." },
       { at: 20, text: "Close your eyes if you like, or let your eyes rest softly on the floor in front of you." },
@@ -78,7 +75,6 @@ export const MEDITATIONS: Meditation[] = [
     minutes: 8,
     group: "daily",
     description: "Maitri, friendliness: wishing well to yourself, your family and everyone, even difficult people.",
-    breathSeconds: 12,
     cues: [
       {
         at: 0,
@@ -112,7 +108,6 @@ export const MEDITATIONS: Meditation[] = [
     minutes: 10,
     group: "daily",
     description: "Hear 'so' as you breathe in and 'hum' as you breathe out. It means: I am That.",
-    breathSeconds: 12,
     cues: [
       { at: 0, text: "Sit comfortably with your back tall but relaxed. Close your eyes." },
       { at: 20, text: "Take a few slow, natural breaths. Let your body settle." },
@@ -139,7 +134,6 @@ export const MEDITATIONS: Meditation[] = [
     minutes: 10,
     group: "sleep",
     description: "Lie down and let the day go, one part of the body at a time.",
-    breathSeconds: 14,
     cues: [
       {
         at: 0,
@@ -171,7 +165,6 @@ export const MEDITATIONS: Meditation[] = [
     minutes: 15,
     group: "daily",
     description: "Watch thoughts pass like clouds, from the stillness that sees them.",
-    breathSeconds: 14,
     cues: [
       { at: 0, text: "Sit comfortably, upright and relaxed. Close your eyes, and take a few slow breaths." },
       { at: 25, text: "For the first few minutes, simply rest your attention on the breath." },

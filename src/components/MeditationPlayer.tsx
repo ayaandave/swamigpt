@@ -5,12 +5,26 @@ import { useEffect, useRef, useState } from "react";
 import { SOUNDS, type Meditation } from "@/lib/meditations";
 import { startAmbient } from "@/lib/ambient";
 import { logSession } from "@/lib/meditation-log";
-import { speak, stopSpeaking } from "@/lib/speak";
+import { speak, speechProgress, stopSpeaking } from "@/lib/speak";
 import { playChime } from "@/lib/sounds";
 import { useSettings, type VoiceId } from "@/lib/settings";
 import { VOICES } from "@/lib/voices";
 import { Diya } from "./Diya";
 import { BackIcon, PauseIcon, PlayIcon } from "./icons";
+
+// Where a line tells you to breathe in or out, so the label and ring change as the voice says it
+type Breath = "in" | "out";
+const BREATH: [RegExp, Breath][] = [
+  [/\b(?:breathe|breathing|slow breath|deep breath|(?<!than )the breath) in\b|\bcom(?:es|ing) in\b|(?:^|\. )In, two/gi, "in"],
+  [/\b(?:breathe|breathing|the breath) out\b|\bsigh out\b|\bgo(?:es|ing) out\b|\bAnd out\b|\blet it go\b/gi, "out"],
+];
+function breathMarks(text: string) {
+  const marks: { at: number; breath: Breath }[] = [];
+  for (const [re, breath] of BREATH) {
+    for (const m of text.matchAll(re)) marks.push({ at: (m.index ?? 0) / text.length, breath });
+  }
+  return marks.sort((a, b) => a.at - b.at);
+}
 
 function fmt(s: number) {
   const m = Math.floor(s / 60);
@@ -24,6 +38,7 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
   const [elapsed, setElapsed] = useState(0);
   const [sound, setSound] = useState<string>("tanpura");
   const [line, setLine] = useState<string | null>(null);
+  const [breath, setBreath] = useState<Breath | null>(null);
   const stopAmbient = useRef<() => void>(() => {});
   const elapsedRef = useRef(0);
   const timers = useRef<number[]>([]);
@@ -41,6 +56,8 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
   const speaking = useRef(false);
   const queue = useRef<string[]>([]);
   const fallback = useRef(0);
+  const marks = useRef<ReturnType<typeof breathMarks>>([]);
+  const lastBreath = useRef(0);
 
   // Meditation is read a little slower than everything else
   const speakNow = (text: string) => {
@@ -50,6 +67,7 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
     const show = () => {
       clearTimeout(fallback.current);
       setLine(text);
+      marks.current = breathMarks(text);
     };
     const finish = () => {
       if (ended) return;
@@ -82,6 +100,8 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
     clearTimeout(fallback.current);
     queue.current = [];
     speaking.current = false;
+    marks.current = [];
+    setBreath(null);
     stopSpeaking();
   };
 
@@ -114,6 +134,25 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
     return () => clearInterval(t);
   }, [running, meditation, total]);
 
+  // Breathe in / out follows the voice: checked a few times a second against how far it has read.
+  // After the line, the last one stays a few seconds while you finish that breath.
+  useEffect(() => {
+    if (!running) return;
+    const t = window.setInterval(() => {
+      const p = speechProgress();
+      if (p !== null && marks.current.length) {
+        const said = marks.current.filter((m) => m.at <= p).at(-1);
+        if (said) {
+          lastBreath.current = Date.now();
+          setBreath(said.breath);
+          return;
+        }
+      }
+      if (Date.now() - lastBreath.current > 6000) setBreath(null);
+    }, 200);
+    return () => clearInterval(t);
+  }, [running]);
+
   // Background sound follows play/pause and the chosen sound
   useEffect(() => {
     stopAmbient.current();
@@ -140,8 +179,14 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
     setRunning(true);
   };
 
-  // The ring swells and settles slowly, a gentle pace to breathe by; the words come from the voice
-  const cycle = meditation.breathSeconds;
+  // The ring fills as you breathe in and empties as you breathe out; otherwise it rests
+  const ring = !running
+    ? "scale-[.62] duration-1000"
+    : breath === "in"
+      ? "scale-100 duration-[4000ms]"
+      : breath === "out"
+        ? "scale-[.62] duration-[6000ms]"
+        : "scale-[.8] duration-[3000ms]";
 
   return (
     <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-night text-sandal">
@@ -163,14 +208,13 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
       <div className="relative flex flex-1 flex-col items-center justify-center px-4 py-4 text-center sm:py-8">
         <div className="relative flex size-[13rem] items-center justify-center sm:size-[20rem]">
           <div
-            className={`absolute inset-0 rounded-full border-2 border-flame/40 bg-flame/10 ${running ? "breath-ring" : "scale-[.62]"}`}
-            style={{ ["--breath-cycle" as string]: `${cycle}s`, animationPlayState: running ? "running" : "paused" }}
+            className={`absolute inset-0 rounded-full border-2 border-flame/40 bg-flame/10 transition-transform ease-in-out ${ring}`}
           />
           <Diya size={110} onDark />
         </div>
 
         <p className="mt-4 min-h-[2.6rem] font-display text-[2rem] leading-tight text-flame">
-          {running ? "Breathe gently" : done ? "Om shanti" : elapsed ? "Paused" : "When you are ready"}
+          {running ? (breath === "in" ? "Breathe in" : breath === "out" ? "Breathe out" : "Breathe gently") : done ? "Om shanti" : elapsed ? "Paused" : "When you are ready"}
         </p>
         <p className="mt-3 min-h-[5.5rem] max-w-[36ch] text-[1.15rem] leading-relaxed text-sandal/85" aria-live="polite">
           {line ?? meditation.description}

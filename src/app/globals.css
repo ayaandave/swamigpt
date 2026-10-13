@@ -212,15 +212,6 @@ body::before {
   box-shadow: 0 22px 40px -20px rgba(43, 27, 16, 0.45);
 }
 
-/* ---------- Meditation breath ---------- */
-@keyframes breath {
-  0%, 100% { transform: scale(0.62); }
-  40%, 50% { transform: scale(1); }
-}
-.breath-ring {
-  animation: breath var(--breath-cycle, 10s) ease-in-out infinite;
-}
-
 /* ---------- The mala ---------- */
 .mala-bead,
 .mala-ripple,

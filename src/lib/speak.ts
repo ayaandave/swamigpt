@@ -30,6 +30,8 @@ type Handlers = { onStart?: () => void; onEnd?: () => void };
 let playing: HTMLAudioElement | null = null;
 let loading: HTMLAudioElement | null = null;
 let session = 0;
+// How far the browser's own voice has read, for speechProgress
+let browserRead: { at: number; of: number } | null = null;
 // Set once ElevenLabs fails (out of credits, down), so later reads go straight to the browser's voice
 let elevenDown = false;
 
@@ -131,14 +133,35 @@ function browserSpeak(text: string, voiceId: VoiceId, speed: number, handlers: H
   if (voice) u.voice = voice;
   u.rate = speed;
   u.pitch = v.pitch;
+  browserRead = { at: 0, of: text.length };
+  u.onboundary = (e) => {
+    if (browserRead) browserRead.at = e.charIndex;
+  };
   u.onstart = () => handlers.onStart?.();
-  u.onend = () => handlers.onEnd?.();
-  u.onerror = () => handlers.onEnd?.();
+  u.onend = () => {
+    browserRead = null;
+    handlers.onEnd?.();
+  };
+  u.onerror = () => {
+    browserRead = null;
+    handlers.onEnd?.();
+  };
   window.speechSynthesis.speak(u);
+}
+
+// How far through the current piece the voice is, from 0 to 1, or null when nothing is playing.
+// Short texts (under one piece, like meditation lines) make this the share of the whole text.
+export function speechProgress(): number | null {
+  if (playing && playing.duration > 0 && Number.isFinite(playing.duration)) {
+    return playing.currentTime / playing.duration;
+  }
+  if (browserRead) return browserRead.at / browserRead.of;
+  return null;
 }
 
 export function stopSpeaking() {
   session++; // any events still on their way from the old audio are ignored
+  browserRead = null;
   for (const audio of [playing, loading]) {
     if (!audio) continue;
     audio.pause();
