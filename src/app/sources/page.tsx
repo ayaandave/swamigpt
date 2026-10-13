@@ -36,6 +36,10 @@ const SOURCES = [
     from: "His own books and speeches (1893–1899), from The Complete Works of Swami Vivekananda on Wikisource; public domain. Later volumes and material first published after his death are not included, because they may still be in copyright. Each chapter is divided into short passages; chapter headings and editors' notes are left out.",
   },
   {
+    text: "Mantra recordings",
+    from: "Om: “OM AUM Mantra Male Chant” by Carlos Carty, CC BY 4.0 (Freesound). Gayatri Mantra: chanted by Rameshvar, CC0 public domain (Wikimedia Commons). Mahamrityunjaya Mantra: “Mahamrityunjay mantra” by afleetingspeck, CC0 public domain (Freesound). Each was evened in volume and given short fades; the tanpura drone is played live in the app, tuned to each voice.",
+  },
+  {
     text: "“In plain words” notes",
     from: "Written for SwamiGPT with the help of AI, to put each verse in everyday English. The translation above each note is the original.",
   },

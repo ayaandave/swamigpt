@@ -7,7 +7,8 @@
 
 type Stop = () => void;
 
-export function startAmbient(kind: string): Stop {
+// tonic: for "drone", the chanter's home note in Hz, so the drone is in tune with the voice
+export function startAmbient(kind: string, tonic?: number): Stop {
   if (kind === "silence" || typeof window === "undefined") return () => {};
   const ctx = new AudioContext();
   const master = ctx.createGain();
@@ -38,6 +39,32 @@ export function startAmbient(kind: string): Stop {
     };
     pluck();
     timers.push(window.setInterval(pluck, 1300));
+  }
+
+  if (kind === "drone" && tonic) {
+    // A quiet tanpura under a chanted mantra: the home note and its octaves only (no fifth),
+    // because Vedic chant moves just a step around that note
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.linearRampToValueAtTime(0.28, ctx.currentTime + 3);
+    const strings = [tonic, tonic * 2, tonic * 2, tonic / 2];
+    let i = 0;
+    const pluck = () => {
+      const f = strings[i++ % strings.length];
+      const t = ctx.currentTime;
+      [1, 2, 3, 4.02].forEach((h, n) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.frequency.value = f * h;
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.08 / (n + 1), t + 0.08);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 6);
+        o.connect(g).connect(master);
+        o.start(t);
+        o.stop(t + 6.5);
+      });
+    };
+    pluck();
+    timers.push(window.setInterval(pluck, 1500));
   }
 
   if (kind === "rain") {

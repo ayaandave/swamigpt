@@ -14,6 +14,16 @@ export type MantraPart = {
   passageHref?: string; // the passage in the library, if we have it
 };
 
+// A free recording of the mantra, credited as its licence asks
+export type MantraAudio = {
+  src: string;
+  tonicHz: number; // the chanter's home note, measured, so the drone underneath is in tune
+  by: string;
+  license: string;
+  licenseUrl: string;
+  sourceUrl: string;
+};
+
 export type Mantra = {
   slug: string;
   title: string;
@@ -23,6 +33,7 @@ export type Mantra = {
   parts: MantraPart[];
   howTo: string;
   note?: string;
+  audio?: MantraAudio;
 };
 
 export const COUNTS = [11, 27, 108] as const; // a mala, the prayer-bead string, has 108 beads
@@ -50,6 +61,14 @@ export const MANTRAS: Mantra[] = [
         passageHref: "/read/upanishads/mandukya/1",
       },
     ],
+    audio: {
+      src: "/audio/mantras/om.m4a",
+      tonicHz: 116,
+      by: "Carlos Carty",
+      license: "CC BY 4.0",
+      licenseUrl: "https://creativecommons.org/licenses/by/4.0/",
+      sourceUrl: "https://freesound.org/people/CarlosCarty/sounds/522687/",
+    },
     howTo:
       "Sit tall and breathe in. As you breathe out, say Om slowly: let “Aa” open your mouth, “Oo” round your lips, and “Mm” hum with your lips closed. Then rest in the silence for one breath before the next Om. You can also say it silently, in your mind.",
   },
@@ -86,6 +105,14 @@ export const MANTRAS: Mantra[] = [
         source: "The Rig Veda, the oldest of the Vedas. “Om bhur bhuvah svah” is added at the start when it is chanted.",
       },
     ],
+    audio: {
+      src: "/audio/mantras/gayatri.m4a",
+      tonicHz: 140,
+      by: "Rameshvar",
+      license: "CC0 (public domain)",
+      licenseUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
+      sourceUrl: "https://commons.wikimedia.org/wiki/File:Gayatri_Mantra_as_it_is_2021_02_13_05_48_%2B.wav",
+    },
     howTo:
       "Face the morning sun if you can, or simply sit quietly. Say each line slowly, or think it. While you say it, picture a warm, golden light filling your mind and making your thoughts clear.",
     note: "Traditions differ on who should chant the Gayatri aloud. Many families today chant it together, and anyone can think about what it means.",
@@ -121,6 +148,14 @@ export const MANTRAS: Mantra[] = [
         source: "The Rig Veda. “Om” is added at the start when it is chanted.",
       },
     ],
+    audio: {
+      src: "/audio/mantras/mahamrityunjaya.m4a",
+      tonicHz: 125,
+      by: "afleetingspeck",
+      license: "CC0 (public domain)",
+      licenseUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
+      sourceUrl: "https://freesound.org/people/afleetingspeck/sounds/256992/",
+    },
     howTo:
       "Sit quietly and think of the person you are praying for, or of what you are afraid of. Say the mantra slowly, or in your mind. Let each repetition feel like handing a little of the worry to God.",
   },

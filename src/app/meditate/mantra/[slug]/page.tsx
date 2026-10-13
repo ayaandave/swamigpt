@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { MANTRAS, getMantra } from "@/lib/mantras";
 import { MantraCounter } from "@/components/MantraCounter";
+import { MantraListen } from "@/components/MantraListen";
 import { BackIcon } from "@/components/icons";
 
 export function generateStaticParams() {
@@ -31,6 +32,7 @@ export default async function MantraPage(props: PageProps<"/meditate/mantra/[slu
       </p>
       <h1 className="font-display text-[2.4rem] leading-tight">{m.title}</h1>
       <p className="mt-3 max-w-[60ch] text-[1.1rem] leading-[1.7]">{m.about}</p>
+      {m.audio && <MantraListen audio={m.audio} title={m.title} />}
 
       {m.parts.map((part, i) => (
         <section key={i} aria-label={part.name ?? m.title} className="mt-10">
