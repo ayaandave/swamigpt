@@ -143,6 +143,14 @@ function InlineAnswer({ answer }: { answer: SwamiAnswer }) {
           Sign in for more questions
         </Link>
       )}
+      {answer.plusPrompt && (
+        <Link
+          href="/plus"
+          className="flex min-h-12 w-fit items-center rounded-full bg-kesar px-6 font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+        >
+          See SwamiGPT Plus
+        </Link>
+      )}
       {answer.verses.map(({ verse, meaning }) => (
         <div key={verse.id} className="flex flex-col gap-3">
           <p className="font-display text-[1.1rem] text-kajal-soft">{whoSays(verse)}:</p>

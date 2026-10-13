@@ -30,10 +30,19 @@ type Handlers = { onStart?: () => void; onEnd?: () => void };
 let playing: HTMLAudioElement | null = null;
 let loading: HTMLAudioElement | null = null;
 let session = 0;
+// A voice ticket for the signed-in account (set by AccountSync), so read-aloud limits follow the
+// account's plan. Fetched ahead of time: audio has to start inside the tap, with no waiting.
+let voiceTicket: string | null = null;
+export const setVoiceTicket = (ticket: string | null) => {
+  voiceTicket = ticket;
+};
+
 // How far the browser's own voice has read, for speechProgress
 let browserRead: { at: number; of: number } | null = null;
-// Set once ElevenLabs fails (out of credits, down), so later reads go straight to the browser's voice
-let elevenDown = false;
+// Set when ElevenLabs fails (out of credits, at a read-aloud limit, down), so the next reads go
+// straight to the browser's voice for a couple of minutes instead of failing one by one
+let elevenDownUntil = 0;
+const ELEVEN_RETRY_MS = 2 * 60 * 1000;
 
 // Phones only let speech start from a tap. If ElevenLabs fails after the tap, the browser's voice
 // would be blocked, so it is woken up now, silently, while the tap still counts.
@@ -65,7 +74,7 @@ function chunks(text: string): string[] {
 // lines, and chat answers, which people often play more than once).
 export function speak(text: string, voiceId: VoiceId, speed: number, handlers: Handlers = {}, save = false) {
   stopSpeaking();
-  if (!ELEVENLABS || elevenDown) {
+  if (!ELEVENLABS || Date.now() < elevenDownUntil) {
     browserSpeak(text, voiceId, speed, handlers);
     return;
   }
@@ -79,6 +88,7 @@ export function speak(text: string, voiceId: VoiceId, speed: number, handlers: H
   const audioFor = (i: number) => {
     const q = new URLSearchParams({ v: voiceId, s: String(speed), t: parts[i] });
     if (save) q.set("c", "1");
+    if (voiceTicket) q.set("k", voiceTicket);
     if (i > 0) q.set("p", lastSentence(parts[i - 1]));
     if (i + 1 < parts.length) q.set("n", firstSentence(parts[i + 1]));
     const audio = new Audio(`/api/speak?${q}`);
@@ -111,7 +121,7 @@ export function speak(text: string, voiceId: VoiceId, speed: number, handlers: H
     audio.onerror = () => {
       if (id !== session) return;
       // ElevenLabs unavailable: read the rest with the browser's voice instead
-      elevenDown = true;
+      elevenDownUntil = Date.now() + ELEVEN_RETRY_MS;
       stopSpeaking();
       browserSpeak(parts.slice(i).join(" "), voiceId, speed, started ? { onEnd: handlers.onEnd } : handlers);
     };

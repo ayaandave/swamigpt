@@ -3,7 +3,8 @@
 import type { AgeGroup, Depth } from "./settings";
 import { askSwami as mockAnswer } from "./mock/answers";
 import type { SwamiAnswer } from "./swami";
-import { accessToken } from "./supabase";
+import { PLUS } from "./plans";
+import { accessToken, supabase } from "./supabase";
 
 export type PastTurn = { question: string; answer: SwamiAnswer };
 
@@ -16,6 +17,13 @@ const SORRY: SwamiAnswer = {
 // What the model said last time, as plain text, so follow-up questions have context
 const asText = (a: SwamiAnswer) =>
   [...a.paragraphs, ...a.verses.map((v) => `(Quoted ${v.verse.source}. ${v.meaning})`)].join("\n\n");
+
+// Whether the signed-in person has Plus, for the out-of-questions message
+async function hasPlus() {
+  const sb = supabase();
+  const { data } = (await sb?.from("plus_members").select("expires_at").maybeSingle()) ?? { data: null };
+  return Boolean(data) && (data!.expires_at === null || new Date(data!.expires_at) > new Date());
+}
 
 export type LessonContext = { title: string; text: string };
 
@@ -53,11 +61,21 @@ export async function askSwami(
     if (res.status === 429) {
       const { error } = (await res.json().catch(() => ({}))) as { error?: string };
       if (error === "limit") {
+        if (token && (!PLUS.enabled || (await hasPlus()))) {
+          return {
+            paragraphs: ["That's all the questions for today. Rest with what we talked about, and come back tomorrow."],
+            verses: [],
+            notice: "limit",
+          };
+        }
         return token
           ? {
-              paragraphs: ["That's all the questions for today. Rest with what we talked about, and come back tomorrow."],
+              paragraphs: [
+                `That's your ${PLUS.questions.free} questions for today. Rest with what we talked about, and come back tomorrow. With Plus, you can ask up to ${PLUS.questions.plus} a day.`,
+              ],
               verses: [],
               notice: "limit",
+              plusPrompt: true,
             }
           : {
               paragraphs: [

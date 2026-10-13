@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Diya } from "@/components/Diya";
+import { PLUS, usePlus } from "@/lib/plus";
 import { supabase, useAuth } from "@/lib/supabase";
 
 export default function AccountPage() {
   const router = useRouter();
   const { ready, user } = useAuth();
+  const { plus } = usePlus();
 
   if (!ready) return <div className="min-h-[60vh]" />;
 
@@ -43,6 +45,20 @@ export default function AccountPage() {
       </div>
 
       <div className="mt-8 flex flex-col gap-3">
+        {PLUS.enabled && (
+          <Link
+            href="/plus"
+            className="flex min-h-16 items-center justify-between rounded-2xl border-2 border-sandal-edge px-5 font-semibold hover:border-kajal"
+          >
+            <span>
+              SwamiGPT Plus
+              <span className="block text-[0.9rem] font-normal text-kajal-soft">
+                {plus ? "You have Plus. Manage your plan" : `Up to ${PLUS.questions.plus} questions a day, read aloud`}
+              </span>
+            </span>
+            <span aria-hidden="true">→</span>
+          </Link>
+        )}
         <Link
           href="/account/history"
           className="flex min-h-16 items-center justify-between rounded-2xl border-2 border-sandal-edge px-5 font-semibold hover:border-kajal"

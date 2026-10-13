@@ -10,6 +10,7 @@ export type SwamiAnswer = {
   practice?: { href: string; title: string; why: string }; // a meditation or lesson in the app
   notice?: "limit" | "error"; // not a real answer: never saved to history
   signInPrompt?: boolean; // show "Sign in for more questions"
+  plusPrompt?: boolean; // show "See SwamiGPT Plus"
 };
 
 // Checked in code as well as by Claude, so the help card never depends on the model noticing

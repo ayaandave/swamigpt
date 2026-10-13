@@ -183,6 +183,14 @@ function Answer({
           Sign in for more questions
         </Link>
       )}
+      {answer.plusPrompt && (
+        <Link
+          href="/plus"
+          className="flex min-h-14 w-fit items-center rounded-full bg-kesar px-7 text-[1.05rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+        >
+          See SwamiGPT Plus
+        </Link>
+      )}
       {answer.verses.map(({ verse, meaning }) => (
         <div key={verse.id} className="mt-3 flex flex-col gap-4">
           <p className="font-display text-[1.15rem] text-kajal-soft">

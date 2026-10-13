@@ -2,9 +2,24 @@
 
 import { useEffect } from "react";
 import { startAccountSync } from "@/lib/account-sync";
-import { useAuth } from "@/lib/supabase";
+import { setVoiceTicket } from "@/lib/speak";
+import { accessToken, useAuth } from "@/lib/supabase";
 
-// Mounted once in the layout: syncs settings and mala progress while someone is signed in
+// Tickets last 12 hours on the server; fetched again well before then
+const TICKET_REFRESH_MS = 6 * 60 * 60 * 1000;
+
+async function fetchVoiceTicket() {
+  const token = await accessToken();
+  if (!token) return setVoiceTicket(null);
+  const res = await fetch("/api/speak/ticket", { method: "POST", headers: { authorization: `Bearer ${token}` } }).catch(
+    () => null,
+  );
+  const { ticket } = ((await res?.json().catch(() => null)) ?? {}) as { ticket?: string | null };
+  setVoiceTicket(ticket ?? null);
+}
+
+// Mounted once in the layout: while someone is signed in, syncs settings and mala progress, and
+// keeps a voice ticket so read-aloud limits follow their account and plan
 export function AccountSync() {
   const { user } = useAuth();
   const userId = user?.id;
@@ -18,6 +33,16 @@ export function AccountSync() {
       cancelled = true;
       stop?.();
     };
+  }, [userId]);
+
+  useEffect(() => {
+    if (!userId) {
+      setVoiceTicket(null);
+      return;
+    }
+    void fetchVoiceTicket();
+    const t = window.setInterval(() => void fetchVoiceTicket(), TICKET_REFRESH_MS);
+    return () => clearInterval(t);
   }, [userId]);
 
   return null;

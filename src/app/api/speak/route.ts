@@ -6,11 +6,12 @@
 // With c=1 (lessons, verse pages, meditations, chat answers), the audio is saved to Supabase
 // Storage after its first play, and later requests are sent straight to the saved file, so each
 // piece of text costs credits only once. Needs SUPABASE_SECRET_KEY; without it nothing is saved.
-// New audio also counts against daily limits per person and for the whole site (lib/limits.ts).
+// New audio also counts against limits per person (by plan) and for the whole site (lib/limits.ts).
 import { createHash } from "node:crypto";
 import { after } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { takeSpeech } from "@/lib/limits";
+import { readTicket } from "@/lib/voice-ticket";
 
 const VOICE_IDS: Record<string, string | undefined> = {
   swamiji: process.env.ELEVENLABS_VOICE_SWAMIJI,
@@ -60,7 +61,9 @@ export async function GET(request: Request) {
   }
 
   // New audio costs credits: count it against today's limits (the app falls back to the browser's voice)
-  if (!(await takeSpeech(request, text.length))) return new Response("limit", { status: 429 });
+  // Signed-in listeners send a voice ticket (k), so the limit is their plan's, counted by account
+  const userId = readTicket(params.get("k"));
+  if (!(await takeSpeech(request, text.length, userId))) return new Response("limit", { status: 429 });
 
   let upstream: Response | undefined;
   for (const model of MODELS) {
