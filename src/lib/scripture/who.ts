@@ -8,6 +8,8 @@ export function whoSays(verse: Verse): string {
   if (id.startsWith("yoga-sutras-")) return "Patanjali says";
   if (id.startsWith("upanishads-")) return "The Upanishads say";
   if (id.startsWith("vivekananda-")) return "Vivekananda says";
+  if (id.startsWith("mahabharata-vidura-")) return "Vidura says";
+  if (id.startsWith("mahabharata-yaksha-")) return "Yudhishthira answers";
   return "The scriptures say";
 }
 
@@ -17,5 +19,6 @@ export function caption(verse: Verse): string {
   const name = verse.source.replace(/\s[\d.]+$/, ""); // the source without its numbers
   if (verse.id.startsWith("upanishads-")) return name;
   if (verse.id.startsWith("vivekananda-")) return `Swami Vivekananda, ${name}`;
+  if (verse.id.startsWith("mahabharata-")) return `Mahabharata, ${name}`;
   return verse.source;
 }

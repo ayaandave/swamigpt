@@ -32,6 +32,10 @@ const SOURCES = [
     from: "Robert Ernest Hume, The Thirteen Principal Upanishads (Oxford, 1921); public domain. Typed from the page images of the printed book; footnotes and the editor's headings are left out.",
   },
   {
+    text: "The Mahabharata: Vidura Niti and the Yaksha Prashna",
+    from: "Kisari Mohan Ganguli, The Mahabharata of Krishna-Dwaipayana Vyasa (1883–1896); public domain. Vidura Niti is Udyoga Parva sections 33–40, and the Yaksha Prashna is Vana Parva section 311. Text from Project Gutenberg's transcription, checked word by word against a scan of the printed book. Only Vidura's own words are kept, cut into short passages; two of the Yaksha's questions are left out because the printed book itself lost part of their wording.",
+  },
+  {
     text: "Swami Vivekananda: Chicago addresses, Karma-Yoga, Raja-Yoga, Bhakti-Yoga, Jnana-Yoga",
     from: "His own books and speeches (1893–1899), from The Complete Works of Swami Vivekananda on Wikisource; public domain. Later volumes and material first published after his death are not included, because they may still be in copyright. Each chapter is divided into short passages; chapter headings and editors' notes are left out.",
   },

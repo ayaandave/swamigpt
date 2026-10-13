@@ -14,7 +14,7 @@ env.allowRemoteModels = false;
 const OUT = process.argv[2] ?? "data/scripture/vectors.json";
 // bge models expect this prefix on queries (not on the passages)
 const QUERY_PREFIX = "Represent this sentence for searching relevant passages: ";
-const TEXTS = ["gita", "yoga-sutras", "upanishads", "vivekananda"]; // data/scripture/<id>.json, plus <id>.notes.json
+const TEXTS = ["gita", "yoga-sutras", "upanishads", "mahabharata", "vivekananda"]; // data/scripture/<id>.json, plus <id>.notes.json
 
 const read = (path, fallback) => (fs.existsSync(path) ? JSON.parse(fs.readFileSync(path, "utf8")) : fallback);
 

@@ -24,6 +24,8 @@ const FAMOUS: [RegExp, string[]][] = [
   [/yada\s*yada\s*hi\s*dharmasya|whenever (?:there is )?(?:a )?(?:decline|decay) of (?:dharma|righteousness)/i, ["gita-4-7"]],
   [/patram\s*pushpam|leaf,? a flower/i, ["gita-9-26"]],
   [/(?:one )?clod of clay|vacarambhanam|vacharambhanam/i, ["upanishads-chandogya-6-1-4"]],
+  [/(?:most|greatest) wonder|yaksha'?s? (?:questions?|prashna|riddles?)|yaksha\s*prashna/i, ["mahabharata-yaksha-33"]],
+  [/vidura\s*niti|vidura'?s? (?:advice|counsel|teaching)/i, ["mahabharata-vidura-1-4"]],
 ];
 
 function famousPassages(question: string): Passage[] {

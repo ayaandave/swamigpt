@@ -48,6 +48,17 @@ export const TEXTS: TextInfo[] = [
     attribution: "",
   },
   {
+    id: "mahabharata",
+    title: "The Mahabharata: Vidura and the Yaksha",
+    short: "Mahabharata",
+    description:
+      "Two teachings from the great epic: Vidura's counsel to a sleepless king on wisdom and right living, and the Yaksha's riddles that Yudhishthira answers at the lake.",
+    sectionLabel: "Teaching",
+    numberedSections: false,
+    passageLabel: "passage",
+    attribution: "",
+  },
+  {
     id: "vivekananda",
     title: "Swami Vivekananda",
     short: "Vivekananda",

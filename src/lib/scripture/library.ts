@@ -8,6 +8,8 @@ import sutrasNotes from "../../../data/scripture/yoga-sutras.notes.json";
 import upanishadsJson from "../../../data/scripture/upanishads.json";
 import upanishadsNotes from "../../../data/scripture/upanishads.notes.json";
 import vivekanandaJson from "../../../data/scripture/vivekananda.json";
+import mahabharataJson from "../../../data/scripture/mahabharata.json";
+import mahabharataNotes from "../../../data/scripture/mahabharata.notes.json";
 import { TEXTS, type TextInfo } from "./texts";
 import type { Verse } from "./types";
 
@@ -40,6 +42,9 @@ export const PASSAGES: Passage[] = [
   ...(upanishadsJson as Omit<Passage, "textId">[])
     .map((p) => ({ ...p, textId: "upanishads" }))
     .map(withNote(upanishadsNotes as Notes)),
+  ...(mahabharataJson as Omit<Passage, "textId">[])
+    .map((p) => ({ ...p, textId: "mahabharata" }))
+    .map(withNote(mahabharataNotes as Notes)),
   // Already in plain English, so no notes
   ...(vivekanandaJson as Omit<Passage, "textId">[]).map((p) => ({ ...p, textId: "vivekananda" })),
 ];
@@ -89,5 +94,7 @@ const LISTENER: Record<string, string> = {
 // "Krishna speaking to Arjuna", or the text's own attribution
 export function attribution(p: Passage) {
   if (p.speaker) return `${p.speaker} speaking to ${LISTENER[p.speaker]}`;
+  if (p.section === "vidura-niti") return "Vidura speaking to King Dhritarashtra";
+  if (p.section === "yaksha-prashna") return "The Yaksha questioning Yudhishthira";
   return LIBRARY.get(p.textId)?.attribution ?? "";
 }
