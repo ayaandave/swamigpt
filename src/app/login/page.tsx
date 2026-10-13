@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Diya } from "@/components/Diya";
+import { useSettings } from "@/lib/settings";
 import { accountsEnabled, appleEnabled, googleEnabled, supabase } from "@/lib/supabase";
 
 type Mode = "signin" | "signup" | "forgot";
@@ -34,6 +35,9 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [sent, setSent] = useState<"" | "confirm" | "reset">("");
+  // Children under 13 need a parent to make the account (US children's privacy law)
+  const { ageGroup } = useSettings();
+  const [parent, setParent] = useState(false);
 
   if (!accountsEnabled) {
     return (
@@ -43,6 +47,28 @@ export default function LoginPage() {
         <p className="mt-2 max-w-[34ch] text-[1.1rem] text-kajal-soft">
           You can keep using SwamiGPT without one. Your progress is saved on this device.
         </p>
+      </div>
+    );
+  }
+
+  if (ageGroup === "under13" && !parent) {
+    return (
+      <div className="mx-auto flex max-w-md flex-col items-center pt-12 text-center">
+        <Diya size={96} />
+        <h1 className="mt-4 font-display text-[2.2rem] leading-tight">Ask a grown-up</h1>
+        <p className="mt-3 max-w-[32ch] text-[1.15rem] leading-relaxed text-kajal-soft">
+          A parent or guardian needs to sign in or make the account for you. You can keep using SwamiGPT without one.
+        </p>
+        <button
+          type="button"
+          onClick={() => setParent(true)}
+          className="mt-8 min-h-14 rounded-full bg-kesar px-8 text-[1.05rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+        >
+          I&apos;m a parent or guardian
+        </button>
+        <Link href="/" className="mt-5 min-h-11 font-semibold text-kesar-deep underline underline-offset-4">
+          Keep going without an account
+        </Link>
       </div>
     );
   }
@@ -219,6 +245,19 @@ export default function LoginPage() {
           </button>
         )}
       </p>
+      {mode === "signup" && (
+        <p className="mt-6 max-w-[34ch] text-[0.9rem] text-kajal-soft">
+          By creating an account, you agree to our{" "}
+          <Link href="/terms" className="underline underline-offset-2">
+            Terms
+          </Link>{" "}
+          and{" "}
+          <Link href="/privacy" className="underline underline-offset-2">
+            Privacy Policy
+          </Link>
+          .
+        </p>
+      )}
       <p className="mt-8 text-[0.85rem] text-kajal-soft">
         You don&apos;t need an account to use SwamiGPT.{" "}
         <Link href="/" className="underline">

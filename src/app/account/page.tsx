@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { DeleteAccount } from "@/components/DeleteAccount";
 import { Diya } from "@/components/Diya";
 import { PLUS, usePlus } from "@/lib/plus";
 import { supabase, useAuth } from "@/lib/supabase";
@@ -78,6 +79,16 @@ export default function AccountPage() {
         >
           Sign out
         </button>
+        <DeleteAccount />
+        <p className="text-[0.9rem] text-kajal-soft">
+          <Link href="/privacy" className="underline underline-offset-2">
+            Privacy Policy
+          </Link>
+          {" · "}
+          <Link href="/terms" className="underline underline-offset-2">
+            Terms of Use
+          </Link>
+        </p>
       </div>
     </div>
   );

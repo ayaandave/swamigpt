@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
+import { Analytics } from "@vercel/analytics/next";
 import { Atkinson_Hyperlegible_Next, Tiro_Devanagari_Sanskrit } from "next/font/google";
 import { settingsScript } from "@/lib/settings";
 import { BottomNav, Header } from "@/components/Chrome";
@@ -44,6 +46,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <BottomNav />
         <WelcomeGate />
         <AccountSync />
+        {/* Visit counts without cookies; reads the address, so it waits for the page in a Suspense */}
+        <Suspense>
+          <Analytics />
+        </Suspense>
       </body>
     </html>
   );

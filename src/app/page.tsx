@@ -96,6 +96,17 @@ export default function Home() {
         </div>
       </section>
 
+      <nav aria-label="About SwamiGPT" className="mt-14 flex flex-wrap gap-x-6 gap-y-2 text-[0.95rem] text-kajal-soft">
+        <Link href="/sources" className="min-h-11 content-center underline-offset-4 hover:underline">
+          Sources &amp; safety
+        </Link>
+        <Link href="/privacy" className="min-h-11 content-center underline-offset-4 hover:underline">
+          Privacy
+        </Link>
+        <Link href="/terms" className="min-h-11 content-center underline-offset-4 hover:underline">
+          Terms
+        </Link>
+      </nav>
     </div>
   );
 }

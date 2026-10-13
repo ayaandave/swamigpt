@@ -119,6 +119,15 @@ export default function SourcesPage() {
       </section>
 
       <p className="mt-10">
+        <Link href="/privacy" className="font-semibold text-kesar-deep hover:underline">
+          Privacy Policy
+        </Link>
+        {" · "}
+        <Link href="/terms" className="font-semibold text-kesar-deep hover:underline">
+          Terms of Use
+        </Link>
+      </p>
+      <p className="mt-4">
         <Link href="/" className="font-semibold text-kesar-deep hover:underline">
           ← Back home
         </Link>

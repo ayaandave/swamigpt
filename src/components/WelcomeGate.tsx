@@ -12,7 +12,7 @@ export function WelcomeGate() {
   const path = usePathname();
   if (ageGroup || path === "/") return null;
 
-  // Under-13s are let in for now; parent approval arrives with accounts.
+  // Under-13s can use the app freely; making an account needs a parent (see the login page)
   const choose = (age: AgeGroup) => update({ ageGroup: age });
 
   return (
