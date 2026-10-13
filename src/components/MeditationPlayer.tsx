@@ -36,20 +36,62 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
     latest.current = { voice: meditationVoice, speed };
   });
 
+  // The words on screen follow the voice: a line appears when the voice starts saying it,
+  // and a cue that comes due while the voice is still talking waits for it to finish
+  const speaking = useRef(false);
+  const queue = useRef<string[]>([]);
+  const fallback = useRef(0);
+
   // Meditation is read a little slower than everything else
+  const speakNow = (text: string) => {
+    clearTimeout(fallback.current);
+    speaking.current = true;
+    let ended = false;
+    const show = () => {
+      clearTimeout(fallback.current);
+      setLine(text);
+    };
+    const finish = () => {
+      if (ended) return;
+      ended = true;
+      show();
+      speaking.current = false;
+      const next = queue.current.shift();
+      if (next) speakNow(next);
+    };
+    // If the voice can't play at all, the words still appear and the session carries on
+    fallback.current = window.setTimeout(() => {
+      setLine(text);
+      fallback.current = window.setTimeout(finish, 4000 + text.length * 60);
+    }, 6000);
+    speak(text, latest.current.voice, latest.current.speed * 0.9, { onStart: show, onEnd: finish }, true);
+  };
+
   const say = (text: string, delay = 0) => {
     timers.current.push(
       window.setTimeout(() => {
-        setLine(text);
-        speak(text, latest.current.voice, latest.current.speed * 0.9, {}, true);
+        if (speaking.current) queue.current.push(text);
+        else speakNow(text);
       }, delay),
     );
+  };
+
+  const hush = () => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+    clearTimeout(fallback.current);
+    queue.current = [];
+    speaking.current = false;
+    stopSpeaking();
   };
 
   // Switching voice mid-session re-reads the current line, so the change is heard right away
   const chooseVoice = (voice: VoiceId) => {
     update({ meditationVoice: voice });
-    if (running && line) speak(line, voice, speed * 0.9, {}, true);
+    if (running && line) {
+      latest.current = { voice, speed };
+      speakNow(line);
+    }
   };
 
   // Clock: each cue is spoken at its second; the session ends with a bell and a closing line
@@ -79,18 +121,11 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
     return () => stopAmbient.current();
   }, [running, sound]);
 
-  useEffect(
-    () => () => {
-      timers.current.forEach(clearTimeout);
-      stopSpeaking();
-    },
-    [],
-  );
+  useEffect(() => hush, []);
 
   const toggle = () => {
     if (running) {
-      timers.current.forEach(clearTimeout);
-      stopSpeaking();
+      hush();
       setRunning(false);
       return;
     }
@@ -105,10 +140,8 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
     setRunning(true);
   };
 
-  // Breath prompt synced to the CSS cycle: 40% in, 10% hold, 50% out
+  // The ring swells and settles slowly, a gentle pace to breathe by; the words come from the voice
   const cycle = meditation.breathSeconds;
-  const phase = (elapsed % cycle) / cycle;
-  const breath = phase < 0.4 ? "Breathe in" : phase < 0.5 ? "Hold" : "Breathe out";
 
   return (
     <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-night text-sandal">
@@ -136,10 +169,10 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
           <Diya size={110} onDark />
         </div>
 
-        <p className="mt-4 min-h-[2.6rem] font-display text-[2rem] leading-tight text-flame" aria-live="polite">
-          {running ? breath : done ? "Om shanti" : elapsed ? "Paused" : "When you are ready"}
+        <p className="mt-4 min-h-[2.6rem] font-display text-[2rem] leading-tight text-flame">
+          {running ? "Breathe gently" : done ? "Om shanti" : elapsed ? "Paused" : "When you are ready"}
         </p>
-        <p className="mt-3 min-h-[3.5rem] max-w-[36ch] text-[1.05rem] leading-relaxed text-sandal/80">
+        <p className="mt-3 min-h-[5.5rem] max-w-[36ch] text-[1.15rem] leading-relaxed text-sandal/85" aria-live="polite">
           {line ?? meditation.description}
         </p>
 
