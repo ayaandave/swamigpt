@@ -5,13 +5,32 @@ import { HomeAsk } from "@/components/home/HomeAsk";
 import { ContinueLesson } from "@/components/home/ContinueLesson";
 import { TodayCard } from "@/components/home/TodayCard";
 import { OldAskLink } from "@/components/home/OldAskLink";
-import { AskIcon, LearnIcon, MeditateIcon, ReadIcon } from "@/components/icons";
+import { AskIcon, LearnIcon, MeditateIcon, PersonIcon, ReadIcon } from "@/components/icons";
 
 const TILES = [
   { href: "/ask", title: "Ask", line: "Real answers from the scriptures, for your question", Icon: AskIcon, tone: "bg-kesar text-kajal" },
   { href: "/learn", title: "Learn", line: "38 short lessons on the Gita, karma, yoga and more", Icon: LearnIcon, tone: "bg-tulsi text-sandal" },
-  { href: "/meditate", title: "Meditate", line: "6 guided meditations, read aloud", Icon: MeditateIcon, tone: "bg-night text-sandal" },
-  { href: "/learn#read", title: "Read", line: "The Gita, Upanishads, Yoga Sutras and Vivekananda", Icon: ReadIcon, tone: "bg-sandal-deep text-kajal" },
+  { href: "/meditate", title: "Meditate", line: "Guided meditations and mantras, read aloud", Icon: MeditateIcon, tone: "bg-night text-sandal" },
+  { href: "/learn#read", title: "Read", line: "The Gita, 10 Upanishads, the Yoga Sutras and Vivekananda", Icon: ReadIcon, tone: "bg-sandal-deep text-kajal" },
+];
+
+// What makes SwamiGPT different from asking any chatbot
+const PROMISES = [
+  {
+    title: "Only real scripture",
+    line: "Every quote comes from real, published translations. SwamiGPT is never allowed to make up a verse.",
+    Icon: ReadIcon,
+  },
+  {
+    title: "For the whole family",
+    line: "Simple enough for a 12-year-old, deep enough for a scholar, and read aloud in a calm voice for elders.",
+    Icon: PersonIcon,
+  },
+  {
+    title: "A daily practice",
+    line: "A verse each morning, guided meditations, and mantras with real chanting. Not just a chatbot.",
+    Icon: MeditateIcon,
+  },
 ];
 
 // The home screen: what SwamiGPT is, in one look, and the way in to each part
@@ -25,6 +44,27 @@ export default function Home() {
         <HomeAsk />
       </HomeHero>
       <ContinueLesson />
+
+      <section aria-labelledby="different" className="mt-12">
+        <h2 id="different" className="font-display text-[1.8rem] leading-tight">
+          Why SwamiGPT is different
+        </h2>
+        <ul className="mt-5 grid gap-3 sm:grid-cols-3 sm:gap-4">
+          {PROMISES.map(({ title, line, Icon }) => (
+            <li key={title} className="rounded-[1.75rem] border-2 border-sandal-edge bg-white/40 px-5 py-5">
+              <Icon className="size-8 text-kesar-deep" />
+              <h3 className="mt-3 font-display text-[1.35rem] leading-tight">{title}</h3>
+              <p className="mt-1.5 text-[1rem] leading-[1.6]">{line}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-[0.95rem] text-kajal-soft">
+          A guide, not a guru: it never pretends to be God, only shows you what the scriptures say.{" "}
+          <Link href="/sources" className="font-semibold text-kesar-deep underline underline-offset-4">
+            See our sources
+          </Link>
+        </p>
+      </section>
 
       <section aria-label="What you can do" className="mt-10 grid grid-cols-2 gap-3 [perspective:900px] sm:gap-4">
         {TILES.map(({ href, title, line, Icon, tone }) => (
@@ -56,19 +96,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mt-12 rounded-[2rem] border-2 border-sandal-edge px-7 py-6">
-        <h2 className="font-display text-[1.5rem] leading-tight">Not just another AI chatbot</h2>
-        <p className="mt-2 max-w-[60ch] text-[1.05rem] leading-[1.7]">
-          Every answer is built on the <strong>Bhagavad Gita, the Upanishads, the Yoga Sutras and Swami Vivekananda&apos;s
-          talks</strong>, and explained in plain words for <em>your</em> question.
-        </p>
-        <p className="mt-3 text-[0.9rem] text-kajal-soft">
-          An AI guide, not a guru.{" "}
-          <Link href="/sources" className="font-semibold text-kesar-deep underline underline-offset-4">
-            See our sources
-          </Link>
-        </p>
-      </section>
     </div>
   );
 }
