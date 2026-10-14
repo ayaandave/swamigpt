@@ -33,6 +33,7 @@ export async function askSwami(
   ageGroup: AgeGroup | null,
   history: PastTurn[] = [],
   lesson?: LessonContext, // when asked from inside a lesson
+  about?: string, // the library passage they were reading, by id
 ): Promise<SwamiAnswer> {
   try {
     // Signed-in people are counted by their account for the daily limit
@@ -45,6 +46,7 @@ export async function askSwami(
         depth,
         ageGroup,
         lesson,
+        about,
         history: history.slice(-3).map((t) => ({ question: t.question, answer: asText(t.answer) })),
       }),
     });

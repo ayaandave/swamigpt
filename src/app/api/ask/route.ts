@@ -8,7 +8,7 @@ import { z } from "zod";
 import { MEDITATIONS } from "@/lib/meditations";
 import { MANTRAS } from "@/lib/mantras";
 import { PATHS } from "@/lib/lessons";
-import { attribution } from "@/lib/scripture/library";
+import { attribution, getPassageById } from "@/lib/scripture/library";
 import { searchPassages } from "@/lib/scripture/search";
 import { SWAMI_SYSTEM_PROMPT } from "@/lib/swami-prompt";
 import { CRISIS, CRISIS_HELP, type SwamiAnswer } from "@/lib/swami";
@@ -21,6 +21,8 @@ const Body = z.object({
   // Earlier turns in this conversation, oldest first, so follow-ups make sense
   // The lesson someone is reading when they ask from inside it
   lesson: z.object({ title: z.string().max(200), text: z.string().max(6000) }).optional(),
+  // The library passage someone was reading when they pressed "Ask the Swami about this"
+  about: z.string().max(120).optional(),
   history: z
     .array(z.object({ question: z.string().max(2000), answer: z.string().max(8000) }))
     .max(6)
@@ -69,6 +71,10 @@ const KID_NOTE =
   "\nThe person asking is under 13. Use short sentences and words a child knows, prefer a story (Ramayana, Mahabharata, Panchatantra) to an abstract idea, and be extra gentle.";
 
 // Questions asked from inside a lesson: answer about that lesson, briefly, since it's shown inline
+// Asked from a passage's page: answer about that passage, and quote it
+const readingNote = (id: string) =>
+  `They are asking about the passage [${id}] above, which they were just reading. Explain that passage and quote it.\n\n`;
+
 const lessonNote = (lesson: { title: string; text: string }) =>
   `<lesson title="${lesson.title.replace(/"/g, "'")}">\n${lesson.text}\n</lesson>\nThe person is reading this lesson in the app and asks a follow-up question about it. Answer about the lesson itself, in two or three short paragraphs, at the same reading level. Quote a passage only if it adds something the lesson didn't. The practice suggestion is optional here.\n\n`;
 
@@ -108,7 +114,8 @@ export async function POST(request: Request) {
   if (!parsed.success) {
     return Response.json({ error: "bad_request" }, { status: 400 });
   }
-  const { question, depth, ageGroup, history, lesson } = parsed.data;
+  const { question, depth, ageGroup, history, lesson, about } = parsed.data;
+  const reading = about ? getPassageById(about) : undefined;
 
   // Each real answer costs money, so count it against today's allowance first
   const left = await takeQuestion(request);
@@ -117,9 +124,12 @@ export async function POST(request: Request) {
   }
 
   // Search on the follow-up plus the previous question, so "what about at work?" still finds something
-  const searchText = [lesson?.title, history.at(-1)?.question, question].filter(Boolean).join("\n");
+  const searchText = [lesson?.title, reading?.translation, history.at(-1)?.question, question].filter(Boolean).join("\n");
   const mode = depth === "deeper" ? DEEPER : SIMPLER;
-  const passages = await searchPassages(searchText, mode.passages);
+  const found = await searchPassages(searchText, mode.passages);
+  // The passage they were reading always goes in first, so "this passage" can't be mistaken for
+  // another text's verse with the same number
+  const passages = reading ? [reading, ...found.filter((p) => p.id !== reading.id)].slice(0, mode.passages) : found;
   const allowed = new Map(passages.map((v) => [v.id, v]));
 
   const passageText = passages
@@ -143,7 +153,7 @@ export async function POST(request: Request) {
     ]),
     {
       role: "user",
-      content: `<passages>\n${passageText}\n</passages>\n\n${lesson ? lessonNote(lesson) : ""}Depth setting: ${depth}${ageGroup === "under13" ? KID_NOTE : ""}\n\n${question}`,
+      content: `<passages>\n${passageText}\n</passages>\n\n${lesson ? lessonNote(lesson) : ""}${reading ? readingNote(reading.id) : ""}Depth setting: ${depth}${ageGroup === "under13" ? KID_NOTE : ""}\n\n${question}`,
     },
   ];
 

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { PASSAGES, attribution, getPassage, getText, passageHref, shortRef } from "@/lib/scripture/library";
 import { VerseCard } from "@/components/VerseCard";
-import { whoSays } from "@/lib/scripture/who";
+import { caption, whoSays } from "@/lib/scripture/who";
 import { ListenButton } from "@/components/ListenButton";
 
 export function generateStaticParams() {
@@ -26,7 +26,8 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
   const found = await load(props);
   if (!found) notFound();
   const { passage: p, prev, next } = found;
-  const question = `What does ${p.source} mean for my life?`;
+  // Names the book, not just a number like "10.11" that other texts share; the id goes along too
+  const question = `What does this passage from ${caption(p)} mean for my life?`;
   const [firstThoughts, ...moreThoughts] = p.commentary ?? [];
   const commentator = getText(p.textId)?.commentaryBy;
 
@@ -50,7 +51,7 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
             .join(" ")}
         />
         <Link
-          href={`/ask?ask=${encodeURIComponent(question)}`}
+          href={`/ask?ask=${encodeURIComponent(question)}&about=${encodeURIComponent(p.id)}`}
           className="inline-flex min-h-14 items-center rounded-full border-2 border-kajal px-6 text-[1rem] font-semibold hover:bg-sandal-deep"
         >
           Ask the Swami about this

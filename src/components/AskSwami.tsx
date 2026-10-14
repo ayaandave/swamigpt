@@ -19,7 +19,16 @@ type Turn = { id: number; question: string; depth: Depth; answer?: SwamiAnswer }
 
 // initialDraft: a question handed over from elsewhere (e.g. a verse page), typed in but not sent.
 // autoAsk: a question to ask straight away (from the home screen).
-export function AskSwami({ initialDraft = "", autoAsk = "" }: { initialDraft?: string; autoAsk?: string }) {
+// about: the library passage a verse page sent them from, used for their first question.
+export function AskSwami({
+  initialDraft = "",
+  autoAsk = "",
+  about,
+}: {
+  initialDraft?: string;
+  autoAsk?: string;
+  about?: string;
+}) {
   const { depth: defaultDepth, ageGroup } = useSettings();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [draft, setDraft] = useState(initialDraft);
@@ -42,7 +51,7 @@ export function AskSwami({ initialDraft = "", autoAsk = "" }: { initialDraft?: s
     setDraft("");
     const history = turns.flatMap((t) => (t.answer ? [{ question: t.question, answer: t.answer }] : []));
     setTurns((t) => [...t, { id, question: q, depth }]);
-    const answer = await askSwami(q, depth, ageGroup, history);
+    const answer = await askSwami(q, depth, ageGroup, history, undefined, turns.length === 0 ? about : undefined);
     setTurns((t) => t.map((turn) => (turn.id === id ? { ...turn, answer } : turn)));
     if (user && !answer.notice) conversation.current = await saveTurn(user.id, conversation.current, q, answer);
   };
