@@ -49,11 +49,22 @@ export const TEXTS: TextInfo[] = [
   },
   {
     id: "mahabharata",
-    title: "The Mahabharata: Vidura and the Yaksha",
+    title: "The Mahabharata: teachings and stories",
     short: "Mahabharata",
     description:
-      "Two teachings from the great epic: Vidura's counsel to a sleepless king on wisdom and right living, and the Yaksha's riddles that Yudhishthira answers at the lake.",
+      "From the great epic: Vidura's counsel to a sleepless king, the Yaksha's riddles at the lake, and stories of the gods: Ganesha the scribe, the churning of the ocean, the Ganga's descent, and Hanuman meeting Bhima.",
     sectionLabel: "Teaching",
+    numberedSections: false,
+    passageLabel: "passage",
+    attribution: "",
+  },
+  {
+    id: "vishnu-purana",
+    title: "The Vishnu Purana: stories of Vishnu and Krishna",
+    short: "Vishnu Purana",
+    description:
+      "Stories from the old book of Vishnu: Lakshmi rising from the churning ocean, the boy Prahlada and the man-lion, Vamana's three steps, and Krishna with the serpent Kaliya and Govardhan Hill.",
+    sectionLabel: "Story",
     numberedSections: false,
     passageLabel: "passage",
     attribution: "",

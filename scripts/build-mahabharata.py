@@ -98,6 +98,22 @@ FIXES = [
     ("mahabharata-yaksha-35", "get up with life!", "get up with life!’"),
     ("mahabharata-yaksha-36", "The Yaksha rejoined,-’This", "The Yaksha rejoined,—‘This"),
     ("mahabharata-yaksha-37", "O bull of Bharata race!", "O bull of Bharata race!’"),
+    ("mahabharata-churning-2", "begemmed peak—in conclave", "begemmed peak and sat in conclave"),
+    ("mahabharata-churning-2", "eager seekers alter amrita", "eager seekers after amrita"),
+    ("mahabharata-churning-2", "Nara-yana", "Narayana"),
+    ("mahabharata-churning-2", "chum the Ocean", "churn the Ocean"),
+    ("mahabharata-churning-4", "failing to do so same to Vishnu", "failing to do so came to Vishnu"),
+    ("mahabharata-churning-5", "churn thy waters for obtaining", "churn thy water for obtaining"),
+    ("mahabharata-churning-6", "agitation of my waters", "agitation of my water"),
+    ("mahabharata-churning-7", "made of Mandara a churning staff", "made Mandara churning staff"),
+    ("mahabharata-churning-9", "Large trees with birds", "Large trees abounding with birds"),
+    ("mahabharata-churning-12", "we have no strength left", "we have not any strength left"),
+    ("mahabharata-churning-14", "I grant you sufficient strength", "I grant ye sufficient strength"),
+    ("mahabharata-ganga-15", "stumbling at it were", "stumbling as it were"),
+    ("mahabharata-hanuman-2", "short flesh neck", "short fleshy neck"),
+    ("mahabharata-hanuman-4", "slayer of foes as casting", "slayer of foes was casting"),
+    ("mahabharata-hanuman-6", "reasonable persons like thee", "reasonable person like thee"),
+    ("mahabharata-hanuman-39", "when thou shall give", "when thou shalt give"),
 ]
 
 
@@ -203,6 +219,54 @@ def yaksha(volume):
     return out
 
 
+# Stories of the gods, for the Learn path of that name: (key, title, [(book, section, first words,
+# last words)]). A segment runs from its first words (or the section's start) to its last words
+# (or the section's end); the narrator's frame is kept, since these are stories.
+STORIES = [
+    ("ganesha", "Ganesha writes the Mahabharata", [
+        ("1", "I", "Brahma said. ‘I esteem thee", "other verses in great abundance."),
+    ]),
+    ("churning", "The churning of the ocean", [
+        ("1", "XVII", "There is a mountain named Meru", None),
+        ("1", "XVIII", None, None),
+    ]),
+    ("ganga", "The Ganga comes down to earth", [
+        ("3", "CVIII", None, None),
+        ("3", "CIX", None, None),
+    ]),
+    ("hanuman", "Hanuman meets Bhima", [
+        ("3", "CXLV", "On those sounds being heard", None),
+        ("3", "CXLVI", None, None),
+        ("3", "CXLVII", None, None),
+        ("3", "CXLIX", None, "no match for thee single-handed."),
+        ("3", "CL", None, None),
+    ]),
+]
+
+
+def story(volume, segments):
+    """The story's paragraphs, cleaned, without section titles and closing formulas."""
+    paras = []
+    for book_no, roman, first, last in segments:
+        book = volume[volume.index(f"\nBOOK {book_no}\n") :]
+        a = book.index(f"\nSECTION {roman}\n")
+        b = book.index("\nSECTION ", a + 5)
+        body = book[a:b]
+        body = body[body.index("\n", 2) :]  # past the heading
+        body = re.sub(r"(?<!\n)\n(?!\n)", " ", body)  # lines joined, paragraph breaks kept
+        body = re.sub(r" {2,}", " ", body)
+        if first:
+            body = body[body.index(first) :]
+        if last:
+            body = body[: body.index(last) + len(last)]
+        for para in re.split(r"\n\s*\n", body):
+            para = clean(para)
+            if not para or re.match(r"^\(.*continued\)$|^So ends the", para):
+                continue
+            paras.append(para)
+    return paras
+
+
 def main(cache):
     vol1, vol2 = fetch(cache, 15474), fetch(cache, 15475)
     passages = []
@@ -238,6 +302,24 @@ def main(cache):
             }
         )
 
+    for key, title, segments in STORIES:
+        vol = vol1  # Books 1 and 3 are both in volume 1
+        n = 0
+        for para in story(vol, segments):
+            for piece in chunk(para):
+                n += 1
+                passages.append(
+                    {
+                        "id": f"mahabharata-{key}-{n}",
+                        "source": f"{title} {n}",
+                        "section": key,
+                        "sectionName": title,
+                        "number": str(n),
+                        "translation": piece,
+                        "translator": TRANSLATOR,
+                    }
+                )
+
     by_id = {p["id"]: p for p in passages}
     for pid, wrong, right in FIXES:
         if wrong not in by_id[pid]["translation"]:
@@ -251,8 +333,10 @@ def main(cache):
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(kept, f, ensure_ascii=False, indent=0)
         f.write("\n")
-    vid = sum(p["section"] == "vidura-niti" for p in kept)
-    print(f"{len(kept)} passages ({vid} Vidura Niti, {len(kept) - vid} Yaksha Prashna); {len(LEAVE_OUT)} left out")
+    sections = {}
+    for p in kept:
+        sections[p["section"]] = sections.get(p["section"], 0) + 1
+    print(f"{len(kept)} passages {sections}; {len(LEAVE_OUT)} left out")
 
 
 if __name__ == "__main__":

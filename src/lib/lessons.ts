@@ -517,6 +517,126 @@ const RAMAYANA: Lesson[] = [
   },
 ];
 
+const GODS: Lesson[] = [
+  {
+    title: "How Ganesha got his elephant head",
+    body: [
+      "Ganesha is the god with the elephant head. Many Hindu families pray to him first, before starting anything new: a school year, a journey, a new home. But why does he have an elephant's head? Families tell this story in different ways. Here is the best-known one.",
+      "The goddess Parvati wanted someone to guard her door while she bathed. So she shaped a boy out of turmeric paste and breathed life into him. She told him, \"Let no one in.\" The boy promised.",
+      "Then Shiva, Parvati's husband, came home. He had never met the boy, and the boy had never met him. The boy stood in the doorway and would not let him pass. Neither would give way, and in the fight that followed, Shiva struck off the boy's head.",
+      "When Parvati came out and saw what had happened, her grief and anger shook the world. Shiva saw his mistake. He sent his helpers to bring the head of the first living being they found. They came back with the head of a great elephant, and Shiva gave the boy new life with it.",
+      "Shiva then made the boy the leader of all his followers, the ganas. That is where the name comes from: Ganesha, or Ganapati, means lord of the ganas. And Shiva promised that Ganesha would be honored first, before every other god.",
+      "There is a lot in this story. A child who keeps his promise to his mother. A great god who admits he was wrong and makes it right. And a new beginning that comes out of a terrible mistake. Ganesha is called the remover of obstacles. Maybe that is because he was once an obstacle himself, standing in a doorway, and he became a blessing.",
+    ],
+    reflect: "Think of a mistake you made. What could you do to make it right, even now?",
+  },
+  {
+    title: "Ganesha writes the Mahabharata",
+    body: [
+      "The Mahabharata is one of the longest poems in the world. The Bhagavad Gita is one small part of it. It was told by a wise sage named Vyasa. But a poem that long needed someone to write it down.",
+      "The god Brahma told Vyasa to ask Ganesha. Ganesha agreed, with one condition: \"My pen must never stop, not even for a moment.\"",
+      "Vyasa was clever. He gave his own condition back: \"Then you must understand every verse before you write it down.\" Ganesha said \"Om\" to show he agreed, and they began.",
+      "Whenever Vyasa needed time to think, he spoke a verse so deep and tangled that even Ganesha had to stop and work out what it meant. While Ganesha was thinking, Vyasa composed the next part. That is how the great story was written.",
+      "In many tellings, Ganesha's pen broke partway through. So he snapped off one of his own tusks and kept writing with it. That's why pictures of Ganesha often show him with one broken tusk.",
+      "The story teaches two things. Good work needs both speed and understanding: Ganesha would not write what he did not understand. And when your tools fail, a determined person finds a way to keep going.",
+    ],
+    verseId: "mahabharata-ganesha-3",
+    reflect: "Is there something you do quickly that you should slow down and understand first?",
+  },
+  {
+    title: "Shiva drinks the poison",
+    body: [
+      "Long ago, the gods and their rivals, the asuras, wanted amrita, the drink that makes you live forever. It was hidden deep in the ocean. To get it, they had to churn the whole ocean, the way you churn milk to make butter.",
+      "They used a mountain as the churning stick, and Vasuki, the king of serpents, as the rope. The gods pulled one end and the asuras pulled the other, back and forth, for a very long time.",
+      "Wonderful things rose out of the sea: the moon, a white horse, a shining jewel, and the goddess Lakshmi. But then something terrible came up too. A poison called Kalakuta spread over the earth. It blazed like fire, and its fumes made the whole world faint.",
+      "Everyone was afraid. Brahma, the creator, asked Shiva for help, and Shiva agreed. To save every living being, he drank the poison himself.",
+      "He did not let it go down. He held it in his throat, and it turned his throat blue. That is why Shiva is called Nilakantha, which means the blue-throated one. Pictures of Shiva often show him with a blue neck.",
+      "Many at the churning hoped to gain something. Shiva was the one who took the bad part, so the rest of the world could be safe. Sometimes being strong means carrying a hard thing so others don't have to.",
+    ],
+    verseId: "mahabharata-churning-16",
+    reflect: "Who in your life quietly carries hard things so you don't have to? How could you thank them?",
+  },
+  {
+    title: "Shiva catches the Ganga",
+    body: [
+      "The Ganga is a river Hindus hold especially holy. But there is a story that once, she did not flow on earth at all. She flowed only in heaven.",
+      "A king named Bhagiratha wanted to bring her down. Long before, sixty thousand of his ancestors had met their end because of a great sage named Kapila. In many tellings, they angered him and were burned to ashes. They could only find peace if the Ganga's water flowed over their remains.",
+      "So Bhagiratha went to the Himalayas and lived very simply for a thousand years, eating only fruit and roots, and praying. Finally, the river goddess Ganga appeared to him and said yes. But she warned him: \"When I fall from the sky, the force will be too much. No one in all the worlds could bear it, except Shiva.\"",
+      "So Bhagiratha prayed again, this time to Shiva. Shiva agreed. He stood on the snowy mountain and caught the falling river on his head, so that she came to earth gently instead of smashing it.",
+      "That is why pictures of Shiva show the Ganga flowing from his hair. And when people do something that takes enormous, patient effort, they still call it a Bhagiratha effort.",
+      "Two lessons are here. Bhagiratha shows that great things take great patience. And Shiva shows that real strength is not always about smashing things. Sometimes it means taking a huge force and making it gentle enough to help.",
+    ],
+    verseId: "mahabharata-ganga-10",
+    reflect: "What is something worth working on for a long time, even if it takes years?",
+  },
+  {
+    title: "Prahlada and the man-lion",
+    body: [
+      "There was once a proud and powerful king named Hiranyakashipu. He had been granted a special protection, and he thought it made him greater than God. He ordered everyone to worship him instead of Vishnu.",
+      "But his own son, a boy named Prahlada, loved Vishnu. He said, gently and without fear, that Vishnu is not just in heaven. He is in everyone, even in his father.",
+      "The king was furious. He tried again and again to make his son obey, and when that failed, to hurt him. Serpents, elephants and fire were sent against the boy. Prahlada kept thinking of Vishnu, and none of them could harm him.",
+      "Here is the most amazing part. When the king's priests attacked Prahlada and their own magic turned back on them, Prahlada didn't cheer. He prayed for them to live, because, he said, Vishnu was in them too. They rose up unhurt.",
+      "In the end, Vishnu came as Narasimha, half man and half lion, and ended the cruel king's rule. Prahlada became a good and kind king himself. In the best-known telling, Narasimha bursts out of a stone pillar, to show that God really is everywhere, just as Prahlada said.",
+      "Prahlada was a child, but he was the bravest one in the palace. He stayed kind even to people who tried to hurt him, because he saw God in everyone.",
+    ],
+    verseId: "vishnu-purana-prahlada-1-18-12",
+    reflect: "Is there someone who has been unkind to you that you could still wish well?",
+  },
+  {
+    title: "Vamana's three steps",
+    body: [
+      "The old book of Vishnu tells this very briefly: Vishnu came as Vamana, and with three steps he won back the worlds and gave them back to Indra. Families tell the fuller story like this.",
+      "Bali was a king of the asuras. He was generous, and his people loved him, but he grew so powerful that he took over heaven and the whole world. He was proud of how much he owned.",
+      "One day, while Bali was holding a great ceremony, a small boy walked in. He was a young priest, very short, with a gentle smile. His name was Vamana. Bali was famous for giving gifts, so he asked the boy what he wanted.",
+      "Vamana said, \"Only as much land as I can cover in three steps.\" Bali laughed. Three tiny steps? Of course!",
+      "Then Vamana began to grow. He grew taller than the trees, taller than the mountains, taller than the clouds. With his first step he covered the whole earth. With his second, he covered the sky. Vamana was Vishnu himself, and he gave heaven back to Indra and the gods.",
+      "There was nowhere left for the third step. Bali understood. He bowed down and said, \"Put your third step on my head.\" Because Bali kept his promise and gave up his pride, Vishnu blessed him. In Kerala, in the south of India, many families still welcome Bali back every year at the festival of Onam.",
+      "The story reminds us that God can come in small, humble forms. And it shows that even a proud person can do something great, by keeping their word and letting go.",
+    ],
+    verseId: "vishnu-purana-vamana-3-1-1",
+    reflect: "When is it hard for you to let go of something you're proud of?",
+  },
+  {
+    title: "Krishna and the serpent Kaliya",
+    body: [
+      "When Krishna was a boy, he lived among cowherds by the river Yamuna. He played with his friends and looked after the cows. But one part of the river had become deadly.",
+      "A huge many-headed serpent named Kaliya lived in a pool there. His poison was so strong that trees on the bank withered, and birds touched by its spray were scorched. The cows and their herders could not drink from it.",
+      "Krishna decided to help. He climbed a tall tree and jumped right into the pool. Kaliya and the other serpents rose up and wrapped themselves around him. His friends ran home crying, and the whole village rushed to the river, sure he was lost.",
+      "Then Krishna freed himself. He climbed onto Kaliya's great hoods and danced on them, until the proud serpent was tired out and could fight no more.",
+      "Kaliya's family begged for mercy, and Krishna gave it. He didn't kill the serpent. He told him to leave the river and go to the sea, far from the village. And he promised that the marks of his feet on Kaliya's head would protect the serpent from his enemies.",
+      "Krishna was strong enough to win. But he was also kind enough to forgive. The river was made clean, and even the defeated serpent was given a safe new home.",
+    ],
+    verseId: "vishnu-purana-kaliya-5-7-23",
+    reflect: "When you win an argument or a game, how do you treat the one who lost?",
+  },
+  {
+    title: "Krishna lifts Govardhan Hill",
+    body: [
+      "Every year, the cowherds of Krishna's village held a big ceremony for Indra, the god of rain. Young Krishna asked them a question: \"Why not honor the things that really feed us: our cows, our forest and Govardhan Hill?\" So that year, they did.",
+      "Indra was offended. In his anger, he sent huge storm clouds. Rain poured down like a flood, and the wind howled. The people and their cows were terrified.",
+      "Krishna said, \"Don't be afraid.\" Then he lifted the whole of Govardhan Hill with one hand, as if it were a toy, and held it up like a giant umbrella.",
+      "Everyone crowded underneath with their cows and wagons. For seven days and nights the rain fell, and Krishna held the mountain steady over their heads. Not one person was harmed.",
+      "At last Indra gave up, and the sky cleared. Everyone came out, safe. In many tellings, Indra came down himself and bowed to Krishna.",
+      "This story shows God as a shelter when people are frightened, and that pride, even a god's pride, gives way in the end. It also reminds us to be grateful for the land, the animals and the people who quietly keep us alive.",
+    ],
+    verseId: "vishnu-purana-govardhan-5-11-5",
+    reflect: "What are three ordinary things that keep you alive and well that you could be thankful for today?",
+  },
+  {
+    title: "Hanuman meets Bhima",
+    body: [
+      "Bhima was one of the five Pandava brothers in the Mahabharata. He was the strongest man of his time, and he knew it. One day he was walking through a mountain forest, on his way to find a rare flower.",
+      "An old monkey was lying across the narrow path, half asleep. Bhima shouted at him to move. The monkey said, \"I'm old and sick and too weak to get up. If you want to pass, just move my tail out of the way.\"",
+      "Bhima laughed and took hold of the tail with one hand. It didn't move. He used both hands. He pulled until his face was red and covered in sweat. He could not even lift it.",
+      "Bhima was ashamed of how rudely he had spoken. He bowed, put his hands together and asked, \"Who are you really?\" The monkey smiled. He was Hanuman, the great hero of the Ramayana. And because both of them were sons of the wind god, he was Bhima's brother.",
+      "Hanuman showed Bhima the giant form he had taken when he leapt across the sea to find Sita, so huge that Bhima had to close his eyes. Then he hugged his brother, and promised to help him. Hanuman said he would ride on the flag of Arjuna's chariot, Bhima's brother, in the great battle to come.",
+      "Bhima learned something that day. However strong you are, there is always someone stronger, and it might be the one you looked down on. Real strength stays humble.",
+    ],
+    verseId: "mahabharata-hanuman-15",
+    reflect: "Have you ever looked down on someone, and then found out you were wrong about them?",
+  },
+];
+
 export const PATHS: LearningPath[] = [
   {
     slug: "gita-18-days",
@@ -549,6 +669,14 @@ export const PATHS: LearningPath[] = [
     forWhom: "Lovely to listen to together",
     totalLessons: 7,
     lessons: RAMAYANA,
+  },
+  {
+    slug: "stories-of-the-gods",
+    title: "Stories of the gods",
+    description: "Ganesha, Shiva, Vishnu, Krishna and Hanuman, in the stories families have told for centuries.",
+    forWhom: "For kids and grown-ups together",
+    totalLessons: 9,
+    lessons: GODS,
   },
 ];
 

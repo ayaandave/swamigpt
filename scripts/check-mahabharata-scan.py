@@ -20,11 +20,20 @@ import urllib.request
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 UA = "SwamiGPT-build/0.1 (personal non-commercial project)"
-SCANS = {"03": "mahabharataofkri03roypuoft", "04": "mahabharataofkri04roypuoft"}
+SCANS = {
+    "01": "mahabharataofkri01roypuoft",
+    "02": "mahabharataofkri02roypuoft",
+    "03": "mahabharataofkri03roypuoft",
+    "04": "mahabharataofkri04roypuoft",
+}
 # Where each teaching starts and ends in the scan (first words of each, as printed)
 RANGES = {
     "yaksha-prashna": ("03", "What is it that maketh the Sun rise", "let all thy brothers live"),
     "vidura-niti": ("04", "Sleeplessness", "SECTION XLI"),
+    "ganesha": ("01", "I esteem thee", "great abundance"),
+    "churning": ("01", "mountain named Meru", "the Amrita in the hands"),
+    "ganga": ("02", "That same king, of a powerful bow", "destroyed by Agastya"),
+    "hanuman": ("03", "On those sounds being heard", "vanished at that spot"),
 }
 
 
@@ -79,8 +88,11 @@ def main(cache):
     for section, (vol, first, last) in RANGES.items():
         body = scan_body(fetch(cache, vol))
         squash = re.sub(r"\s+", " ", body)
-        a = squash.index(re.sub(r"\s+", " ", first))
-        b = squash.index(last, a) + len(last)
+        # The anchors narrow the search; if the OCR garbled one, the whole volume is searched
+        a = squash.find(re.sub(r"\s+", " ", first))
+        a = max(a, 0)
+        b = squash.find(last, a)
+        b = b + len(last) if b != -1 else len(squash)
         scan = words(squash[a:b])
         # Each passage is found in the scan by its opening words, then compared word by word in
         # a window just long enough to hold it (comparing everything at once is far too slow)

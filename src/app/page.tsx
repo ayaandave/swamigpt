@@ -9,7 +9,7 @@ import { AskIcon, LearnIcon, MeditateIcon, PersonIcon, ReadIcon } from "@/compon
 
 const TILES = [
   { href: "/ask", title: "Ask", line: "Real answers from the scriptures, for your question", Icon: AskIcon, tone: "bg-kesar text-kajal" },
-  { href: "/learn", title: "Learn", line: "38 short lessons on the Gita, karma, yoga and more", Icon: LearnIcon, tone: "bg-tulsi text-sandal" },
+  { href: "/learn", title: "Learn", line: "47 short lessons: the Gita, karma, yoga and stories of the gods", Icon: LearnIcon, tone: "bg-tulsi text-sandal" },
   { href: "/meditate", title: "Meditate", line: "Guided meditations and mantras, read aloud", Icon: MeditateIcon, tone: "bg-night text-sandal" },
   { href: "/learn#read", title: "Read", line: "The Gita, 10 Upanishads, the Yoga Sutras and Vivekananda", Icon: ReadIcon, tone: "bg-sandal-deep text-kajal" },
 ];

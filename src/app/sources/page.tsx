@@ -36,6 +36,14 @@ const SOURCES = [
     from: "Kisari Mohan Ganguli, The Mahabharata of Krishna-Dwaipayana Vyasa (1883–1896); public domain. Vidura Niti is Udyoga Parva sections 33–40, and the Yaksha Prashna is Vana Parva section 311. Text from Project Gutenberg's transcription, checked word by word against a scan of the printed book. Only Vidura's own words are kept, cut into short passages; two of the Yaksha's questions are left out because the printed book itself lost part of their wording.",
   },
   {
+    text: "The Mahabharata: stories of the gods",
+    from: "The same Ganguli translation: Ganesha writing the epic (Adi Parva section 1), the churning of the ocean (Adi Parva 17–18), the Ganga's descent onto Shiva (Vana Parva 108–109), and Hanuman meeting Bhima (Vana Parva 145–150, leaving out a long talk on the ages of the world). Checked against the printed book the same way.",
+  },
+  {
+    text: "The Vishnu Purana: Lakshmi, Prahlada, Vamana and Krishna",
+    from: "Manmatha Nath Dutt, A Prose English Translation of Vishnupuranam (Calcutta, 1896); public domain. Part 1 sections 9 and 17–20, the Vamana passage of Part 3 section 1, and Part 5 sections 7, 10 and 11. Text from Project Gutenberg's transcription, checked word by word against a scan of the printed book, with a few printer's slips in names corrected. Four short passages are left out: two promising rewards for reciting, one describing the body with disgust, and one about an animal offering.",
+  },
+  {
     text: "Swami Vivekananda: Chicago addresses, Karma-Yoga, Raja-Yoga, Bhakti-Yoga, Jnana-Yoga",
     from: "His own books and speeches (1893–1899), from The Complete Works of Swami Vivekananda on Wikisource; public domain. Later volumes and material first published after his death are not included, because they may still be in copyright. Each chapter is divided into short passages; chapter headings and editors' notes are left out.",
   },

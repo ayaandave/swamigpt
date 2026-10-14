@@ -18,7 +18,8 @@ const TITLES = {
   gita: "Bhagavad Gita",
   "yoga-sutras": "Yoga Sutras of Patanjali",
   upanishads: "Upanishads",
-  mahabharata: "Mahabharata (Vidura Niti and Yaksha Prashna, Ganguli's translation)",
+  mahabharata: "Mahabharata (Vidura Niti, Yaksha Prashna and stories of the gods, Ganguli's translation)",
+  "vishnu-purana": "Vishnu Purana (M. N. Dutt's translation)",
 };
 if (!TITLES[TEXT]) {
   console.error(`Usage: node --env-file=.env.local scripts/enrich-notes.mjs <${Object.keys(TITLES).join(" | ")}> [--limit N]`);
