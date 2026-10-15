@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { GROUPS, MEDITATIONS } from "@/lib/meditations";
 import { MANTRAS } from "@/lib/mantras";
 import { MeditationStats } from "@/components/MeditationStats";
+import { PracticeStreak } from "@/components/PracticeStreak";
 import { PlayIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function MeditatePage() {
         Choose what fits this moment. The lamp will breathe with you.
       </p>
       <MeditationStats />
+      <PracticeStreak className="mt-5" />
 
       {GROUPS.map((g) => (
         <section key={g.id} aria-labelledby={`group-${g.id}`} className="mt-10">

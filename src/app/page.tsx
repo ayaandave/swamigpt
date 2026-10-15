@@ -4,6 +4,7 @@ import { HomeHero } from "@/components/home/HomeHero";
 import { HomeAsk } from "@/components/home/HomeAsk";
 import { ContinueLesson } from "@/components/home/ContinueLesson";
 import { TodayCard } from "@/components/home/TodayCard";
+import { PracticeStreak } from "@/components/PracticeStreak";
 import { dailyEntries } from "@/lib/daily";
 import { OldAskLink } from "@/components/home/OldAskLink";
 import { AskIcon, LearnIcon, MeditateIcon, PersonIcon, ReadIcon } from "@/components/icons";
@@ -45,6 +46,7 @@ export default function Home() {
         <HomeAsk />
       </HomeHero>
       <ContinueLesson />
+      <PracticeStreak className="mt-6" />
 
       <section aria-labelledby="different" className="mt-12">
         <h2 id="different" className="font-display text-[1.8rem] leading-tight">

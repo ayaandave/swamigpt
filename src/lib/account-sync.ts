@@ -1,8 +1,10 @@
 "use client";
 
-// Keeps this device and the signed-in account in step: settings, the age answer and mala progress.
+// Keeps this device and the signed-in account in step: settings, the age answer, mala progress
+// and practice days.
 // On sign-in the two are merged (nothing earned on either side is lost); after that, changes
 // made here are saved to the account as they happen.
+import { getPracticeDays, mergePracticeDays, onPractice } from "./practice";
 import { getProgress, mergeProgress, onLessonDone, type Progress } from "./progress";
 import { getSettings, onSettingsChange, updateSettings, type Settings } from "./settings";
 import { supabase } from "./supabase";
@@ -37,6 +39,11 @@ export async function startAccountSync(userId: string): Promise<() => void> {
   if (missing.length) await sb.from("lesson_progress").upsert(missing, { ignoreDuplicates: true });
   mergeProgress(remote);
 
+  // ---- Practice days: union of both sides ----
+  const { data: practice } = await sb.from("profiles").select("practice_days").eq("id", userId).maybeSingle<{ practice_days: string[] }>();
+  mergePracticeDays(practice?.practice_days ?? []);
+  await sb.from("profiles").update({ practice_days: getPracticeDays() }).eq("id", userId);
+
   // ---- From now on, save changes as they happen ----
   let timer: ReturnType<typeof setTimeout> | undefined;
   const offSettings = onSettingsChange(() => {
@@ -48,9 +55,12 @@ export async function startAccountSync(userId: string): Promise<() => void> {
       void sb.from("lesson_progress").upsert({ user_id: userId, path_slug: slug, lesson_index: index }, { ignoreDuplicates: true }),
   );
 
+  const offPractice = onPractice((days) => void sb.from("profiles").update({ practice_days: days }).eq("id", userId));
+
   return () => {
     clearTimeout(timer);
     offSettings();
     offLessons();
+    offPractice();
   };
 }

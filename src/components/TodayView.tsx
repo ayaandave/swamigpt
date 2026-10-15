@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import type { Daily } from "@/lib/daily";
 import { dailyIndex } from "@/lib/daily-verses";
+import { markPractice } from "@/lib/practice";
 import { useIsClient } from "@/lib/store";
 import { caption, whoSays } from "@/lib/scripture/who";
 import { VerseCard } from "./VerseCard";
@@ -15,6 +17,11 @@ const pill =
 export function TodayView({ entries }: { entries: Daily[] }) {
   // The verse depends on the reader's local date, so it renders in the browser only
   const isClient = useIsClient();
+  // Spending a little while with today's verse counts as the day's practice
+  useEffect(() => {
+    const t = window.setTimeout(markPractice, 15_000);
+    return () => clearTimeout(t);
+  }, []);
   if (!isClient) return <div className="min-h-[60vh]" />;
   const daily = entries[dailyIndex()];
   const { verse } = daily;

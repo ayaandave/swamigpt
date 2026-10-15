@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DeleteAccount } from "@/components/DeleteAccount";
+import { Journey } from "@/components/Journey";
 import { Diya } from "@/components/Diya";
 import { PLUS, usePlus } from "@/lib/plus";
 import { supabase, useAuth } from "@/lib/supabase";
@@ -44,6 +45,8 @@ export default function AccountPage() {
         <p className="mt-1 break-all font-display text-[1.4rem]">{user.email}</p>
         <p className="mt-2 text-[0.95rem] text-kajal-soft">With SwamiGPT since {since}</p>
       </div>
+
+      <Journey />
 
       <div className="mt-8 flex flex-col gap-3">
         {PLUS.enabled && (

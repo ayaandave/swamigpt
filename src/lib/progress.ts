@@ -1,5 +1,6 @@
 "use client";
 
+import { markPractice } from "./practice";
 import { createLocalStore } from "./store";
 
 // Mala progress, kept in browser storage and, when signed in, synced to the account (lib/account-sync).
@@ -13,6 +14,7 @@ function markDone(slug: string, index: number) {
   const p = store.get();
   store.set({ ...p, [slug]: Array.from(new Set([...(p[slug] ?? []), index])) });
   doneListeners.forEach((l) => l(slug, index));
+  markPractice();
 }
 
 export const getProgress = store.get;

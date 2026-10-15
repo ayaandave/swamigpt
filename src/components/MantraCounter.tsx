@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { COUNTS } from "@/lib/mantras";
+import { markPractice } from "@/lib/practice";
 
 // Say the mantra, then tap: a ring of beads fills as you go, like moving through a mala.
 export function MantraCounter({ title }: { title: string }) {
@@ -19,6 +20,7 @@ export function MantraCounter({ title }: { title: string }) {
     try {
       navigator.vibrate?.(count === goal ? [40, 60, 40] : 12);
     } catch {}
+    if (count === goal) markPractice(); // a full count is a day's practice
   }, [count, goal]);
 
   return (
