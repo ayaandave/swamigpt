@@ -19,7 +19,14 @@ export async function generateMetadata(props: PageProps<"/read/[text]/[section]/
   const found = await load(props);
   if (!found) return {};
   const p = found.passage;
-  return { title: `${p.source} meaning · SwamiGPT`, description: p.plain ?? p.translation };
+  const card = `/api/card?id=${encodeURIComponent(p.id)}`;
+  return {
+    title: `${p.source} meaning · SwamiGPT`,
+    description: p.plain ?? p.translation,
+    // The verse as a picture, for link previews in messages and social apps
+    openGraph: { images: [{ url: card, width: 1200, height: 630 }] },
+    twitter: { card: "summary_large_image", images: [card] },
+  };
 }
 
 export default async function PassagePage(props: PageProps<"/read/[text]/[section]/[number]">) {

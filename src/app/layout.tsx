@@ -22,6 +22,7 @@ const atkinson = Atkinson_Hyperlegible_Next({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.swamigpt.com"),
   title: "SwamiGPT",
   description:
     "A calm AI guide to Hindu philosophy, yoga and meditation, answering from the Gita, Upanishads and Yoga Sutras.",

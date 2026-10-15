@@ -13,6 +13,7 @@ import { Diya } from "./Diya";
 import { VerseCard } from "./VerseCard";
 import { whoSays } from "@/lib/scripture/who";
 import { ListenButton } from "./ListenButton";
+import { ShareButton } from "./ShareButton";
 import { MicIcon, SendIcon } from "./icons";
 
 type Turn = { id: number; question: string; depth: Depth; answer?: SwamiAnswer };
@@ -223,6 +224,7 @@ function Answer({
       )}
       <div className="flex flex-wrap items-center gap-3 pt-1">
         <ListenButton text={spoken} onSpeakingChange={onSpeaking} save />
+        {!answer.notice && <ShareButton question={turn.question} answer={answer} />}
         <button
           type="button"
           disabled={disabled}
