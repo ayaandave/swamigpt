@@ -23,9 +23,9 @@ const atkinson = Atkinson_Hyperlegible_Next({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.swamigpt.com"),
-  title: "SwamiGPT",
+  title: "SwamiGPT: a calm guide to the Gita, the Upanishads and meditation",
   description:
-    "A calm AI guide to Hindu philosophy, yoga and meditation, answering from the Gita, Upanishads and Yoga Sutras.",
+    "A calm AI guide to Hindu philosophy, yoga and meditation. Answers drawn only from real scripture: the Bhagavad Gita, the Upanishads, the Yoga Sutras, the Ramayana and more.",
   // Opens full-screen, like an app, when added to an iPhone home screen
   appleWebApp: { capable: true, title: "SwamiGPT", statusBarStyle: "default" },
 };

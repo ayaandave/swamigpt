@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { PATHS } from "@/lib/lessons";
 import { getPassageById } from "@/lib/scripture/library";
 import type { Verse } from "@/lib/scripture/types";
@@ -6,6 +7,18 @@ import { LessonView } from "@/components/LessonView";
 
 export function generateStaticParams() {
   return PATHS.flatMap((p) => p.lessons.map((_, i) => ({ slug: p.slug, lesson: String(i + 1) })));
+}
+
+export async function generateMetadata(props: PageProps<"/learn/[slug]/[lesson]">): Promise<Metadata> {
+  const { slug, lesson } = await props.params;
+  const path = PATHS.find((p) => p.slug === slug);
+  const l = path?.lessons[Number(lesson) - 1];
+  if (!path || !l) return {};
+  return {
+    title: `${l.title} · ${path.title} · SwamiGPT`,
+    description: l.body[0],
+    ...(l.verseId && { openGraph: { images: [{ url: `/api/card?id=${l.verseId}`, width: 1200, height: 630 }] } }),
+  };
 }
 
 export default async function Page(props: PageProps<"/learn/[slug]/[lesson]">) {

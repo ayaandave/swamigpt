@@ -1,9 +1,16 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { PATHS } from "@/lib/lessons";
 import { PathTimeline } from "@/components/PathTimeline";
 
 export function generateStaticParams() {
   return PATHS.map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata(props: PageProps<"/learn/[slug]">): Promise<Metadata> {
+  const { slug } = await props.params;
+  const path = PATHS.find((p) => p.slug === slug);
+  return path ? { title: `${path.title} · SwamiGPT`, description: path.description } : {};
 }
 
 export default async function Page(props: PageProps<"/learn/[slug]">) {

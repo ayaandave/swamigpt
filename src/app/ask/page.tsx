@@ -1,4 +1,11 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Ask a question · SwamiGPT",
+  description:
+    "Ask about life, karma, the Gita or meditation, and get a calm answer drawn from real scripture: the Bhagavad Gita, the Upanishads, the Yoga Sutras and more.",
+};
 import { AskSwami } from "@/components/AskSwami";
 import { AskFromLink } from "@/components/AskFromLink";
 
