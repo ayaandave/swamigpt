@@ -1,6 +1,6 @@
 "use client";
 
-import { createLocalStore } from "./store";
+import { createLocalStore, useIsClient } from "./store";
 
 // Days with some practice: a finished meditation or lesson, a full mantra count, or time with
 // today's verse. Kept in browser storage and, when signed in, synced to the account.
@@ -45,6 +45,9 @@ export function onPractice(l: (days: string[]) => void) {
 // Today's streak (still alive if the last practice was yesterday), the longest, and the last 7 days
 export function usePractice() {
   const { days } = store.useStore();
+  // Dates are the reader's own, so nothing is worked out while the page is built on the server
+  const isClient = useIsClient();
+  if (!isClient) return { total: 0, streak: 0, longest: 0, week: [], practisedToday: false };
   const set = new Set(days);
   let streak = 0;
   for (let i = set.has(daysAgo(0)) ? 0 : 1; set.has(daysAgo(i)); i++) streak++;
