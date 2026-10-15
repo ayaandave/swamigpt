@@ -5,6 +5,7 @@ import { HomeAsk } from "@/components/home/HomeAsk";
 import { ContinueLesson } from "@/components/home/ContinueLesson";
 import { TodayCard } from "@/components/home/TodayCard";
 import { PracticeStreak } from "@/components/PracticeStreak";
+import { InstallApp } from "@/components/InstallApp";
 import { dailyEntries } from "@/lib/daily";
 import { OldAskLink } from "@/components/home/OldAskLink";
 import { AskIcon, LearnIcon, MeditateIcon, PersonIcon, ReadIcon } from "@/components/icons";
@@ -82,6 +83,7 @@ export default function Home() {
       </section>
 
       <TodayCard entries={dailyEntries()} />
+      <InstallApp />
 
       <section className="mt-14">
         <h2 className="font-display text-[1.8rem] leading-tight">Why I built this</h2>
