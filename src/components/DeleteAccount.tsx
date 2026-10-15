@@ -12,13 +12,14 @@ export function DeleteAccount() {
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<"plus" | "failed" | null>(null);
 
-  const remove = async () => {
+  const remove = async (confirmPlus = false) => {
     setBusy(true);
     setProblem(null);
     const token = await accessToken();
     const res = await fetch("/api/account/delete", {
       method: "POST",
-      headers: { authorization: `Bearer ${token}` },
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: JSON.stringify({ confirmPlus }),
     }).catch(() => null);
     if (res?.ok) {
       await supabase()?.auth.signOut({ scope: "local" });
@@ -50,11 +51,11 @@ export function DeleteAccount() {
       </p>
       {problem === "plus" && (
         <p role="alert" className="mt-3 font-semibold text-kesar-deep">
-          You still have Plus. Please{" "}
+          You still have Plus. Deleting your account does not stop the billing, so please{" "}
           <Link href="/plus" className="underline underline-offset-4">
-            cancel it first
+            cancel your plan first
           </Link>
-          , so you aren&apos;t charged again. Then you can delete your account.
+          . If you already have, you can delete now.
         </p>
       )}
       {problem === "failed" && (
@@ -66,10 +67,10 @@ export function DeleteAccount() {
         <button
           type="button"
           disabled={busy}
-          onClick={() => void remove()}
+          onClick={() => void remove(problem === "plus")}
           className="min-h-12 rounded-full bg-kesar-deep px-6 font-bold text-sandal hover:bg-kajal disabled:opacity-60"
         >
-          {busy ? "Deleting…" : "Yes, delete everything"}
+          {busy ? "Deleting…" : problem === "plus" ? "Delete anyway" : "Yes, delete everything"}
         </button>
         <button
           type="button"

@@ -30,7 +30,7 @@ export async function GET(request: Request) {
   const key = process.env.ELEVENLABS_API_KEY;
   const params = new URL(request.url).searchParams;
   const voice = params.get("v") ?? "swamiji";
-  const voiceId = VOICE_IDS[voice];
+  const voiceId = Object.hasOwn(VOICE_IDS, voice) ? VOICE_IDS[voice] : undefined;
   if (!key || !voiceId) return new Response("not configured", { status: 503 });
 
   // Only our own pages may spend credits (browsers mark same-site requests themselves)
@@ -45,7 +45,8 @@ export async function GET(request: Request) {
 
   // The app's speed slider (0.65-0.95) mapped onto ElevenLabs' gentler range (0.7-1.0), in steps
   // of 0.05 so saved audio is shared by everyone at about the same speed
-  const slider = Number(params.get("s") ?? 0.8);
+  const asked = Number(params.get("s") ?? 0.8);
+  const slider = Number.isFinite(asked) ? asked : 0.8;
   const exact = Math.min(1.0, Math.max(0.7, 0.7 + ((slider - 0.65) / 0.3) * 0.3));
   const speed = Math.round(exact * 20) / 20;
 

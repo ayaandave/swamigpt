@@ -9,13 +9,15 @@ const SANDAL = "#f2e3c6";
 const FLAME = "#ffb347";
 const NIGHT = "#17142e";
 
-// The app's display face, fetched as TTF and cut down to just the letters on this card
+// Lora, a serif close to the app's own (whose font tables the image renderer can't read),
+// fetched as TTF and cut down to just the letters on this card
 async function font(text: string) {
-  const css = await fetch(
-    `https://fonts.googleapis.com/css2?family=Lora&text=${encodeURIComponent(text)}`,
-  ).then((r) => r.text());
+  const signal = AbortSignal.timeout(4000); // a slow font server falls back to a plain serif
+  const css = await fetch(`https://fonts.googleapis.com/css2?family=Lora&text=${encodeURIComponent(text)}`, {
+    signal,
+  }).then((r) => r.text());
   const url = css.match(/src: url\((.+?)\) format\('(?:opentype|truetype)'\)/)?.[1];
-  return url ? fetch(url).then((r) => r.arrayBuffer()) : null;
+  return url ? fetch(url, { signal }).then((r) => r.arrayBuffer()) : null;
 }
 
 // Long passages are cut at a word, so the card stays readable
@@ -26,7 +28,12 @@ function clip(text: string, max: number) {
 }
 
 export async function GET(request: Request) {
-  const id = new URL(request.url).searchParams.get("id") ?? "";
+  const reqUrl = new URL(request.url);
+  const id = reqUrl.searchParams.get("id") ?? "";
+  // One address per card, so extra parameters can't skip the cache and force new drawings
+  if ([...reqUrl.searchParams.keys()].some((k) => k !== "id")) {
+    return Response.redirect(new URL(`/api/card?id=${encodeURIComponent(id)}`, request.url), 308);
+  }
   const p = getPassageById(id);
   if (!p) return new Response("not found", { status: 404 });
 
@@ -48,7 +55,7 @@ export async function GET(request: Request) {
           padding: "64px 80px",
           background: `radial-gradient(ellipse at 50% 35%, #3a2a3a 0%, ${NIGHT} 70%)`,
           color: SANDAL,
-          fontFamily: data ? "Tiro" : "serif",
+          fontFamily: data ? "Lora" : "serif",
         }}
       >
         <div style={{ display: "flex", fontSize: 30, color: FLAME, letterSpacing: 1 }}>{who}</div>
@@ -64,7 +71,7 @@ export async function GET(request: Request) {
     {
       width: 1200,
       height: 630,
-      fonts: data ? [{ name: "Tiro", data, weight: 400, style: "normal" }] : undefined,
+      fonts: data ? [{ name: "Lora", data, weight: 400, style: "normal" }] : undefined,
       headers: { "Cache-Control": "public, max-age=31536000, immutable" },
     },
   );

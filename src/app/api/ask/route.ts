@@ -24,8 +24,8 @@ const Body = z.object({
   // The library passage someone was reading when they pressed "Ask the Swami about this"
   about: z.string().max(120).optional(),
   history: z
-    .array(z.object({ question: z.string().max(2000), answer: z.string().max(8000) }))
-    .max(6)
+    .array(z.object({ question: z.string().max(2000), answer: z.string().max(4000) }))
+    .max(4)
     .default([]),
 });
 
@@ -110,6 +110,11 @@ export async function POST(request: Request) {
   if (!process.env.ANTHROPIC_API_KEY) {
     return Response.json({ error: "not_configured" }, { status: 503 });
   }
+  // Only our own pages ask (browsers mark same-site requests themselves). Revisit for the iPhone
+  // app, whose pages load from their own origin, the same as in /api/speak.
+  const site = request.headers.get("sec-fetch-site");
+  if (site && site !== "same-origin") return Response.json({ error: "forbidden" }, { status: 403 });
+
   const parsed = Body.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
     return Response.json({ error: "bad_request" }, { status: 400 });
@@ -121,6 +126,9 @@ export async function POST(request: Request) {
   const left = await takeQuestion(request);
   if (left === -1) {
     return Response.json({ error: "limit" }, { status: 429 });
+  }
+  if (left === -2) {
+    return Response.json({ error: "site_limit" }, { status: 429 });
   }
 
   // Search on the follow-up plus the previous question, so "what about at work?" still finds something

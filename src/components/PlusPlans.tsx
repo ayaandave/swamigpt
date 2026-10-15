@@ -97,7 +97,8 @@ export function PlusPlans() {
     body = <div className="h-32" />;
   } else {
     // Yearly first: it's the better deal
-    const sorted = [...packages].sort((a) => (a.packageType === "$rc_annual" ? -1 : 0));
+    const yearlyFirst = (p: Package) => Number(p.packageType === "$rc_annual");
+    const sorted = [...packages].sort((a, b) => yearlyFirst(b) - yearlyFirst(a));
     body = (
       <div className="flex flex-col gap-3">
         {sorted.map((pkg) => {

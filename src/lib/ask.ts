@@ -47,7 +47,7 @@ export async function askSwami(
         ageGroup,
         lesson,
         about,
-        history: history.slice(-3).map((t) => ({ question: t.question, answer: asText(t.answer) })),
+        history: history.slice(-3).map((t) => ({ question: t.question, answer: asText(t.answer).slice(0, 4000) })),
       }),
     });
     if (res.status === 503) {
@@ -62,6 +62,15 @@ export async function askSwami(
     }
     if (res.status === 429) {
       const { error } = (await res.json().catch(() => ({}))) as { error?: string };
+      if (error === "site_limit") {
+        return {
+          paragraphs: [
+            "SwamiGPT has answered so many questions today that it is resting until tomorrow. Please come back then. The lessons, meditations and library are all still open.",
+          ],
+          verses: [],
+          notice: "limit",
+        };
+      }
       if (error === "limit") {
         if (token && (!PLUS.enabled || (await hasPlus()))) {
           return {

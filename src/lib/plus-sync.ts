@@ -11,7 +11,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 type Subscriber = {
   entitlements?: Record<string, { expires_date: string | null; grace_period_expires_date?: string | null; product_identifier?: string }>;
-  subscriptions?: Record<string, { store?: string }>;
+  subscriptions?: Record<string, { store?: string; is_sandbox?: boolean }>;
 };
 
 // Looks up one account (RevenueCat app user id = Supabase user id) and saves whether it has Plus.
@@ -32,7 +32,11 @@ export async function syncPlus(userId: string): Promise<boolean> {
   const plus = subscriber.entitlements?.[PLUS_ENTITLEMENT];
   // Billing trouble keeps Plus on through the store's grace period
   const ends = [plus?.expires_date, plus?.grace_period_expires_date].filter(Boolean).sort().at(-1) ?? null;
-  const active = Boolean(plus) && (plus!.expires_date === null || (ends !== null && new Date(ends) > new Date()));
+  // Test purchases (Stripe test mode, TestFlight) never give real Plus on the live site
+  const sandbox = subscriber.subscriptions?.[plus?.product_identifier ?? ""]?.is_sandbox === true;
+  const testOnly = sandbox && process.env.VERCEL_ENV === "production";
+  const active =
+    Boolean(plus) && !testOnly && (plus!.expires_date === null || (ends !== null && new Date(ends) > new Date()));
 
   const sb = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
   const { error } = active
