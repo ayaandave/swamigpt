@@ -1,16 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { getDaily } from "@/lib/mock/content";
+import type { Daily } from "@/lib/daily";
+import { dailyIndex } from "@/lib/daily-verses";
 import { whoSays } from "@/lib/scripture/who";
 import { useIsClient } from "@/lib/store";
 
 // A taste of today's verse; the full page has the Sanskrit, the reflection and the question
-export function TodayCard() {
+export function TodayCard({ entries }: { entries: Daily[] }) {
   // The verse depends on the reader's local date, so it renders in the browser only
   const isClient = useIsClient();
   if (!isClient) return <div className="mt-10 h-40" />;
-  const { verse } = getDaily();
+  const { verse } = entries[dailyIndex()];
   return (
     <Link
       href="/today"

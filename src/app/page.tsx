@@ -4,6 +4,7 @@ import { HomeHero } from "@/components/home/HomeHero";
 import { HomeAsk } from "@/components/home/HomeAsk";
 import { ContinueLesson } from "@/components/home/ContinueLesson";
 import { TodayCard } from "@/components/home/TodayCard";
+import { dailyEntries } from "@/lib/daily";
 import { OldAskLink } from "@/components/home/OldAskLink";
 import { AskIcon, LearnIcon, MeditateIcon, PersonIcon, ReadIcon } from "@/components/icons";
 
@@ -78,7 +79,7 @@ export default function Home() {
         ))}
       </section>
 
-      <TodayCard />
+      <TodayCard entries={dailyEntries()} />
 
       <section className="mt-14">
         <h2 className="font-display text-[1.8rem] leading-tight">Why I built this</h2>
