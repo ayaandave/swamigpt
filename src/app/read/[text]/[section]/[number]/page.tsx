@@ -40,7 +40,7 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
 
   return (
     <div className="pt-8">
-      <Link href={`/read/${p.textId}/${p.section}`} className="text-[0.95rem] font-semibold text-kesar-deep hover:underline">
+      <Link href={`/read/${p.textId}/${p.section}`} className="inline-flex min-h-11 items-center text-[0.95rem] font-semibold text-kesar-deep hover:underline">
         ← {p.sectionName}
       </Link>
       <h1 className="mt-3 font-display text-[2.2rem] leading-tight">{p.source}</h1>

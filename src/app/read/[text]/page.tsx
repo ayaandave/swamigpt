@@ -18,7 +18,7 @@ export default async function TextPage(props: PageProps<"/read/[text]">) {
 
   return (
     <div className="pt-8">
-      <Link href="/learn" className="text-[0.95rem] font-semibold text-kesar-deep hover:underline">
+      <Link href="/learn" className="inline-flex min-h-11 items-center text-[0.95rem] font-semibold text-kesar-deep hover:underline">
         ← Learn
       </Link>
       <h1 className="mt-3 font-display text-[2.4rem] leading-tight">{t.title}</h1>

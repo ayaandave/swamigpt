@@ -188,7 +188,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => switchTo("forgot")}
-                  className="text-[0.95rem] font-semibold text-kesar-deep hover:underline"
+                  className="inline-flex min-h-11 items-center text-[0.95rem] font-semibold text-kesar-deep hover:underline"
                 >
                   Forgot password?
                 </button>
@@ -235,12 +235,12 @@ export default function LoginPage() {
         {mode === "signin" ? (
           <>
             New here?{" "}
-            <button type="button" onClick={() => switchTo("signup")} className="font-semibold text-kesar-deep hover:underline">
+            <button type="button" onClick={() => switchTo("signup")} className="inline-flex min-h-11 items-center font-semibold text-kesar-deep hover:underline">
               Create an account
             </button>
           </>
         ) : (
-          <button type="button" onClick={() => switchTo("signin")} className="font-semibold text-kesar-deep hover:underline">
+          <button type="button" onClick={() => switchTo("signin")} className="inline-flex min-h-11 items-center font-semibold text-kesar-deep hover:underline">
             ← Back to sign in
           </button>
         )}

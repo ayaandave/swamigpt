@@ -52,7 +52,7 @@ export default function HistoryPage() {
         <button
           type="button"
           onClick={() => setOpen(null)}
-          className="text-[0.95rem] font-semibold text-kesar-deep hover:underline"
+          className="inline-flex min-h-11 items-center text-[0.95rem] font-semibold text-kesar-deep hover:underline"
         >
           ← All conversations
         </button>
@@ -100,7 +100,7 @@ export default function HistoryPage() {
 
   return (
     <div className="pt-8">
-      <Link href="/account" className="text-[0.95rem] font-semibold text-kesar-deep hover:underline">
+      <Link href="/account" className="inline-flex min-h-11 items-center text-[0.95rem] font-semibold text-kesar-deep hover:underline">
         ← Your account
       </Link>
       <h1 className="mt-3 font-display text-[2.4rem] leading-tight">Your conversations</h1>

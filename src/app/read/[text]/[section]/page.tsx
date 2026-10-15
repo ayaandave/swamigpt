@@ -28,7 +28,7 @@ export default async function SectionPage(props: PageProps<"/read/[text]/[sectio
 
   return (
     <div className="pt-8">
-      <Link href={`/read/${t.id}`} className="text-[0.95rem] font-semibold text-kesar-deep hover:underline">
+      <Link href={`/read/${t.id}`} className="inline-flex min-h-11 items-center text-[0.95rem] font-semibold text-kesar-deep hover:underline">
         ← {t.title}
       </Link>
       {t.numberedSections && (

@@ -21,7 +21,7 @@ export function LegalPage({ title, intro, children }: { title: string; intro: st
         .
       </p>
       <p className="mt-6">
-        <Link href="/" className="font-semibold text-kesar-deep hover:underline">
+        <Link href="/" className="inline-flex min-h-11 items-center font-semibold text-kesar-deep hover:underline">
           ← Back home
         </Link>
       </p>

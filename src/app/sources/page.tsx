@@ -118,14 +118,14 @@ export default function SourcesPage() {
         </p>
         <ul className="mt-4 flex flex-col gap-2 text-[1.05rem]">
           <li>
-            <a href="tel:988" className="font-bold underline">
+            <a href="tel:988" className="inline-flex min-h-11 items-center font-bold underline">
               Call or text 988
             </a>{" "}
             in the United States, any time.
           </li>
           <li>
             Outside the US:{" "}
-            <a href="https://findahelpline.com" className="font-bold underline">
+            <a href="https://findahelpline.com" className="inline-flex min-h-11 items-center font-bold underline">
               findahelpline.com
             </a>{" "}
             lists free helplines in your country.
@@ -135,16 +135,16 @@ export default function SourcesPage() {
       </section>
 
       <p className="mt-10">
-        <Link href="/privacy" className="font-semibold text-kesar-deep hover:underline">
+        <Link href="/privacy" className="inline-flex min-h-11 items-center font-semibold text-kesar-deep hover:underline">
           Privacy Policy
         </Link>
         {" · "}
-        <Link href="/terms" className="font-semibold text-kesar-deep hover:underline">
+        <Link href="/terms" className="inline-flex min-h-11 items-center font-semibold text-kesar-deep hover:underline">
           Terms of Use
         </Link>
       </p>
       <p className="mt-4">
-        <Link href="/" className="font-semibold text-kesar-deep hover:underline">
+        <Link href="/" className="inline-flex min-h-11 items-center font-semibold text-kesar-deep hover:underline">
           ← Back home
         </Link>
       </p>

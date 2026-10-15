@@ -17,7 +17,7 @@ export function Header() {
   // Sizes here are in px, not rem, so the header still fits a phone at the largest text size
   return (
     <header className="relative z-10 mx-auto flex w-full max-w-3xl items-center justify-between gap-2 px-[16px] pt-[max(16px,env(safe-area-inset-top))] sm:px-6">
-      <Link href="/" className="flex min-w-0 items-center gap-1.5 rounded-full" aria-label="SwamiGPT home">
+      <Link href="/" className="flex min-h-[44px] min-w-0 items-center gap-1.5 rounded-full" aria-label="SwamiGPT home">
         <Diya size={34} />
         <span className="font-display text-[20px] tracking-tight sm:text-[24px]">SwamiGPT</span>
       </Link>
