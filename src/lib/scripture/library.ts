@@ -12,6 +12,8 @@ import mahabharataJson from "../../../data/scripture/mahabharata.json";
 import mahabharataNotes from "../../../data/scripture/mahabharata.notes.json";
 import vishnuPuranaJson from "../../../data/scripture/vishnu-purana.json";
 import vishnuPuranaNotes from "../../../data/scripture/vishnu-purana.notes.json";
+import ramayanaJson from "../../../data/scripture/ramayana.json";
+import ramayanaNotes from "../../../data/scripture/ramayana.notes.json";
 import { TEXTS, type TextInfo } from "./texts";
 import type { Verse } from "./types";
 
@@ -50,6 +52,9 @@ export const PASSAGES: Passage[] = [
   ...(vishnuPuranaJson as Omit<Passage, "textId">[])
     .map((p) => ({ ...p, textId: "vishnu-purana" }))
     .map(withNote(vishnuPuranaNotes as Notes)),
+  ...(ramayanaJson as Omit<Passage, "textId">[])
+    .map((p) => ({ ...p, textId: "ramayana" }))
+    .map(withNote(ramayanaNotes as Notes)),
   // Already in plain English, so no notes
   ...(vivekanandaJson as Omit<Passage, "textId">[]).map((p) => ({ ...p, textId: "vivekananda" })),
 ];

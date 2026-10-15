@@ -441,6 +441,7 @@ const RAMAYANA: Lesson[] = [
       "His wife Sita would not stay behind, and his loyal brother Lakshmana would not either. So the three of them walked out of the city, and all of Ayodhya cried as they left.",
       "This is the first lesson of the Ramayana: keeping your word, and caring about others' honor, sometimes matters more than getting what you want.",
     ],
+    verseId: "ramayana-exile-2-19-2",
     reflect: "Have you ever kept a promise even when it cost you something?",
   },
   {
@@ -453,6 +454,7 @@ const RAMAYANA: Lesson[] = [
       "Ravana came to the hut dressed as a holy man asking for food. When Sita stepped out to help him, he grabbed her and flew away in his chariot. A brave old bird named Jatayu tried to stop him and was badly hurt.",
       "The story warns us that things that look golden and perfect are not always what they seem. Sometimes wanting something shiny can lead us into trouble.",
     ],
+    verseId: "ramayana-deer-3-43-4",
     reflect: "When has something that looked perfect turned out to be a trick or a trap?",
   },
   {
@@ -465,6 +467,7 @@ const RAMAYANA: Lesson[] = [
       "Notice who helps Rama: a wounded bird, a poor old woman and a band of monkeys. Not kings or armies.",
       "The lesson is that help often comes from people others overlook. Every being, no matter how small, can do something great.",
     ],
+    verseId: "ramayana-shabari-3-75-3",
     reflect: "Who is someone others overlook who has helped you?",
   },
   {
@@ -477,6 +480,7 @@ const RAMAYANA: Lesson[] = [
       "There, in a garden, he found Sita, sad but strong. He gave her Rama's ring so she would know he was really sent by Rama, and he promised that Rama was coming.",
       "Sometimes we forget how much strength we have, just like Hanuman. A good friend, teacher or grandparent who says \"You can do this\" can help us remember.",
     ],
+    verseId: "ramayana-leap-5-1-6",
     reflect: "Who reminds you of your strength? Whose strength could you remind them of?",
   },
   {
@@ -489,6 +493,7 @@ const RAMAYANA: Lesson[] = [
       "The squirrel's help was small, but it was everything the squirrel had to give, given with love.",
       "No help is too small. What matters is giving your best, whatever size it is.",
     ],
+    verseId: "ramayana-bridge-6-22-3",
     reflect: "What \"small\" help could you give that might matter more than you think?",
   },
   {
@@ -501,6 +506,7 @@ const RAMAYANA: Lesson[] = [
       "Many people find it interesting that Ravana is not simply a monster in the story. He had great gifts. What brought him down was pride, the inability to admit he was wrong.",
       "This is a story about every one of us. We all have gifts. The question is whether our pride gets in the way of doing the right thing.",
     ],
+    verseId: "ramayana-ravana-6-111-8",
     reflect: "Is there something you know you should apologize for, but pride is getting in the way?",
   },
   {
@@ -508,11 +514,12 @@ const RAMAYANA: Lesson[] = [
     body: [
       "At last, the fourteen years were over. Rama, Sita and Lakshmana returned to Ayodhya, along with Hanuman and their new friends.",
       "All this time, Rama's brother Bharata had refused to sit on the throne. He believed it belonged to Rama. He had placed Rama's sandals on it and ruled only as a caretaker until Rama came back.",
-      "When the people heard Rama was returning, they were overjoyed. On that dark, moonless night, they lit rows and rows of small clay lamps, called diyas, along every street and rooftop to welcome him home.",
+      "When the people heard Rama was returning, they were overjoyed. The old poem tells of flowers on every shrine, music and drums, and huge crowds running out to greet him. Families add that on that dark, moonless night, people lit rows and rows of small clay lamps, called diyas, along every street and rooftop to welcome him home.",
       "In many parts of India, this is the story behind Diwali, the festival of lights. Each year, families light diyas to celebrate the return of goodness and the victory of light over darkness.",
       "Rama ruled with such fairness and kindness that, for generations, people have used \"Ram Rajya,\" Rama's rule, to mean an ideal, just world.",
       "So the next time you light a diya, remember the whole story: keeping your word, help from unexpected friends, courage, humility, and the light that always finds its way home.",
     ],
+    verseId: "ramayana-homecoming-6-129-21",
     reflect: "What is a \"darkness\" in your life where you could light a small lamp of goodness?",
   },
 ];

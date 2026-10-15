@@ -44,6 +44,10 @@ const SOURCES = [
     from: "Manmatha Nath Dutt, A Prose English Translation of Vishnupuranam (Calcutta, 1896); public domain. Part 1 sections 9 and 17–20, the Vamana passage of Part 3 section 1, and Part 5 sections 7, 10 and 11. Text from Project Gutenberg's transcription, checked word by word against a scan of the printed book, with a few printer's slips in names corrected. Four short passages are left out: two promising rewards for reciting, one describing the body with disgust, and one about an animal offering.",
   },
   {
+    text: "The Ramayana: Rama's journey",
+    from: "Ralph T. H. Griffith, The Rámáyan of Válmíki, translated into English verse (London, 1870–1874); public domain. The cantos behind the Ramayana lessons: Rama's exile, the golden deer, Jatayu, Shabari, Hanuman meeting Rama and his leap, the bridge to Lanka, Ravana's fall and the homecoming. Text from Project Gutenberg's transcription, checked word by word against a scan of the first edition. Griffith's spelling of names is kept (Ráma, Sítá, Savarí for Shabari). Seven short passages are left out for gore, ritual detail, or a line blaming 'woman's guile'.",
+  },
+  {
     text: "Swami Vivekananda: Chicago addresses, Karma-Yoga, Raja-Yoga, Bhakti-Yoga, Jnana-Yoga",
     from: "His own books and speeches (1893–1899), from The Complete Works of Swami Vivekananda on Wikisource; public domain. Later volumes and material first published after his death are not included, because they may still be in copyright. Each chapter is divided into short passages; chapter headings and editors' notes are left out.",
   },

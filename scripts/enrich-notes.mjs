@@ -20,6 +20,7 @@ const TITLES = {
   upanishads: "Upanishads",
   mahabharata: "Mahabharata (Vidura Niti, Yaksha Prashna and stories of the gods, Ganguli's translation)",
   "vishnu-purana": "Vishnu Purana (M. N. Dutt's translation)",
+  ramayana: "Ramayana of Valmiki (Ralph Griffith's verse translation)",
 };
 if (!TITLES[TEXT]) {
   console.error(`Usage: node --env-file=.env.local scripts/enrich-notes.mjs <${Object.keys(TITLES).join(" | ")}> [--limit N]`);

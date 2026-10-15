@@ -38,7 +38,7 @@ export function VerseCard({ verse, onDark = false }: { verse: Verse; onDark?: bo
           {verse.transliteration}
         </p>
       )}
-      <blockquote className="font-display text-[1.15rem] leading-relaxed">
+      <blockquote className="whitespace-pre-line font-display text-[1.15rem] leading-relaxed">
         {verse.translation}
       </blockquote>
       {verse.plain && (

@@ -70,6 +70,17 @@ export const TEXTS: TextInfo[] = [
     attribution: "",
   },
   {
+    id: "ramayana",
+    title: "The Ramayana: Rama's journey",
+    short: "Ramayana",
+    description:
+      "Valmiki's Ramayana in Ralph Griffith's verse: Rama leaving for the forest, the golden deer, Jatayu and Shabari, Hanuman's leap, the bridge to Lanka, Ravana's fall, and coming home.",
+    sectionLabel: "Story",
+    numberedSections: false,
+    passageLabel: "passage",
+    attribution: "",
+  },
+  {
     id: "vivekananda",
     title: "Swami Vivekananda",
     short: "Vivekananda",
