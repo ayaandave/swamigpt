@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import { Analytics } from "@vercel/analytics/next";
 import { Atkinson_Hyperlegible_Next, Tiro_Devanagari_Sanskrit } from "next/font/google";
 import { settingsScript } from "@/lib/settings";
 import { BottomNav, Header } from "@/components/Chrome";
 import { WelcomeGate } from "@/components/WelcomeGate";
 import { AccountSync } from "@/components/AccountSync";
+import { PrivateAnalytics } from "@/components/PrivateAnalytics";
 import "./globals.css";
 
 const tiro = Tiro_Devanagari_Sanskrit({
@@ -47,9 +47,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <BottomNav />
         <WelcomeGate />
         <AccountSync />
-        {/* Visit counts without cookies; reads the address, so it waits for the page in a Suspense */}
+        {/* Visit counts without cookies or questions; reads the address, so it waits for the page in a Suspense */}
         <Suspense>
-          <Analytics />
+          <PrivateAnalytics />
         </Suspense>
       </body>
     </html>
