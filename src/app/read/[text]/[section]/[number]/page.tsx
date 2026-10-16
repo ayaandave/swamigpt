@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { PASSAGES, attribution, getPassage, getText, passageHref, shortRef } from "@/lib/scripture/library";
+import { PASSAGES, attribution, getPassage, getText, passageHref, shortRef, type Passage } from "@/lib/scripture/library";
+import { JsonLd, ORGANIZATION, SITE, breadcrumbs, pageMeta } from "@/lib/seo";
 import { VerseCard } from "@/components/VerseCard";
 import { caption, whoSays } from "@/lib/scripture/who";
 import { ListenButton } from "@/components/ListenButton";
@@ -19,13 +20,45 @@ export async function generateMetadata(props: PageProps<"/read/[text]/[section]/
   const found = await load(props);
   if (!found) return {};
   const p = found.passage;
-  const card = `/api/card?id=${encodeURIComponent(p.id)}`;
-  return {
+  // The verse as a picture, for link previews in messages and social apps
+  return pageMeta({
     title: `${p.source} meaning · SwamiGPT`,
     description: p.plain ?? p.translation,
-    // The verse as a picture, for link previews in messages and social apps
-    openGraph: { images: [{ url: card, width: 1200, height: 630 }] },
-    twitter: { card: "summary_large_image", images: [card] },
+    path: passageHref(p),
+    image: `/api/card?id=${encodeURIComponent(p.id)}`,
+    type: "article",
+  });
+}
+
+// The passage as structured data: its words, who says them, the book it's from, the translator,
+// and its meaning in plain words, so search engines and AI assistants can quote it correctly
+function passageData(p: Passage) {
+  const t = getText(p.textId);
+  const sectionPath = `/read/${p.textId}/${p.section}`;
+  return {
+    "@graph": [
+      {
+        "@type": "Quotation",
+        "@id": `${SITE}${passageHref(p)}#passage`,
+        name: p.source,
+        url: `${SITE}${passageHref(p)}`,
+        text: p.translation,
+        ...(p.plain && { abstract: p.plain }),
+        ...(p.speaker && { spokenByCharacter: { "@type": "Person", name: p.speaker } }),
+        ...(p.translator && { translator: { "@type": "Person", name: p.translator.replace(/\s*\(.*\)$/, "") } }),
+        ...(t && { isPartOf: { "@type": "Book", name: t.title, url: `${SITE}/read/${t.id}` } }),
+        inLanguage: "en",
+        isAccessibleForFree: true,
+        publisher: ORGANIZATION,
+      },
+      breadcrumbs([
+        { name: "Home", path: "/" },
+        { name: "Learn", path: "/learn" },
+        ...(t ? [{ name: t.title, path: `/read/${t.id}` }] : []),
+        { name: p.sectionName, path: sectionPath },
+        { name: p.source, path: passageHref(p) },
+      ]),
+    ],
   };
 }
 
@@ -40,6 +73,7 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
 
   return (
     <div className="pt-8">
+      <JsonLd data={passageData(p)} />
       <Link href={`/read/${p.textId}/${p.section}`} className="inline-flex min-h-11 items-center text-[0.95rem] font-semibold text-kesar-deep hover:underline">
         ← {p.sectionName}
       </Link>

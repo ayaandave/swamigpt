@@ -1,12 +1,14 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { PlusPlans } from "@/components/PlusPlans";
 import { PLUS } from "@/lib/plans";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "SwamiGPT Plus",
   description: "More questions each day, and Swamiji reads your answers aloud. The same best answers for everyone.",
-};
+  path: "/plus",
+});
 
 const ROWS: [string, string, string][] = [
   ["Questions a day", String(PLUS.questions.free), String(PLUS.questions.plus)],

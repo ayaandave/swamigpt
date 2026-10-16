@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Atkinson_Hyperlegible_Next, Tiro_Devanagari_Sanskrit } from "next/font/google";
 import { settingsScript } from "@/lib/settings";
+import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/seo";
 import { BottomNav, Header } from "@/components/Chrome";
 import { WelcomeGate } from "@/components/WelcomeGate";
 import { AccountSync } from "@/components/AccountSync";
@@ -23,9 +24,8 @@ const atkinson = Atkinson_Hyperlegible_Next({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.swamigpt.com"),
-  title: "SwamiGPT: a calm guide to the Gita, the Upanishads and meditation",
-  description:
-    "A calm AI guide to Hindu philosophy, yoga and meditation. Answers drawn only from real scripture: the Bhagavad Gita, the Upanishads, the Yoga Sutras, the Ramayana and more.",
+  title: HOME_TITLE,
+  description: HOME_DESCRIPTION,
   // Opens full-screen, like an app, when added to an iPhone home screen
   appleWebApp: { capable: true, title: "SwamiGPT", statusBarStyle: "default" },
 };

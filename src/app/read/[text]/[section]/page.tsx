@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { allTexts, getText, passageHref, shortRef } from "@/lib/scripture/library";
+import { JsonLd, SITE, breadcrumbs, pageMeta } from "@/lib/seo";
 
 export function generateStaticParams() {
   return allTexts().flatMap((t) => t.sections.map((s) => ({ text: t.id, section: s.key })));
@@ -18,7 +19,12 @@ export async function generateMetadata(props: PageProps<"/read/[text]/[section]"
   const found = await load(props);
   if (!found) return {};
   const { t, s, label } = found;
-  return { title: `${t.numberedSections ? `${t.short} ${label.toLowerCase()}: ` : ""}${s.name} · SwamiGPT` };
+  const name = `${t.numberedSections ? `${t.short} ${label.toLowerCase()}: ` : ""}${s.name}`;
+  return pageMeta({
+    title: `${name} · SwamiGPT`,
+    description: `${name}: all ${s.passages.length} ${t.passageLabel}s from ${t.title}, each with its meaning in plain words.`,
+    path: `/read/${t.id}/${s.key}`,
+  });
 }
 
 export default async function SectionPage(props: PageProps<"/read/[text]/[section]">) {
@@ -28,6 +34,25 @@ export default async function SectionPage(props: PageProps<"/read/[text]/[sectio
 
   return (
     <div className="pt-8">
+      <JsonLd
+        data={{
+          "@graph": [
+            {
+              "@type": "Chapter",
+              name: s.name,
+              url: `${SITE}/read/${t.id}/${s.key}`,
+              isPartOf: { "@type": "Book", name: t.title, url: `${SITE}/read/${t.id}` },
+              inLanguage: "en",
+            },
+            breadcrumbs([
+              { name: "Home", path: "/" },
+              { name: "Learn", path: "/learn" },
+              { name: t.title, path: `/read/${t.id}` },
+              { name: s.name, path: `/read/${t.id}/${s.key}` },
+            ]),
+          ],
+        }}
+      />
       <Link href={`/read/${t.id}`} className="inline-flex min-h-11 items-center text-[0.95rem] font-semibold text-kesar-deep hover:underline">
         ← {t.title}
       </Link>

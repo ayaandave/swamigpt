@@ -1,4 +1,6 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import { HOME_DESCRIPTION, HOME_TITLE, JsonLd, ORGANIZATION, SITE, SITE_NAME, pageMeta } from "@/lib/seo";
 import { Suspense } from "react";
 import { HomeHero } from "@/components/home/HomeHero";
 import { HomeAsk } from "@/components/home/HomeAsk";
@@ -37,9 +39,39 @@ const PROMISES = [
 ];
 
 // The home screen: what SwamiGPT is, in one look, and the way in to each part
+export const metadata: Metadata = pageMeta({ title: HOME_TITLE, description: HOME_DESCRIPTION, path: "/" });
+
+// Tells search engines and AI assistants what SwamiGPT is, in their own terms
+const SITE_DATA = {
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${SITE}/#website`,
+      name: SITE_NAME,
+      url: SITE,
+      description: HOME_DESCRIPTION,
+      inLanguage: "en",
+      publisher: { "@id": `${SITE}/#organization` },
+    },
+    ORGANIZATION,
+    {
+      "@type": "WebApplication",
+      name: SITE_NAME,
+      url: SITE,
+      description: HOME_DESCRIPTION,
+      applicationCategory: "EducationalApplication",
+      operatingSystem: "Any (web browser)",
+      isAccessibleForFree: true,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      publisher: { "@id": `${SITE}/#organization` },
+    },
+  ],
+};
+
 export default function Home() {
   return (
     <div className="pb-6">
+      <JsonLd data={SITE_DATA} />
       <Suspense>
         <OldAskLink />
       </Suspense>

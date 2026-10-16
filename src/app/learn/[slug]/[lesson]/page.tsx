@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { PATHS } from "@/lib/lessons";
+import { PATHS, lessonHref } from "@/lib/lessons";
+import { JsonLd, ORGANIZATION, SITE, breadcrumbs, pageMeta } from "@/lib/seo";
 import { getPassageById } from "@/lib/scripture/library";
 import type { Verse } from "@/lib/scripture/types";
 import { LessonView } from "@/components/LessonView";
@@ -14,11 +15,13 @@ export async function generateMetadata(props: PageProps<"/learn/[slug]/[lesson]"
   const path = PATHS.find((p) => p.slug === slug);
   const l = path?.lessons[Number(lesson) - 1];
   if (!path || !l) return {};
-  return {
+  return pageMeta({
     title: `${l.title} · ${path.title} · SwamiGPT`,
     description: l.body[0],
-    ...(l.verseId && { openGraph: { images: [{ url: `/api/card?id=${l.verseId}`, width: 1200, height: 630 }] } }),
-  };
+    path: `/learn/${path.slug}/${lesson}`,
+    ...(l.verseId && { image: `/api/card?id=${l.verseId}` }),
+    type: "article",
+  });
 }
 
 export default async function Page(props: PageProps<"/learn/[slug]/[lesson]">) {
@@ -38,5 +41,38 @@ export default async function Page(props: PageProps<"/learn/[slug]/[lesson]">) {
     translator: p.translator,
     plain: p.plain,
   };
-  return <LessonView path={path} index={index} verse={verse} />;
+  const l = path.lessons[index];
+  const url = lessonHref(path.slug, index);
+  return (
+    <>
+      <JsonLd
+        data={{
+          "@graph": [
+            {
+              "@type": "LearningResource",
+              name: l.title,
+              headline: l.title,
+              description: l.body[0],
+              url: `${SITE}${url}`,
+              learningResourceType: "Lesson",
+              educationalLevel: "Beginner",
+              timeRequired: "PT5M",
+              inLanguage: "en",
+              isAccessibleForFree: true,
+              isPartOf: { "@type": "Course", name: path.title, url: `${SITE}/learn/${path.slug}` },
+              ...(p && { citation: { "@type": "Quotation", name: p.source, text: p.translation } }),
+              publisher: ORGANIZATION,
+            },
+            breadcrumbs([
+              { name: "Home", path: "/" },
+              { name: "Learn", path: "/learn" },
+              { name: path.title, path: `/learn/${path.slug}` },
+              { name: l.title, path: url },
+            ]),
+          ],
+        }}
+      />
+      <LessonView path={path} index={index} verse={verse} />
+    </>
+  );
 }

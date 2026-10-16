@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { allTexts, getText } from "@/lib/scripture/library";
+import { JsonLd, ORGANIZATION, SITE, breadcrumbs, pageMeta } from "@/lib/seo";
 
 export function generateStaticParams() {
   return allTexts().map((t) => ({ text: t.id }));
@@ -9,7 +10,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata(props: PageProps<"/read/[text]">): Promise<Metadata> {
   const t = getText((await props.params).text);
-  return t ? { title: `${t.title} · SwamiGPT`, description: t.description } : {};
+  return t ? pageMeta({ title: `${t.title} · SwamiGPT`, description: t.description, path: `/read/${t.id}` }) : {};
 }
 
 export default async function TextPage(props: PageProps<"/read/[text]">) {
@@ -18,6 +19,27 @@ export default async function TextPage(props: PageProps<"/read/[text]">) {
 
   return (
     <div className="pt-8">
+      <JsonLd
+        data={{
+          "@graph": [
+            {
+              "@type": "Book",
+              name: t.title,
+              url: `${SITE}/read/${t.id}`,
+              description: t.description,
+              inLanguage: "en",
+              isAccessibleForFree: true,
+              publisher: ORGANIZATION,
+              hasPart: t.sections.map((s) => ({ "@type": "Chapter", name: s.name, url: `${SITE}/read/${t.id}/${s.key}` })),
+            },
+            breadcrumbs([
+              { name: "Home", path: "/" },
+              { name: "Learn", path: "/learn" },
+              { name: t.title, path: `/read/${t.id}` },
+            ]),
+          ],
+        }}
+      />
       <Link href="/learn" className="inline-flex min-h-11 items-center text-[0.95rem] font-semibold text-kesar-deep hover:underline">
         ← Learn
       </Link>

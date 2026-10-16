@@ -1,11 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { CONTACT, LegalPage } from "@/components/LegalPage";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Privacy Policy · SwamiGPT",
   description: "What SwamiGPT keeps, why, who helps us run it, and how to delete your data.",
-};
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

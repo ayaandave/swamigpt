@@ -1,10 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { JsonLd, pageMeta } from "@/lib/seo";
+import { FAQ, faqData } from "@/lib/faq";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Sources & safety · SwamiGPT",
   description: "Where SwamiGPT's scriptures come from, how its answers work, and where to find real help.",
-};
+  path: "/sources",
+});
 
 const SOURCES = [
   {
@@ -109,6 +112,19 @@ export default function SourcesPage() {
           </a>
           .
         </p>
+      </section>
+
+      <section className="mt-10">
+        <JsonLd data={faqData} />
+        <h2 className="font-display text-[1.6rem]">Common questions</h2>
+        <div className="mt-4 flex max-w-[60ch] flex-col gap-6">
+          {FAQ.map(({ q, a }) => (
+            <div key={q}>
+              <h3 className="font-display text-[1.25rem] leading-snug">{q}</h3>
+              <p className="mt-1 text-[1.05rem] leading-relaxed">{a}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section className="mt-10 rounded-[2rem] bg-tulsi px-7 py-6 text-sandal">

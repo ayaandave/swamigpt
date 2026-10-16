@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { MANTRAS, getMantra } from "@/lib/mantras";
+import { JsonLd, ORGANIZATION, SITE, breadcrumbs, pageMeta } from "@/lib/seo";
 import { MantraCounter } from "@/components/MantraCounter";
 import { MantraListen } from "@/components/MantraListen";
 import { BackIcon } from "@/components/icons";
@@ -12,7 +13,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata(props: PageProps<"/meditate/mantra/[slug]">): Promise<Metadata> {
   const m = getMantra((await props.params).slug);
-  return m ? { title: `${m.title} · SwamiGPT`, description: m.short } : {};
+  return m ? pageMeta({ title: `${m.title} · SwamiGPT`, description: m.short, path: `/meditate/mantra/${m.slug}` }) : {};
 }
 
 // One mantra: the Sanskrit and how to say it, word by word, what it means, and a counter
@@ -22,6 +23,28 @@ export default async function MantraPage(props: PageProps<"/meditate/mantra/[slu
 
   return (
     <div className="pt-8">
+      <JsonLd
+        data={{
+          "@graph": [
+            {
+              "@type": "LearningResource",
+              name: m.title,
+              alternateName: m.sanskritName,
+              description: m.about,
+              url: `${SITE}/meditate/mantra/${m.slug}`,
+              learningResourceType: "Mantra",
+              inLanguage: "en",
+              isAccessibleForFree: true,
+              publisher: ORGANIZATION,
+            },
+            breadcrumbs([
+              { name: "Home", path: "/" },
+              { name: "Meditate", path: "/meditate" },
+              { name: m.title, path: `/meditate/mantra/${m.slug}` },
+            ]),
+          ],
+        }}
+      />
       <Link href="/meditate" className="inline-flex min-h-11 items-center gap-2 font-semibold text-kajal-soft hover:text-kajal">
         <BackIcon className="size-5" />
         Meditate

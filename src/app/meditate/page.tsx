@@ -1,16 +1,18 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { GROUPS, MEDITATIONS } from "@/lib/meditations";
 import { MANTRAS } from "@/lib/mantras";
 import { MeditationStats } from "@/components/MeditationStats";
 import { PracticeStreak } from "@/components/PracticeStreak";
 import { PlayIcon } from "@/components/icons";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Guided meditations and mantras · SwamiGPT",
   description:
     "Calm guided meditations read aloud, from a three-minute reset to sleep, and mantras like Om and the Gayatri with real chanting and a mala counter.",
-};
+  path: "/meditate",
+});
 
 export default function MeditatePage() {
   return (

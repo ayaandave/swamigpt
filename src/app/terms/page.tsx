@@ -1,11 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { LegalPage } from "@/components/LegalPage";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Terms of Use · SwamiGPT",
   description: "The simple rules for using SwamiGPT and SwamiGPT Plus.",
-};
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (
