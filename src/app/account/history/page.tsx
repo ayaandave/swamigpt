@@ -66,6 +66,12 @@ export default function HistoryPage() {
                   {p}
                 </p>
               ))}
+              {t.answer.help && (
+                <a href={t.answer.help.href} className="flex min-h-16 flex-col justify-center rounded-2xl bg-tulsi px-6 py-3 text-sandal">
+                  <span className="text-[0.85rem]">{t.answer.help.text}</span>
+                  <span className="text-[1.2rem] font-bold">{t.answer.help.label}</span>
+                </a>
+              )}
               {t.answer.verses.map(({ verse, meaning }) => (
                 <div key={verse.id} className="flex flex-col gap-4">
                   <p className="font-display text-[1.15rem] text-kajal-soft">{whoSays(verse)}:</p>

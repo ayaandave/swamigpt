@@ -16,6 +16,20 @@ const synced = (s: Settings) => {
   return { settings: rest, age_group: ageGroup };
 };
 
+// A Supabase query only runs once something waits for it (a bare "void query" never sends
+// anything), so each save goes through here: it runs, and a failure is tried once more later.
+type Query = PromiseLike<{ error: { message: string } | null }>;
+function save(run: () => Query, retried = false) {
+  void Promise.resolve(run()).then(
+    ({ error }) => {
+      if (!error) return;
+      if (!retried) setTimeout(() => save(run, true), 5000);
+      else console.error("saving to your account failed", error.message);
+    },
+    () => !retried && setTimeout(() => save(run, true), 5000),
+  );
+}
+
 export async function startAccountSync(userId: string): Promise<() => void> {
   const sb = supabase();
   if (!sb) return () => {};
@@ -48,14 +62,14 @@ export async function startAccountSync(userId: string): Promise<() => void> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   const offSettings = onSettingsChange(() => {
     clearTimeout(timer); // a burst of slider moves becomes one save
-    timer = setTimeout(() => void sb.from("profiles").upsert({ id: userId, ...synced(getSettings()) }), 800);
+    timer = setTimeout(() => save(() => sb.from("profiles").upsert({ id: userId, ...synced(getSettings()) })), 800);
   });
   const offLessons = onLessonDone(
     (slug, index) =>
-      void sb.from("lesson_progress").upsert({ user_id: userId, path_slug: slug, lesson_index: index }, { ignoreDuplicates: true }),
+      save(() => sb.from("lesson_progress").upsert({ user_id: userId, path_slug: slug, lesson_index: index }, { ignoreDuplicates: true })),
   );
 
-  const offPractice = onPractice((days) => void sb.from("profiles").update({ practice_days: days }).eq("id", userId));
+  const offPractice = onPractice((days) => save(() => sb.from("profiles").update({ practice_days: days }).eq("id", userId)));
 
   return () => {
     clearTimeout(timer);

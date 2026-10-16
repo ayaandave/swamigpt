@@ -50,22 +50,36 @@ export function PlusPlans() {
     if (!user) return;
     setBusy(true);
     setProblem(null);
+    const p = await purchases(user.id).catch(() => null);
+    if (!p) {
+      setProblem("Plans couldn't load. Please try again in a moment. You haven't been charged.");
+      setBusy(false);
+      return;
+    }
+    // The payment itself: only a failure here means nothing was charged
     try {
-      const p = await purchases(user.id);
       await p.purchase({ rcPackage: pkg, customerEmail: user.email ?? undefined });
-      // Switch Plus on now instead of waiting for the webhook
-      const token = await accessToken();
-      await fetch("/api/plus", { method: "POST", headers: { authorization: `Bearer ${token}` } }).catch(() => null);
-      recheck();
-      setManageUrl((await p.getCustomerInfo()).managementURL);
     } catch (e) {
       const { ErrorCode, PurchasesError } = await import("@revenuecat/purchases-js");
       if (!(e instanceof PurchasesError && e.errorCode === ErrorCode.UserCancelledError)) {
         setProblem("That didn't go through, and you weren't charged. Please try again.");
       }
-    } finally {
       setBusy(false);
+      return;
     }
+    // Paid: switch Plus on now instead of waiting for the webhook. If that step fails, the webhook
+    // still turns Plus on shortly, so say so rather than asking them to pay again
+    try {
+      const token = await accessToken();
+      const res = await fetch("/api/plus", { method: "POST", headers: { authorization: `Bearer ${token}` } });
+      const { plus } = (await res.json()) as { plus?: boolean };
+      if (!res.ok || !plus) throw new Error("not yet");
+    } catch {
+      setProblem("Your payment went through. Plus can take a minute to switch on, so please refresh this page shortly. Don't buy it again.");
+    }
+    recheck();
+    setManageUrl((await p.getCustomerInfo().catch(() => null))?.managementURL ?? null);
+    setBusy(false);
   };
 
   let body: React.ReactNode;

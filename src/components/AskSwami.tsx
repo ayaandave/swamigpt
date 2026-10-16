@@ -17,6 +17,8 @@ import { ShareButton } from "./ShareButton";
 import { ReportAnswer } from "./ReportAnswer";
 import { MicIcon, SendIcon } from "./icons";
 
+// The longest question the server accepts (app/api/ask), so nothing typed is ever thrown away
+const MAX_QUESTION = 2000;
 type Turn = { id: number; question: string; depth: Depth; answer?: SwamiAnswer };
 
 // initialDraft: a question handed over from elsewhere (e.g. a verse page), typed in but not sent.
@@ -224,7 +226,8 @@ function Answer({
         </Link>
       )}
       <div className="flex flex-wrap items-center gap-3 pt-1">
-        <ListenButton text={spoken} onSpeakingChange={onSpeaking} save />
+        {/* Not saved: an answer can repeat something personal, so its audio is never kept */}
+        <ListenButton text={spoken} onSpeakingChange={onSpeaking} />
         {!answer.notice && <ShareButton question={turn.question} answer={answer} />}
         <button
           type="button"
@@ -282,7 +285,7 @@ function AskBox({
     rec.lang = "en-US";
     rec.interimResults = true;
     rec.onresult = (e) => {
-      setDraft(Array.from(e.results).map((r) => r[0].transcript).join(""));
+      setDraft(Array.from(e.results).map((r) => r[0].transcript).join("").slice(0, MAX_QUESTION));
     };
     rec.onend = () => setListening(false);
     recRef.current = rec;
@@ -307,6 +310,7 @@ function AskBox({
         id="ask"
         rows={compact ? 1 : Math.min(4, Math.max(2, Math.ceil(draft.length / 16)))} // grow for longer questions
         value={draft}
+        maxLength={MAX_QUESTION}
         autoFocus={autoFocus}
         onChange={(e) => setDraft(e.target.value)}
         onKeyDown={(e) => {
@@ -321,6 +325,11 @@ function AskBox({
         }`}
       />
       <div className="flex items-center justify-end gap-2">
+        {draft.length > MAX_QUESTION - 200 && (
+          <span className="mr-auto px-3 text-[0.85rem] text-kajal-soft" aria-live="polite">
+            {MAX_QUESTION - draft.length} characters left
+          </span>
+        )}
         {canListen && (
           <button
             type="button"

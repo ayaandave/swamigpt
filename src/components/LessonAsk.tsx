@@ -97,6 +97,7 @@ export function LessonAsk({ lesson }: { lesson: LessonContext }) {
             id="lesson-ask"
             rows={1}
             value={draft}
+            maxLength={2000}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {

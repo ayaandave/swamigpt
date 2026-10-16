@@ -2,7 +2,7 @@
 // the mock answers so the app keeps working.
 import type { AgeGroup, Depth } from "./settings";
 import { askSwami as mockAnswer } from "./mock/answers";
-import type { SwamiAnswer } from "./swami";
+import { CRISIS, CRISIS_HELP, type SwamiAnswer } from "./swami";
 import { PLUS } from "./plans";
 import { accessToken, supabase } from "./supabase";
 
@@ -27,7 +27,7 @@ async function hasPlus() {
 
 export type LessonContext = { title: string; text: string };
 
-export async function askSwami(
+async function fetchAnswer(
   question: string,
   depth: Depth,
   ageGroup: AgeGroup | null,
@@ -103,4 +103,12 @@ export async function askSwami(
   } catch {
     return SORRY;
   }
+}
+
+// Every reply, even "that's all for today" or an error, shows the 988 card when the question
+// sounds like someone may be in danger. The check runs here on the phone, so it never depends
+// on the server, the daily limit or the AI.
+export async function askSwami(...args: Parameters<typeof fetchAnswer>): Promise<SwamiAnswer> {
+  const answer = await fetchAnswer(...args);
+  return CRISIS.test(args[0]) && !answer.help ? { ...answer, help: CRISIS_HELP } : answer;
 }

@@ -67,7 +67,11 @@ export async function searchPassages(question: string, k = 8): Promise<Passage[]
   });
   scored.sort((a, b) => b.dot - a.dot);
 
-  const picked = new Map([...famousPassages(question), ...referencedPassages(question)].map((v) => [v.id, v]));
+  // Passages the question names ("Gita 2.47") come first, but never more than k in all, so naming
+  // many verses can't make the answer's prompt (and its cost) bigger than usual
+  const named = [...famousPassages(question), ...referencedPassages(question)];
+  const picked = new Map<string, (typeof named)[number]>();
+  for (const v of named) if (picked.size < k) picked.set(v.id, v);
   // No single text takes more than half the results: Vivekananda's modern English matches
   // questions so well that he would otherwise crowd out the scriptures
   const perText = new Map<string, number>();

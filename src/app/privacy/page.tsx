@@ -68,8 +68,8 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong>ElevenLabs</strong> makes the read-aloud voice. It receives the text being read: answers, lessons,
-            verses and meditations. Read-aloud audio is saved so it can play again without being made twice. Each saved
-            file is named with a code made from its text, and can&apos;t be found without that exact text.
+            verses and meditations. Audio for lessons, verses and meditations, which are the same for everyone, is saved
+            so it can play again without being made twice. Audio of your own answers is never saved.
           </li>
           <li>
             <strong>Supabase</strong> stores accounts and saved data. <strong>Vercel</strong> hosts the website and

@@ -1,25 +1,41 @@
 // Daily question limits: 3 a day for guests, 5 for free accounts, 20 with Plus, and a ceiling for
 // the whole site (set in the database's take_question function). Server only: the server works out
-// who is asking, so nobody can claim to be someone else or skip the count. If accounts aren't set
-// up, there are no limits.
+// who is asking, so nobody can claim to be someone else or skip the count. On the live site, if the
+// limits can't be checked, paid answers and voices are refused rather than left unlimited.
 import "server-only";
-import { createHash } from "node:crypto";
+import { createHash, createHmac } from "node:crypto";
+import { isIP } from "node:net";
 import { createClient } from "@supabase/supabase-js";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 const secret = process.env.SUPABASE_SECRET_KEY;
-// Mixed into guests' addresses before hashing, so the stored key can't be turned back into an address
-const SALT = process.env.GUEST_KEY_SALT ?? "swamigpt-guests";
+const LIVE = process.env.NODE_ENV === "production";
+// A secret mixed into guests' addresses, so the stored code can't be worked back to an address by
+// trying every address. GUEST_KEY_SALT if set, otherwise one made from the server's secret key.
+const GUEST_KEY = process.env.GUEST_KEY_SALT ?? createHash("sha256").update(`guest-key:${secret ?? "dev"}`).digest("hex");
 // Questions answered across the whole site in a day, whoever asks: a ceiling on the day's bill
 const QUESTIONS_PER_SITE = Number(process.env.QUESTIONS_DAILY_PER_SITE ?? 400);
 
-// A guest's address, hashed. An IPv6 address counts by its network (the first four groups), since
-// one connection can use millions of addresses in it.
+// The first four groups of an IPv6 address (its /64 network), written out in full, so every
+// address in one network counts as one guest: "2001:db8::1" and "2001:db8::2" are the same.
+function ipv6Network(address: string): string {
+  let a = address.replace(/^\[|\]$/g, "").split("%")[0];
+  const v4 = a.match(/(\d+\.\d+\.\d+\.\d+)$/); // "::ffff:1.2.3.4": an IPv4 address in IPv6 form
+  if (v4) return v4[1];
+  const [left, right] = a.includes("::") ? a.split("::") : [a, undefined];
+  const head = left ? left.split(":") : [];
+  const tail = right ? right.split(":") : [];
+  const groups = right === undefined ? head : [...head, ...Array(8 - head.length - tail.length).fill("0"), ...tail];
+  a = groups.slice(0, 4).map((g) => parseInt(g || "0", 16).toString(16)).join(":");
+  return `${a}::/64`;
+}
+
+// A guest's address, as a keyed code. Vercel sets x-forwarded-for itself, so it can't be faked.
 const hashAddress = (request: Request) => {
   let address = request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "local";
-  if (address.includes(":")) address = address.split(":").slice(0, 4).join(":") + "::/64";
-  return createHash("sha256").update(`${SALT}:${address}`).digest("hex");
+  if (isIP(address) === 6) address = ipv6Network(address);
+  return createHmac("sha256", GUEST_KEY).update(address).digest("hex");
 };
 
 // Who sent this request: their account id if the sign-in token checks out, otherwise null
@@ -37,23 +53,33 @@ export async function whoIsAsking(request: Request): Promise<{ who: string; uid:
   return { who: uid ? `user:${uid}` : `guest:${hashAddress(request)}`, uid };
 }
 
-// If the counter itself is down, each server instance keeps a small count of its own, so the
-// limits still hold roughly instead of switching off
+// If the counter itself is down, each server instance keeps a small count of its own: 3 a person
+// and 30 in all per day, so answers keep working for a while but the bill stays small
 const fallback = new Map<string, number>();
+const FALLBACK_PER_INSTANCE = 30;
 function fallbackTake(who: string) {
-  const k = `${new Date().toISOString().slice(0, 10)}|${who}`;
+  const day = new Date().toISOString().slice(0, 10);
+  const total = `${day}|all`;
+  if ((fallback.get(total) ?? 0) >= FALLBACK_PER_INSTANCE) return -2;
+  const k = `${day}|${who}`;
   const used = (fallback.get(k) ?? 0) + 1;
+  if (used > 3) return -1;
   if (fallback.size > 10_000) fallback.clear();
   fallback.set(k, used);
-  return used > 3 ? -1 : 3 - used;
+  fallback.set(total, (fallback.get(total) ?? 0) + 1);
+  return 3 - used;
 }
 
 // Uses one of today's questions for whoever sent this request. Returns the number left today,
-// -1 if they had none left, -2 if the whole site is at today's ceiling, or null when limits aren't on.
+// -1 if they had none left, -2 if the whole site is at today's ceiling (or limits can't be checked),
+// or null while developing.
 export async function takeQuestion(request: Request): Promise<number | null> {
-  if (!url || !key || !secret) return null;
   // No limits while developing on this Mac (next dev); the live site always counts
-  if (process.env.NODE_ENV !== "production") return null;
+  if (!LIVE) return null;
+  if (!url || !key || !secret) {
+    console.error("question limits aren't set up (Supabase keys missing): refusing paid answers");
+    return -2;
+  }
   // A missing or invalid token just means a guest
   const { who, uid } = await whoIsAsking(request);
   const sb = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
@@ -74,8 +100,8 @@ const SPEECH_PER_SITE = Number(process.env.SPEECH_DAILY_PER_SITE ?? 60_000);
 // request carries a voice ticket (an <audio> element can't send a sign-in token), otherwise by
 // address. Returns false once they, or the whole site, are at the limit.
 export async function takeSpeech(request: Request, chars: number, userId: string | null): Promise<boolean> {
-  if (!url || !secret) return true;
-  if (process.env.NODE_ENV !== "production") return true;
+  if (!LIVE) return true;
+  if (!url || !secret) return false; // limits can't be checked: the phone's own voice reads instead
   const sb = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
   const { data, error } = await sb.rpc("use_voice", {
     p_who: userId ? `user:${userId}` : `guest:${hashAddress(request)}`,

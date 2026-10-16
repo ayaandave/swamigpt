@@ -52,7 +52,7 @@ export function MantraCounter({ title }: { title: string }) {
         type="button"
         onClick={tap}
         aria-label={done ? `Done: ${goal} of ${goal}` : `Count one. ${count} of ${goal} so far`}
-        className="mx-auto mt-7 grid size-56 place-items-center rounded-full p-2 transition-transform active:scale-95"
+        className="mx-auto mt-7 grid aspect-square w-full max-w-56 place-items-center rounded-full p-2 transition-transform active:scale-95"
         style={{ background: `conic-gradient(var(--flame) ${angle}deg, rgba(242,227,198,0.15) ${angle}deg)` }}
       >
         <span className="grid size-full place-items-center rounded-full bg-night">

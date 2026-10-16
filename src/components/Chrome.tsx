@@ -34,6 +34,7 @@ export function Header() {
         </button>
         <Link
           href="/settings"
+          aria-label="Voice and settings"
           className="flex h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full border-2 border-sandal-edge text-[14px] font-semibold hover:border-kajal sm:px-4"
         >
           <SettingsIcon className="size-[24px]" />
