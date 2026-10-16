@@ -31,6 +31,12 @@ async function signedInUser(request: Request): Promise<string | null> {
   return error || !data.user ? null : data.user.id;
 }
 
+// Who is asking, as the database counts them: their account if signed in, otherwise their hashed address
+export async function whoIsAsking(request: Request): Promise<{ who: string; uid: string | null }> {
+  const uid = await signedInUser(request);
+  return { who: uid ? `user:${uid}` : `guest:${hashAddress(request)}`, uid };
+}
+
 // If the counter itself is down, each server instance keeps a small count of its own, so the
 // limits still hold roughly instead of switching off
 const fallback = new Map<string, number>();
@@ -49,8 +55,7 @@ export async function takeQuestion(request: Request): Promise<number | null> {
   // No limits while developing on this Mac (next dev); the live site always counts
   if (process.env.NODE_ENV !== "production") return null;
   // A missing or invalid token just means a guest
-  const uid = await signedInUser(request);
-  const who = uid ? `user:${uid}` : `guest:${hashAddress(request)}`;
+  const { who, uid } = await whoIsAsking(request);
   const sb = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
   const { data, error } = await sb.rpc("take_question", { p_who: who, p_uid: uid, p_site_cap: QUESTIONS_PER_SITE });
   if (error) {

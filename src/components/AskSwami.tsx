@@ -14,6 +14,7 @@ import { VerseCard } from "./VerseCard";
 import { whoSays } from "@/lib/scripture/who";
 import { ListenButton } from "./ListenButton";
 import { ShareButton } from "./ShareButton";
+import { ReportAnswer } from "./ReportAnswer";
 import { MicIcon, SendIcon } from "./icons";
 
 type Turn = { id: number; question: string; depth: Depth; answer?: SwamiAnswer };
@@ -234,6 +235,7 @@ function Answer({
           {depth === "simpler" ? "Go deeper" : "Say it more simply"}
         </button>
       </div>
+      {!answer.notice && <ReportAnswer question={turn.question} answer={answer} depth={depth} />}
     </div>
   );
 }

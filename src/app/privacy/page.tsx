@@ -29,6 +29,10 @@ export default function PrivacyPage() {
             these by a scrambled code made from your internet address. The code can&apos;t be turned back into the
             address, and it isn&apos;t linked to your name.
           </li>
+          <li>
+            If you tap &ldquo;Report this answer&rdquo;, we keep that question, the answer and anything you add, so a
+            person can check it. If you have an account, the report is linked to it and deleted with it.
+          </li>
         </ul>
       </section>
 
