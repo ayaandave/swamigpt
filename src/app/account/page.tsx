@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { AvatarBadge, AvatarPicker } from "@/components/AvatarPicker";
 import { DeleteAccount } from "@/components/DeleteAccount";
 import { Journey } from "@/components/Journey";
 import { Diya } from "@/components/Diya";
@@ -41,9 +42,15 @@ export default function AccountPage() {
     <div className="pt-10">
       <h1 className="font-display text-[2.4rem] leading-tight">Your account</h1>
       <div className="mt-6 rounded-[2rem] bg-sandal-deep px-7 py-6">
-        <p className="text-[0.9rem] font-semibold text-kajal-soft">Signed in as</p>
-        <p className="mt-1 break-all font-display text-[1.4rem]">{user.email}</p>
-        <p className="mt-2 text-[0.95rem] text-kajal-soft">With SwamiGPT since {since}</p>
+        <div className="flex items-center gap-4">
+          <AvatarBadge fallback={(user.email ?? "?")[0].toUpperCase()} size={72} />
+          <div className="min-w-0">
+            <p className="text-[0.9rem] font-semibold text-kajal-soft">Signed in as</p>
+            <p className="mt-1 break-all font-display text-[1.4rem]">{user.email}</p>
+          </div>
+        </div>
+        <p className="mt-3 text-[0.95rem] text-kajal-soft">With SwamiGPT since {since}</p>
+        <AvatarPicker />
       </div>
 
       <Journey />

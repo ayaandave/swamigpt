@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useSettings, type TextSize } from "@/lib/settings";
 import { accountsEnabled, useAuth } from "@/lib/supabase";
 import { Diya } from "./Diya";
+import { AvatarBadge } from "./AvatarPicker";
 import { AskIcon, HomeIcon, LearnIcon, MeditateIcon, PersonIcon, SettingsIcon } from "./icons";
 
 const SIZES: TextSize[] = ["regular", "large", "larger"];
@@ -87,7 +88,7 @@ export function BottomNav() {
   );
 }
 
-// "Sign in" when signed out; the first letter of their email when signed in
+// "Sign in" when signed out; their avatar (or the first letter of their email) when signed in
 function AccountButton() {
   const { ready, user } = useAuth();
   if (!ready) return <span className="size-[44px]" />;
@@ -96,9 +97,9 @@ function AccountButton() {
       <Link
         href="/account"
         aria-label={`Your account (${user.email})`}
-        className="flex size-[44px] items-center justify-center rounded-full bg-tulsi font-display text-[18px] text-sandal hover:bg-kajal"
+        className="flex size-[44px] items-center justify-center rounded-full hover:ring-2 hover:ring-kajal"
       >
-        {(user.email ?? "?")[0].toUpperCase()}
+        <AvatarBadge fallback={(user.email ?? "?")[0].toUpperCase()} size={44} />
       </Link>
     );
   }

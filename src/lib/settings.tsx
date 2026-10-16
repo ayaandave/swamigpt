@@ -14,6 +14,7 @@ export type Settings = {
   depth: Depth;
   ageGroup: AgeGroup | null; // answered once on the welcome gate
   meditationVoice: VoiceId; // meditations are read by Dhyan ("sakshi") unless changed in the player
+  avatar: string | null; // an id from lib/avatars, chosen on the account page
 };
 
 const KEY = "swamigpt.settings";
@@ -25,6 +26,7 @@ const store = createLocalStore<Settings>(KEY, {
   depth: "simpler",
   ageGroup: null,
   meditationVoice: "sakshi",
+  avatar: null,
 });
 
 // Runs in <head> before first paint so the chosen text size never flickers
