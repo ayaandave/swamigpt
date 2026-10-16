@@ -4,8 +4,9 @@
 // and practice days.
 // On sign-in the two are merged (nothing earned on either side is lost); after that, changes
 // made here are saved to the account as they happen.
-import { getPracticeDays, mergePracticeDays, onPractice } from "./practice";
-import { getProgress, mergeProgress, onLessonDone, type Progress } from "./progress";
+import { clearMeditationLog } from "./meditation-log";
+import { clearPracticeDays, getPracticeDays, mergePracticeDays, onPractice } from "./practice";
+import { clearProgress, getProgress, mergeProgress, onLessonDone, type Progress } from "./progress";
 import { getSettings, onSettingsChange, updateSettings, type Settings } from "./settings";
 import { supabase } from "./supabase";
 
@@ -28,6 +29,16 @@ function save(run: () => Query, retried = false) {
     },
     () => !retried && setTimeout(() => save(run, true), 5000),
   );
+}
+
+// On signing out: this phone forgets the account's lessons, practice days, meditation totals and
+// picture, so the next person to use it doesn't see them or merge them into their own account.
+// They're all saved in the account and come back on signing in. Text size and voice stay.
+export function forgetAccountOnThisDevice() {
+  clearProgress();
+  clearPracticeDays();
+  clearMeditationLog();
+  updateSettings({ avatar: null });
 }
 
 export async function startAccountSync(userId: string): Promise<() => void> {

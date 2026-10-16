@@ -25,20 +25,33 @@ export async function POST(request: Request) {
     return Response.json({ error: "plus" }, { status: 409 });
   }
 
-  await admin.from("question_usage").delete().eq("who", `user:${id}`);
-  await admin.from("speech_usage").delete().eq("who", `user:${id}`);
+  // Everything is checked: if any step fails, nothing is reported as deleted and the person can try again
+  const usage = await Promise.all([
+    admin.from("question_usage").delete().eq("who", `user:${id}`),
+    admin.from("speech_usage").delete().eq("who", `user:${id}`),
+  ]);
+  const usageError = usage.find((r) => r.error)?.error;
+  if (usageError) {
+    console.error("account delete: usage counts", usageError.message);
+    return Response.json({ error: "failed" }, { status: 500 });
+  }
+  // Their record at RevenueCat (account id and checkout email) goes first, while we can still retry
+  const rcKey = process.env.REVENUECAT_SECRET_KEY;
+  if (rcKey) {
+    const rc = await fetch(`https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      headers: { authorization: `Bearer ${rcKey}` },
+    }).catch(() => null);
+    // 404: RevenueCat never had a record for them, which is fine
+    if (!rc || (!rc.ok && rc.status !== 404)) {
+      console.error("account delete: RevenueCat", rc?.status);
+      return Response.json({ error: "failed" }, { status: 502 });
+    }
+  }
   const { error: gone } = await admin.auth.admin.deleteUser(id);
   if (gone) {
     console.error("account delete failed", gone.message);
     return Response.json({ error: "failed" }, { status: 500 });
-  }
-  // Their record at RevenueCat (account id and checkout email) is removed as well
-  const rcKey = process.env.REVENUECAT_SECRET_KEY;
-  if (rcKey) {
-    await fetch(`https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(id)}`, {
-      method: "DELETE",
-      headers: { authorization: `Bearer ${rcKey}` },
-    }).catch((e) => console.error("RevenueCat delete failed", e));
   }
   return Response.json({ ok: true });
 }

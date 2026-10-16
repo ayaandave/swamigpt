@@ -114,11 +114,19 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
     }
   };
 
-  // Clock: each cue is spoken at its second; the session ends with a bell and a closing line
+  // Clock: each cue is spoken at its second; the session ends with a bell and a closing line.
+  // Time is read from the clock, not counted in ticks, because phones slow or pause timers when the
+  // screen locks: a 5-minute session still ends after 5 minutes. After a pause in the timers, only
+  // the latest missed line is spoken, so lines never pile up.
   useEffect(() => {
     if (!running) return;
+    let startedAt: number | null = null; // set on the first tick, counting any time already played
     const t = window.setInterval(() => {
-      const e = ++elapsedRef.current;
+      const before = elapsedRef.current;
+      startedAt ??= Date.now() - before * 1000;
+      const e = Math.min(total, Math.floor((Date.now() - startedAt) / 1000));
+      if (e === before) return;
+      elapsedRef.current = e;
       setElapsed(e);
       if (e >= total) {
         setRunning(false);
@@ -128,9 +136,9 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
         if (meditation.closing) say(meditation.closing, 2500);
         return;
       }
-      const cue = meditation.cues.find((c) => c.at === e);
+      const cue = meditation.cues.filter((c) => c.at > before && c.at <= e).at(-1);
       if (cue) say(cue.text);
-    }, 1000);
+    }, 250);
     return () => clearInterval(t);
   }, [running, meditation, total]);
 
@@ -189,7 +197,7 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
         : "scale-[.8] duration-[3000ms]";
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-night text-sandal">
+    <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-night pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)] text-sandal">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(255,179,71,.16),transparent_60%)]"
@@ -240,7 +248,7 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
             {VOICES.map((v) => (
               <label
                 key={v.id}
-                className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border-2 px-3 text-center text-[0.95rem] font-semibold ${
+                className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border-2 px-3 text-center text-[0.95rem] font-semibold has-focus-visible:outline-4 has-focus-visible:outline-offset-2 has-focus-visible:outline-flame ${
                   meditationVoice === v.id ? "border-flame bg-flame/15 text-flame" : "border-sandal/20 hover:border-sandal/50"
                 }`}
               >
@@ -264,7 +272,7 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
             {SOUNDS.map((s) => (
               <label
                 key={s.id}
-                className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border-2 px-3 text-center text-[0.95rem] font-semibold ${
+                className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border-2 px-3 text-center text-[0.95rem] font-semibold has-focus-visible:outline-4 has-focus-visible:outline-offset-2 has-focus-visible:outline-flame ${
                   sound === s.id ? "border-flame bg-flame/15 text-flame" : "border-sandal/20 hover:border-sandal/50"
                 }`}
               >

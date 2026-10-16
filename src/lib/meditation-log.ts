@@ -15,3 +15,4 @@ export function logSession(minutes: number) {
 }
 
 export const useMeditationLog = () => store.useStore();
+export const clearMeditationLog = () => store.set({ sessions: 0, minutes: 0 });

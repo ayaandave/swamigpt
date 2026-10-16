@@ -28,6 +28,7 @@ export function markPractice() {
 }
 
 export const getPracticeDays = () => store.get().days;
+export const clearPracticeDays = () => store.set({ days: [] });
 
 // Adds days practised on another device
 export function mergePracticeDays(remote: string[]) {

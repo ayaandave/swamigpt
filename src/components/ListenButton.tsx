@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { speak, stopSpeaking } from "@/lib/speak";
 import { useSettings } from "@/lib/settings";
 import { getVoice } from "@/lib/voices";
@@ -16,10 +16,13 @@ type Props = {
 export function ListenButton({ text, onSpeakingChange, onDark = false, save = false }: Props) {
   const { voice, speed } = useSettings();
   const [playing, setPlaying] = useState(false);
+  const mine = useRef(false); // this button started what's playing now
 
-  useEffect(() => () => stopSpeaking(), []);
+  // Leaving the page stops this button's audio, but never audio another button started
+  useEffect(() => () => void (mine.current && stopSpeaking()), []);
 
   const set = (v: boolean) => {
+    mine.current = v;
     setPlaying(v);
     onSpeakingChange?.(v);
   };
@@ -30,7 +33,7 @@ export function ListenButton({ text, onSpeakingChange, onDark = false, save = fa
       set(false);
       return;
     }
-    speak(text, voice, speed, { onStart: () => set(true), onEnd: () => set(false) }, save);
+    speak(text, voice, speed, { onStart: () => set(true), onEnd: () => set(false), onStop: () => set(false) }, save);
     set(true);
   };
 

@@ -23,6 +23,7 @@ export function VerseFinder() {
   const [searched, setSearched] = useState("");
   const [busy, setBusy] = useState(false);
 
+  const [failed, setFailed] = useState(false);
   const find = async (q: string) => {
     q = q.trim();
     if (!q || busy) return;
@@ -30,9 +31,13 @@ export function VerseFinder() {
     setBusy(true);
     try {
       const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
-      setResults(res.ok ? (await res.json()).results : []);
+      if (!res.ok) throw new Error(String(res.status));
+      setResults((await res.json()).results);
+      setFailed(false);
     } catch {
+      // A failed search isn't "nothing found": say so, so they don't change words that were fine
       setResults([]);
+      setFailed(true);
     }
     setSearched(q);
     setBusy(false);
@@ -96,12 +101,19 @@ export function VerseFinder() {
                   setResults(null);
                   setQuery("");
                 }}
-                className="text-[0.95rem] font-semibold text-kesar-deep hover:underline"
+                className="min-h-11 min-w-11 px-2 text-[0.95rem] font-semibold text-kesar-deep hover:underline"
               >
                 Clear
               </button>
             </div>
-            {results.length === 0 ? (
+            {failed ? (
+              <p className="mt-3 text-kajal-soft">
+                The search didn&apos;t work just now.{" "}
+                <button type="button" onClick={() => find(searched)} className="min-h-11 font-semibold text-kesar-deep underline">
+                  Try again
+                </button>
+              </p>
+            ) : results.length === 0 ? (
               <p className="mt-3 text-kajal-soft">Nothing found. Try other words.</p>
             ) : (
               <ul className="mt-3 flex flex-col gap-3">

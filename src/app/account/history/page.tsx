@@ -18,13 +18,6 @@ const when = (iso: string) =>
 
 export default function HistoryPage() {
   const { ready, user } = useAuth();
-  const [list, setList] = useState<Conversation[] | null>(null);
-  const [open, setOpen] = useState<{ conversation: Conversation; turns: SavedTurn[] } | null>(null);
-
-  useEffect(() => {
-    if (user) void listConversations().then(setList);
-  }, [user]);
-
   if (!ready) return <div className="min-h-[60vh]" />;
   if (!user) {
     return (
@@ -41,9 +34,30 @@ export default function HistoryPage() {
     );
   }
 
+  // A new account on the same phone gets a fresh page: nothing from the last person stays on screen
+  return <History key={user.id} />;
+}
+
+function History() {
+  const [list, setList] = useState<Conversation[] | null>(null);
+  const [open, setOpen] = useState<{ conversation: Conversation; turns: SavedTurn[] } | null>(null);
+  const [problem, setProblem] = useState("");
+
+  useEffect(() => {
+    let live = true;
+    void listConversations().then((l) => live && setList(l));
+    return () => {
+      live = false;
+    };
+  }, []);
+
   if (open) {
     const remove = async () => {
-      await deleteConversation(open.conversation.id);
+      if (!(await deleteConversation(open.conversation.id))) {
+        setProblem("That didn't delete. Please try again.");
+        return;
+      }
+      setProblem("");
       setList((l) => l?.filter((c) => c.id !== open.conversation.id) ?? null);
       setOpen(null);
     };
@@ -100,6 +114,7 @@ export default function HistoryPage() {
         >
           Delete this conversation
         </button>
+        {problem && <p className="mt-2 text-[1rem] text-kumkum">{problem}</p>}
       </div>
     );
   }

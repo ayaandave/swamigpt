@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { forgetAccountOnThisDevice } from "@/lib/account-sync";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { accessToken, supabase } from "@/lib/supabase";
@@ -23,6 +24,7 @@ export function DeleteAccount() {
     }).catch(() => null);
     if (res?.ok) {
       await supabase()?.auth.signOut({ scope: "local" });
+      forgetAccountOnThisDevice();
       router.push("/");
       return;
     }

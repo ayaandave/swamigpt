@@ -35,7 +35,7 @@ export default function SettingsPage() {
       setSampling(null);
       return;
     }
-    speak(text, id, s.speed, { onEnd: () => setSampling(null) }, true);
+    speak(text, id, s.speed, { onEnd: () => setSampling(null), onStop: () => setSampling(null) }, true);
     setSampling(id);
   };
 
@@ -142,7 +142,7 @@ function Choice({
           return (
             <label
               key={o.id}
-              className={`flex min-h-16 cursor-pointer flex-col justify-center rounded-2xl border-2 px-5 py-3 ${
+              className={`flex min-h-16 cursor-pointer flex-col justify-center rounded-2xl border-2 px-5 py-3 has-focus-visible:outline-4 has-focus-visible:outline-offset-2 has-focus-visible:outline-kesar-deep ${
                 on ? "border-kesar bg-sandal-deep" : "border-sandal-edge hover:border-kajal"
               }`}
             >

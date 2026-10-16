@@ -18,6 +18,7 @@ function markDone(slug: string, index: number) {
 }
 
 export const getProgress = store.get;
+export const clearProgress = () => store.set({});
 
 // Adds lessons finished on another device without firing onLessonDone again
 export function mergeProgress(remote: Progress) {

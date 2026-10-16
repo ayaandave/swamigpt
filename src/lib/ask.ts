@@ -51,7 +51,16 @@ async function fetchAnswer(
       }),
     });
     if (res.status === 503) {
-      // No API key yet: the practice answers are about general topics, not lessons, so be honest
+      // No API key: only while building on this Mac do the practice answers stand in. On the live site
+      // that's a fault, and saying so is more honest than a made-up answer
+      if (process.env.NODE_ENV === "production") {
+        return {
+          paragraphs: ["The Swami can't answer right now. Please try again in a little while."],
+          verses: [],
+          notice: "error",
+        };
+      }
+      // The practice answers are about general topics, not lessons, so be honest
       return lesson
         ? {
             paragraphs: ["The Swami can't answer questions about lessons just yet. This will switch on very soon."],

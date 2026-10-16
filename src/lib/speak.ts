@@ -24,7 +24,11 @@ function pickVoice(prefer: "male" | "female" | "any") {
 const ELEVENLABS = process.env.NEXT_PUBLIC_ELEVENLABS === "1";
 const CHUNK = 350; // characters per request: about two sentences, roughly 20 seconds of speech
 
-type Handlers = { onStart?: () => void; onEnd?: () => void };
+// onEnd: it finished (or failed). onStop: something else started playing, or it was stopped,
+// so a button showing "Stop" can go back to "Listen"
+type Handlers = { onStart?: () => void; onEnd?: () => void; onStop?: () => void };
+// Whoever is playing now, told when they are interrupted
+let owner: Handlers | null = null;
 
 // What's playing now, and the next piece already loading, so stop can cancel both
 let playing: HTMLAudioElement | null = null;
@@ -70,10 +74,11 @@ function chunks(text: string): string[] {
   return out;
 }
 
-// save: the server keeps the audio and replays it for free next time (lessons, verses, meditation
-// lines, and chat answers, which people often play more than once).
+// save: the server keeps the audio and replays it for free next time (lessons, verses and
+// meditation lines; never chat answers, which can be personal).
 export function speak(text: string, voiceId: VoiceId, speed: number, handlers: Handlers = {}, save = false) {
   stopSpeaking();
+  owner = handlers;
   if (!ELEVENLABS || Date.now() < elevenDownUntil) {
     browserSpeak(text, voiceId, speed, handlers);
     return;
@@ -122,10 +127,18 @@ export function speak(text: string, voiceId: VoiceId, speed: number, handlers: H
       if (id !== session) return;
       // ElevenLabs unavailable: read the rest with the browser's voice instead
       elevenDownUntil = Date.now() + ELEVEN_RETRY_MS;
-      stopSpeaking();
+      stopSpeaking(false);
+      owner = handlers;
       browserSpeak(parts.slice(i).join(" "), voiceId, speed, started ? { onEnd: handlers.onEnd } : handlers);
     };
-    void audio.play().catch(() => {});
+    // A refused play (a phone blocking audio that didn't start from a tap) falls back to the
+    // phone's own voice instead of leaving the button stuck on "Stop"
+    audio.play().catch(() => {
+      if (id !== session || started) return;
+      stopSpeaking(false);
+      owner = handlers;
+      browserSpeak(parts.slice(i).join(" "), voiceId, speed, handlers);
+    });
   };
 
   play(0, audioFor(0));
@@ -169,7 +182,10 @@ export function speechProgress(): number | null {
   return null;
 }
 
-export function stopSpeaking() {
+export function stopSpeaking(notify = true) {
+  const was = owner;
+  owner = null;
+  if (notify) was?.onStop?.();
   session++; // any events still on their way from the old audio are ignored
   browserRead = null;
   for (const audio of [playing, loading]) {

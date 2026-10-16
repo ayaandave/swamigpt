@@ -123,7 +123,10 @@ export async function POST(request: Request) {
   const reading = about ? getPassageById(about) : undefined;
 
   // Each real answer costs money, so count it against today's allowance first
-  const left = await takeQuestion(request);
+  const left = await takeQuestion(request).catch((error) => {
+    console.error("question limit failed", error);
+    return -2; // limits can't be checked, so no paid answer
+  });
   if (left === -1) {
     return Response.json({ error: "limit" }, { status: 429 });
   }
@@ -134,7 +137,11 @@ export async function POST(request: Request) {
   // Search on the follow-up plus the previous question, so "what about at work?" still finds something
   const searchText = [lesson?.title, reading?.translation, history.at(-1)?.question, question].filter(Boolean).join("\n");
   const mode = depth === "deeper" ? DEEPER : SIMPLER;
-  const found = await searchPassages(searchText, mode.passages);
+  const found = await searchPassages(searchText, mode.passages).catch((error) => {
+    console.error("search failed", error);
+    return null;
+  });
+  if (!found) return Response.json({ error: "failed" }, { status: 502 });
   // The passage they were reading always goes in first, so "this passage" can't be mistaken for
   // another text's verse with the same number
   const passages = reading ? [reading, ...found.filter((p) => p.id !== reading.id)].slice(0, mode.passages) : found;

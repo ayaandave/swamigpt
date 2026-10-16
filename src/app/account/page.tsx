@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AvatarBadge, AvatarPicker } from "@/components/AvatarPicker";
+import { forgetAccountOnThisDevice } from "@/lib/account-sync";
 import { DeleteAccount } from "@/components/DeleteAccount";
 import { Journey } from "@/components/Journey";
 import { Diya } from "@/components/Diya";
@@ -33,6 +34,7 @@ export default function AccountPage() {
 
   const signOut = async () => {
     await supabase()?.auth.signOut();
+    forgetAccountOnThisDevice();
     router.push("/");
   };
 

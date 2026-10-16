@@ -49,6 +49,10 @@ export async function loadConversation(id: string) {
   return convo ? { conversation: convo, turns: (turns as SavedTurn[] | null) ?? [] } : null;
 }
 
-export async function deleteConversation(id: string) {
-  await supabase()?.from("conversations").delete().eq("id", id);
+// True once it's really gone, so the list only drops it after the delete worked
+export async function deleteConversation(id: string): Promise<boolean> {
+  const sb = supabase();
+  if (!sb) return false;
+  const { error } = await sb.from("conversations").delete().eq("id", id);
+  return !error;
 }
