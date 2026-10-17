@@ -187,6 +187,33 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
     setRunning(true);
   };
 
+  // Lock screen and Control Center: the meditation's name with play and pause, in the iPhone app
+  // and in browsers that support it
+  const toggleRef = useRef(toggle);
+  useEffect(() => {
+    toggleRef.current = toggle;
+  });
+  useEffect(() => {
+    if (!("mediaSession" in navigator)) return;
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: meditation.title,
+      artist: "SwamiGPT",
+      album: `${meditation.minutes}-minute meditation`,
+      artwork: [{ src: "/pwa-icon/512.png", sizes: "512x512", type: "image/png" }],
+    });
+    const run = () => toggleRef.current();
+    navigator.mediaSession.setActionHandler("play", run);
+    navigator.mediaSession.setActionHandler("pause", run);
+    return () => {
+      navigator.mediaSession.setActionHandler("play", null);
+      navigator.mediaSession.setActionHandler("pause", null);
+      navigator.mediaSession.metadata = null;
+    };
+  }, [meditation]);
+  useEffect(() => {
+    if ("mediaSession" in navigator) navigator.mediaSession.playbackState = running ? "playing" : "paused";
+  }, [running]);
+
   // The ring fills as you breathe in and empties as you breathe out; otherwise it rests
   const ring = !running
     ? "scale-[.62] duration-1000"

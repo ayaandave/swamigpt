@@ -6,6 +6,7 @@ import { useSettings, type Depth, type TextSize } from "@/lib/settings";
 import { VOICES } from "@/lib/voices";
 import { speak, stopSpeaking } from "@/lib/speak";
 import { Diya } from "@/components/Diya";
+import { MorningVerse } from "@/components/MorningVerse";
 import { CheckIcon, SpeakerIcon, StopIcon } from "@/components/icons";
 
 const TEXT_SIZES: { id: TextSize; label: string; sample: string }[] = [
@@ -107,6 +108,8 @@ export default function SettingsPage() {
         value={s.depth}
         onChange={(v) => s.update({ depth: v as Depth })}
       />
+
+      <MorningVerse />
 
       <Link
         href="/sources"

@@ -6,6 +6,7 @@ import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/seo";
 import { BottomNav, Header } from "@/components/Chrome";
 import { WelcomeGate } from "@/components/WelcomeGate";
 import { AccountSync } from "@/components/AccountSync";
+import { NativeBridge } from "@/components/NativeBridge";
 import { PrivateAnalytics } from "@/components/PrivateAnalytics";
 import "./globals.css";
 
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <BottomNav />
         <WelcomeGate />
         <AccountSync />
+        <NativeBridge />
         {/* Visit counts without cookies or questions; reads the address, so it waits for the page in a Suspense */}
         <Suspense>
           <PrivateAnalytics />

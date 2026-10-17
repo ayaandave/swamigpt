@@ -15,6 +15,7 @@ export type Settings = {
   ageGroup: AgeGroup | null; // answered once on the welcome gate
   meditationVoice: VoiceId; // meditations are read by Dhyan ("sakshi") unless changed in the player
   avatar: string | null; // an id from lib/avatars, chosen on the account page
+  dailyVerse: { on: boolean; time: string }; // the iPhone app's morning notification, "07:30"
 };
 
 const KEY = "swamigpt.settings";
@@ -27,6 +28,7 @@ const store = createLocalStore<Settings>(KEY, {
   ageGroup: null,
   meditationVoice: "sakshi",
   avatar: null,
+  dailyVerse: { on: false, time: "07:30" },
 });
 
 // Runs in <head> before first paint so the chosen text size never flickers
