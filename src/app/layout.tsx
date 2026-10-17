@@ -43,7 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-dvh" suppressHydrationWarning>
         <Header />
-        <main className="mx-auto w-full max-w-3xl px-4 pb-40 sm:px-6">{children}</main>
+        <main className="mx-auto w-full max-w-3xl px-4 pb-40 sm:px-6 md:pb-20">{children}</main>
         <BottomNav />
         <WelcomeGate />
         <AccountSync />

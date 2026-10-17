@@ -85,9 +85,6 @@ export default function SettingsPage() {
             );
           })}
         </div>
-        <p className="mt-3 text-[0.85rem] text-kajal-soft">
-          Preview voices use your device&apos;s built-in speech. The finished app will use studio-quality voices.
-        </p>
       </section>
 
       <Choice

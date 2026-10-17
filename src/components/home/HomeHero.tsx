@@ -57,13 +57,13 @@ export function HomeHero({ children }: { children?: ReactNode }) {
 
       <div className="hero-content absolute inset-0 flex flex-col">
         <div className="mx-auto w-full max-w-3xl px-6 text-center">
-          <h1 className="font-display text-[clamp(2.1rem,6.5vw,3.4rem)] leading-[1.08] text-kajal">
-            Ancient wisdom,
-            <br />
-            {/* Keeps "life today." together when a phone has to wrap the line */}
-            for your life&nbsp;today.
+          <h1 className="font-display text-[clamp(2.4rem,7.5vw,4rem)] leading-[1.05] text-kajal">
+            Ask the Gita anything.
           </h1>
-          <p className="mt-3 text-[1.1rem] font-semibold tracking-wide text-kajal-soft">Ask. Learn. Breathe.</p>
+          <p className="mx-auto mt-3 max-w-[30ch] text-[1.1rem] leading-snug text-kajal-soft sm:max-w-[40ch] sm:text-[1.2rem]">
+            Real answers from the Bhagavad Gita, the Upanishads and more, in words you&apos;ll actually understand.
+            Free.
+          </p>
         </div>
         <div className="flex-1" />
         <div className="mx-auto w-full max-w-3xl px-4 pb-[max(1.25rem,3svh)] sm:px-6">{children}</div>

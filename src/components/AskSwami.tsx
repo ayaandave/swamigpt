@@ -81,7 +81,7 @@ export function AskSwami({
           </div>
           <h1 className="mt-4 font-display text-[2.4rem] leading-[1.1] sm:mt-6 sm:text-[3.2rem]">Namaste.</h1>
           <p className="mt-3 max-w-[30ch] text-[1.1rem] text-kajal-soft">
-            Ask anything about life, the mind or the old teachings. I will answer slowly.
+            Ask about anything in your life, or about the Gita, karma or meditation. Every answer comes from real scripture.
           </p>
           <div className="mt-6 w-full text-left sm:mt-8">
             <AskBox draft={draft} setDraft={setDraft} onAsk={ask} disabled={thinking} autoFocus />
@@ -132,7 +132,7 @@ export function AskSwami({
               </div>
             </article>
           ))}
-          <div className="sticky bottom-[calc(4.6rem+env(safe-area-inset-bottom))] z-20 -mx-4 bg-sandal/95 px-4 pt-2 pb-3 backdrop-blur sm:-mx-6 sm:px-6">
+          <div className="sticky bottom-[calc(4.6rem+env(safe-area-inset-bottom))] z-20 md:bottom-0 -mx-4 bg-sandal/95 px-4 pt-2 pb-3 backdrop-blur sm:-mx-6 sm:px-6">
             <AskBox
               draft={draft}
               setDraft={setDraft}

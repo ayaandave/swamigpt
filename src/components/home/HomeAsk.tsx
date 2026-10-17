@@ -35,7 +35,7 @@ export function HomeAsk() {
           id="home-ask"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="Ask Swamiji anything…"
+          placeholder="What’s on your mind?"
           maxLength={500}
           className="min-h-12 min-w-0 flex-1 bg-transparent text-[1.1rem] placeholder:text-kajal-soft/80 focus:outline-none"
         />

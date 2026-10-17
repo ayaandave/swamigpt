@@ -49,18 +49,18 @@ export default function LearnPage() {
         <h2 id="read-title" className="font-display text-[1.6rem] leading-tight">
           Read the scriptures
         </h2>
-        <ul className="mt-4 flex flex-col gap-3">
+        <ul className="mt-4 border-t-2 border-sandal-edge">
           {TEXTS.map((t) => (
-            <li key={t.id}>
+            <li key={t.id} className="border-b border-sandal-edge">
               <Link
                 href={`/read/${t.id}`}
-                className="flex items-center justify-between gap-4 rounded-[2rem] bg-sandal-deep px-6 py-5 hover:bg-sandal-edge/60 sm:px-8"
+                className="group flex items-center justify-between gap-4 py-5 pr-1 hover:bg-sandal-deep/40"
               >
                 <span>
                   <span className="block font-display text-[1.45rem] leading-tight">{t.title}</span>
                   <span className="mt-1 block text-[0.95rem] leading-snug text-kajal-soft">{t.description}</span>
                 </span>
-                <span aria-hidden="true" className="font-display text-[1.6rem] text-kesar-deep">
+                <span aria-hidden="true" className="font-display text-[1.6rem] text-kesar-deep transition-transform group-hover:translate-x-1">
                   →
                 </span>
               </Link>

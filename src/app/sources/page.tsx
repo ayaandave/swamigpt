@@ -90,9 +90,9 @@ export default function SourcesPage() {
 
       <section className="mt-10">
         <h2 className="font-display text-[1.6rem]">Texts and translations</h2>
-        <ul className="mt-4 flex flex-col gap-3">
+        <ul className="mt-4 border-t-2 border-sandal-edge">
           {SOURCES.map((s) => (
-            <li key={s.text} className="rounded-2xl border-2 border-sandal-edge px-5 py-4">
+            <li key={s.text} className="border-b border-sandal-edge py-4">
               <p className="font-semibold">{s.text}</p>
               <p className="mt-1 text-[1rem] text-kajal-soft">{s.from}</p>
             </li>

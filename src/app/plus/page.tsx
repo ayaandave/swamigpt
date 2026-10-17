@@ -22,7 +22,7 @@ export default function PlusPage() {
   return (
     <div className="pt-10">
       <p className="text-[0.85rem] font-semibold uppercase tracking-[0.12em] text-kesar-deep">SwamiGPT Plus</p>
-      <h1 className="mt-1 font-display text-[2.4rem] leading-tight">Ask more. Listen more.</h1>
+      <h1 className="mt-1 font-display text-[2.4rem] leading-tight">For when you want to ask more each day.</h1>
       <p className="mt-3 max-w-[60ch] text-[1.1rem] leading-[1.7]">
         Everyone gets the same answers, from our best model and in our best voice. We never give free answers that
         are any worse. Plus gives you more of them each day, with Swamiji reading your answers aloud.

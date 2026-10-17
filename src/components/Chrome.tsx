@@ -11,41 +11,6 @@ import { AskIcon, HomeIcon, LearnIcon, MeditateIcon, PersonIcon, SettingsIcon } 
 const SIZES: TextSize[] = ["regular", "large", "larger"];
 const SIZE_LABEL: Record<TextSize, string> = { regular: "Aa", large: "Aa+", larger: "Aa++" };
 
-export function Header() {
-  const { textSize, update } = useSettings();
-  const next = SIZES[(SIZES.indexOf(textSize) + 1) % SIZES.length];
-
-  // Sizes here are in px, not rem, so the header still fits a phone at the largest text size
-  return (
-    <header className="relative z-10 mx-auto flex w-full max-w-3xl items-center justify-between gap-2 px-[16px] pt-[max(16px,env(safe-area-inset-top))] sm:px-6">
-      <Link href="/" className="flex min-h-[44px] min-w-0 items-center gap-1.5 rounded-full" aria-label="SwamiGPT home">
-        <Diya size={34} />
-        <span className="font-display text-[20px] tracking-tight sm:text-[24px]">SwamiGPT</span>
-      </Link>
-      <div className="flex shrink-0 items-center gap-[6px] sm:gap-2">
-        <button
-          type="button"
-          onClick={() => update({ textSize: next })}
-          className="flex h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full border-2 border-sandal-edge text-[14px] font-semibold hover:border-kajal sm:px-4"
-          aria-label={`Text size: ${textSize}. Tap to make text ${next === "regular" ? "regular" : "bigger"}.`}
-        >
-          <span className="font-display text-[17px] leading-none">{SIZE_LABEL[textSize]}</span>
-          <span className="hidden sm:inline">Text size</span>
-        </button>
-        <Link
-          href="/settings"
-          aria-label="Voice and settings"
-          className="flex h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full border-2 border-sandal-edge text-[14px] font-semibold hover:border-kajal sm:px-4"
-        >
-          <SettingsIcon className="size-[24px]" />
-          <span className="hidden sm:inline">Voice &amp; settings</span>
-        </Link>
-        {accountsEnabled && <AccountButton />}
-      </div>
-    </header>
-  );
-}
-
 const TABS = [
   { href: "/", label: "Home", Icon: HomeIcon, also: ["/today"] }, // today's verse is reached from home
   { href: "/ask", label: "Ask", Icon: AskIcon, also: [] as string[] },
@@ -53,16 +18,78 @@ const TABS = [
   { href: "/meditate", label: "Meditate", Icon: MeditateIcon, also: [] },
 ];
 
+const isActive = (path: string, href: string, also: string[]) =>
+  href === "/" ? path === "/" || also.some((p) => path.startsWith(p)) : [href, ...also].some((p) => path.startsWith(p));
+
+export function Header() {
+  const path = usePathname();
+  const { textSize, update } = useSettings();
+  const next = SIZES[(SIZES.indexOf(textSize) + 1) % SIZES.length];
+
+  // Sizes here are in px, not rem, so the header still fits a phone at the largest text size
+  return (
+    <header className="relative z-10 mx-auto flex w-full max-w-3xl items-center md:max-w-5xl justify-between gap-2 px-[16px] pt-[max(16px,env(safe-area-inset-top))] sm:px-6">
+      <Link href="/" className="flex min-h-[44px] min-w-0 items-center gap-1.5 rounded-full" aria-label="SwamiGPT home">
+        <Diya size={34} />
+        <span className="font-display text-[20px] tracking-tight sm:text-[24px]">SwamiGPT</span>
+      </Link>
+      {/* On big screens the four sections sit up here; phones keep the tab bar at the bottom */}
+      <nav aria-label="Main" className="hidden md:block">
+        <ul className="flex items-center gap-1">
+          {TABS.map(({ href, label, also }) => {
+            const active = isActive(path, href, also);
+            return (
+              <li key={href}>
+                <Link
+                  href={href}
+                  aria-current={active ? "page" : undefined}
+                  className={`flex min-h-[44px] items-center rounded-full px-4 text-[16px] font-semibold ${
+                    active ? "bg-kesar/20 text-kesar-deep" : "text-kajal-soft hover:text-kajal"
+                  }`}
+                >
+                  {label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+      <div className="flex shrink-0 items-center gap-[6px] sm:gap-2">
+        <button
+          type="button"
+          onClick={() => update({ textSize: next })}
+          className="flex h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full border-2 border-sandal-edge text-[14px] font-semibold hover:border-kajal lg:px-4"
+          aria-label={`Text size: ${textSize}. Tap to make text ${next === "regular" ? "regular" : "bigger"}.`}
+        >
+          <span className="font-display text-[17px] leading-none">{SIZE_LABEL[textSize]}</span>
+          <span className="hidden lg:inline">Text size</span>
+        </button>
+        <Link
+          href="/settings"
+          aria-label="Voice and settings"
+          className="flex h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full border-2 border-sandal-edge text-[14px] font-semibold hover:border-kajal lg:px-4"
+        >
+          <SettingsIcon className="size-[24px]" />
+          <span className="hidden lg:inline">Voice &amp; settings</span>
+        </Link>
+        {accountsEnabled && <AccountButton />}
+      </div>
+    </header>
+  );
+}
+
+
+
 export function BottomNav() {
   const path = usePathname();
   return (
     <nav
       aria-label="Main"
-      className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-sandal-edge bg-sandal/95 pb-[env(safe-area-inset-bottom)] backdrop-blur"
+      className="fixed inset-x-0 bottom-0 z-30 border-t-2 md:hidden border-sandal-edge bg-sandal/95 pb-[env(safe-area-inset-bottom)] backdrop-blur"
     >
       <ul className="mx-auto grid max-w-3xl grid-cols-4">
         {TABS.map(({ href, label, Icon, also }) => {
-          const active = href === "/" ? path === "/" || also.some((p) => path.startsWith(p)) : [href, ...also].some((p) => path.startsWith(p));
+          const active = isActive(path, href, also);
           return (
             <li key={href}>
               <Link

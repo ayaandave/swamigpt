@@ -63,7 +63,7 @@ export default async function SectionPage(props: PageProps<"/read/[text]/[sectio
       )}
       <h1 className="mt-1 font-display text-[2.2rem] leading-tight">{s.name}</h1>
 
-      <ol className="mt-8 flex flex-col gap-3">
+      <ol className="mt-8 border-t-2 border-sandal-edge">
         {s.passages.map((p, i) => {
           // Upanishads and prose books have parts within a section: label each new one
           // ("Part 1.2", or the chapter title when there is one)
@@ -71,15 +71,15 @@ export default async function SectionPage(props: PageProps<"/read/[text]/[sectio
           const prev = s.passages[i - 1];
           const newPart = part && !prev?.number.startsWith(part + ".");
           return (
-            <li key={p.id}>
+            <li key={p.id} className="border-b border-sandal-edge">
               {newPart && (
-                <h2 className="mt-6 mb-3 font-display text-[1.3rem] text-kajal-soft">
+                <h2 className="pt-8 pb-2 font-display text-[1.3rem] text-kajal-soft">
                   {p.partName ? `${part}. ${p.partName}` : `Part ${part}`}
                 </h2>
               )}
               <Link
                 href={passageHref(p)}
-                className="flex gap-4 rounded-2xl border-2 border-sandal-edge px-5 py-4 hover:border-kesar hover:bg-sandal-deep/60"
+                className="flex gap-4 py-4 pr-1 hover:bg-sandal-deep/40"
               >
                 <span className="min-w-12 shrink-0 pt-0.5 font-display text-[1.1rem] text-kesar-deep">{shortRef(p)}</span>
                 <span className="min-w-0">

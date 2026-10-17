@@ -46,21 +46,22 @@ export default async function TextPage(props: PageProps<"/read/[text]">) {
       <h1 className="mt-3 font-display text-[2.4rem] leading-tight">{t.title}</h1>
       <p className="mt-2 max-w-[48ch] text-[1.1rem] text-kajal-soft">{t.description}</p>
 
-      <ol className="mt-8 flex flex-col gap-3">
+      <ol className="mt-8 border-t-2 border-sandal-edge">
         {t.sections.map((s, i) => (
-          <li key={s.key}>
+          <li key={s.key} className="border-b border-sandal-edge">
             <Link
               href={`/read/${t.id}/${s.key}`}
-              className="flex min-h-16 items-center gap-4 rounded-2xl border-2 border-sandal-edge px-5 py-3 hover:border-kesar hover:bg-sandal-deep/60"
+              className="group flex min-h-16 items-center gap-5 py-4 pr-1 hover:bg-sandal-deep/40"
             >
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-sandal-deep font-display text-[1.2rem]">
-                {i + 1}
-              </span>
-              <span className="min-w-0">
+              <span className="w-8 shrink-0 text-right font-display text-[1.4rem] text-kesar-deep">{i + 1}</span>
+              <span className="min-w-0 flex-1">
                 <span className="block font-display text-[1.25rem] leading-snug">{s.name}</span>
                 <span className="text-[0.9rem] text-kajal-soft">
                   {s.passages.length} {t.passageLabel}s
                 </span>
+              </span>
+              <span aria-hidden="true" className="font-display text-[1.3rem] text-kesar-deep transition-transform group-hover:translate-x-1">
+                →
               </span>
             </Link>
           </li>
