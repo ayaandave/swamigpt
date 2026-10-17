@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: ["/", "/api/card"],
-      disallow: ["/api/", "/account", "/login", "/settings", "/v/"],
+      disallow: ["/api/", "/account", "/admin", "/login", "/settings", "/v/"],
     },
     sitemap: "https://www.swamigpt.com/sitemap.xml",
   };
