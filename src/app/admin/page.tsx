@@ -54,9 +54,13 @@ export default function MoneyPage() {
   const claudeMonth = claude.ok ? claude.monthToDate : 0;
   const voiceMonth = voice.ok && voice.nextBill != null ? voice.nextBill : 0;
   const fixedMonth = money.fixed.reduce((t, f) => t + (f.monthly ?? 0), 0);
-  const total = claudeMonth + voiceMonth + fixedMonth;
+  // One-time spending counts toward the month it was paid in
+  const monthKey = new Date(money.updatedAt).toISOString().slice(0, 7);
+  const oneTimeMonth = money.oneTime.filter((o) => o.date.startsWith(monthKey)).reduce((t, o) => t + o.dollars, 0);
+  const oneTimeAll = money.oneTime.reduce((t, o) => t + o.dollars, 0);
+  const total = claudeMonth + voiceMonth + fixedMonth + oneTimeMonth;
   // Claude grows with use; the plans are flat for the month
-  const projected = (claudeMonth / Math.max(1, money.daysSoFar)) * money.daysInMonth + voiceMonth + fixedMonth;
+  const projected = (claudeMonth / Math.max(1, money.daysSoFar)) * money.daysInMonth + voiceMonth + fixedMonth + oneTimeMonth;
   const share = total / money.budget;
   const level = share >= 1 ? "over" : share >= 0.75 ? "close" : "fine";
   const tone = { fine: "bg-tulsi", close: "bg-kesar", over: "bg-kumkum" }[level];
@@ -125,6 +129,19 @@ export default function MoneyPage() {
           ))}
         </ul>
       </section>
+
+      {/* One-time spending */}
+      {money.oneTime.length > 0 && (
+        <section aria-labelledby="one-time" className="mt-12">
+          <h2 id="one-time" className="font-display text-[1.6rem]">One-time spending</h2>
+          <p className="mt-1 text-[0.95rem] text-kajal-soft">Top-ups and one-off purchases. {usdExact(oneTimeAll)} in total so far.</p>
+          <ul className="mt-3 border-t-2 border-sandal-edge">
+            {money.oneTime.map((o) => (
+              <Row key={o.name + o.date} name={o.name} value={usdExact(o.dollars)} note={`${short(o.date)} · ${o.note}`} problem={false} />
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Claude by day */}
       {claude.ok && (

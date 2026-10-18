@@ -13,6 +13,17 @@ export const FIXED_COSTS: { name: string; monthly: number | null; note: string }
   { name: "Vercel", monthly: 0, note: "Hobby plan (free)" },
   { name: "Supabase", monthly: 0, note: "Free plan" },
   { name: "Domain (swamigpt.com)", monthly: null, note: "GoDaddy, paid yearly: add the price in src/lib/money.ts" },
+  { name: "Resend (emails)", monthly: 0, note: "Free plan, up to 3,000 emails a month" },
+];
+
+// Money spent once rather than every month (top-ups, one-off purchases). Add a line each time.
+export const ONE_TIME_COSTS: { name: string; dollars: number; date: string; note: string }[] = [
+  {
+    name: "Higgsfield API credits",
+    dollars: 10,
+    date: "2026-10-18",
+    note: "Homepage images and video. $2.14 used so far, $7.86 left in the wallet (lasts a year)",
+  },
 ];
 
 type Day = { day: string; dollars: number };
@@ -49,6 +60,7 @@ export type Money = {
       }
     | { ok: false; problem: string };
   fixed: typeof FIXED_COSTS;
+  oneTime: typeof ONE_TIME_COSTS;
 };
 
 const isoDay = (d: Date) => d.toISOString().slice(0, 10);
@@ -75,6 +87,7 @@ export async function getMoney(): Promise<Money> {
     voice,
     usage,
     fixed: FIXED_COSTS,
+    oneTime: ONE_TIME_COSTS,
   };
   cached = { at: Date.now(), money };
   return money;
