@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { setPendingQuestion } from "@/lib/pending-question";
 import { SendIcon } from "../icons";
 
@@ -11,6 +11,7 @@ const EXAMPLES = ["I'm stressed about a test", "What is karma?", "How do I find 
 export function HomeAsk() {
   const router = useRouter();
   const [draft, setDraft] = useState("");
+  const id = useId(); // the home page can show this box more than once
   const go = (q: string) => {
     const question = q.trim();
     if (!question) return;
@@ -28,11 +29,11 @@ export function HomeAsk() {
         }}
         className="flex items-center gap-2 rounded-full border-2 border-white/70 bg-white/80 py-2 pr-2 pl-6 shadow-[0_18px_40px_-18px_rgba(43,27,16,0.55)] backdrop-blur-md focus-within:border-kesar"
       >
-        <label htmlFor="home-ask" className="sr-only">
+        <label htmlFor={id} className="sr-only">
           Your question
         </label>
         <input
-          id="home-ask"
+          id={id}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="What’s on your mind?"

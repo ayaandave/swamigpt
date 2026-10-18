@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { HomeAsk } from "./HomeAsk";
+import { FILM_SEEN_KEY } from "@/lib/film";
 import "./home-film.css";
 
 // First-visit home: "The Leaf and the River". A film made with Higgsfield plays as you scroll:
@@ -12,8 +13,6 @@ import "./home-film.css";
 // Shown only to new visitors: a script in the page head marks returning, signed-in and iPhone-app
 // visitors before first paint, and CSS hides this for them (see FILM_SEEN_SCRIPT).
 
-export const FILM_SEEN_KEY = "swamigpt.seenFilm";
-export const FILM_SEEN_SCRIPT = `try{var l=localStorage,s=l.getItem("${FILM_SEEN_KEY}")||window.Capacitor;for(var i=0;!s&&i<l.length;i++){var k=l.key(i);if(k&&k.indexOf("sb-")===0&&k.slice(-11)==="-auth-token")s=1}if(s)document.documentElement.dataset.seenFilm="1"}catch(e){}`;
 
 const BEADS = 18;
 const SOURCES: [string, number, number][] = [
@@ -38,12 +37,26 @@ export function HomeFilm() {
   useEffect(() => {
     const el = root.current;
     if (!el || document.documentElement.dataset.seenFilm) return;
-    // This visit plays the film; the next one goes straight to the quick home
-    try {
-      localStorage.setItem(FILM_SEEN_KEY, "1");
-    } catch {}
+    // Once they've watched to the end or left the page, the next visit goes straight to the quick home
+    const markSeen = () => {
+      try {
+        localStorage.setItem(FILM_SEEN_KEY, "1");
+      } catch {}
+    };
+    addEventListener("pagehide", markSeen);
     document.documentElement.classList.add("film-on");
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // The videos load only for visitors who will see them (returning visitors never download them)
+    if (!reduce) {
+      el.querySelectorAll<HTMLVideoElement>("video").forEach((v) => {
+        v.querySelectorAll<HTMLSourceElement>("source").forEach((s) => (s.src = s.dataset.src ?? ""));
+        v.preload = "auto";
+        v.load();
+      });
+      // iPhones only paint frames of a video that has started once, so start the film and pause it straight away
+      const f = film.current;
+      f?.play().then(() => f.pause()).catch(() => {});
+    }
 
     // ---- the lines of each chapter rise in as it arrives ----
     const io = new IntersectionObserver(
@@ -93,6 +106,7 @@ export function HomeFilm() {
       const y = scrollY;
       const filmEnd = anchors[anchors.length - 1].y + innerHeight * 0.9;
       setStage(y < 12 ? "hero" : y < filmEnd ? "film" : "after");
+      if (stage === "after") markSeen();
       want = timeAt(y);
       setLit(Math.round(through('[data-fx="mala"]') * BEADS));
       const b = through('[data-fx="breath"]') * 2;
@@ -152,6 +166,8 @@ export function HomeFilm() {
       removeEventListener("scroll", onScroll);
       removeEventListener("resize", onResize);
       removeEventListener("load", onResize);
+      removeEventListener("pagehide", markSeen);
+      markSeen();
       document.documentElement.classList.remove("film-on");
     };
   }, []);
@@ -160,14 +176,19 @@ export function HomeFilm() {
     <div ref={root} className="home-film" data-stage="hero">
       {/* the stage: fixed behind the chapters */}
       <div className="hf-stage" aria-hidden="true">
-        <video className="hf-layer hf-hero" ref={hero} muted loop playsInline autoPlay preload="auto" poster="/home/film/hero-poster-1920.webp">
-          <source src="/home/film/hero-tall.mp4" type="video/mp4" media="(max-aspect-ratio: 4/5)" />
-          <source src="/home/film/hero-wide.webm" type="video/webm" />
-          <source src="/home/film/hero-wide.mp4" type="video/mp4" />
+        {/* the first frame, shown instantly while the videos load (and instead of them if motion is reduced) */}
+        <picture>
+          <source srcSet="/home/film/hero-poster-tall.webp" media="(max-aspect-ratio: 4/5)" />
+          <img className="hf-layer hf-poster" src="/home/film/hero-poster-wide.webp" alt="" loading="lazy" />
+        </picture>
+        <video className="hf-layer hf-hero" ref={hero} muted loop playsInline autoPlay preload="none">
+          <source data-src="/home/film/hero-tall.mp4" type="video/mp4" media="(max-aspect-ratio: 4/5)" />
+          <source data-src="/home/film/hero-wide.webm" type="video/webm" />
+          <source data-src="/home/film/hero-wide.mp4" type="video/mp4" />
         </video>
-        <video className="hf-layer hf-film" ref={film} muted playsInline preload="auto">
-          <source src="/home/film/film-tall.mp4" type="video/mp4" media="(max-aspect-ratio: 4/5)" />
-          <source src="/home/film/film-wide.mp4" type="video/mp4" />
+        <video className="hf-layer hf-film" ref={film} muted playsInline preload="none">
+          <source data-src="/home/film/film-tall.mp4" type="video/mp4" media="(max-aspect-ratio: 4/5)" />
+          <source data-src="/home/film/film-wide.mp4" type="video/mp4" />
         </video>
         <div className="hf-wash" />
       </div>
