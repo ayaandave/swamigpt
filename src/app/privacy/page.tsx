@@ -47,6 +47,7 @@ export default function PrivacyPage() {
           <li>Your settings, your age group and your lesson progress, so they follow you to every device.</li>
           <li>Daily counts of questions and read-aloud audio, linked to your account.</li>
           <li>If you join SwamiGPT Plus: which plan you have and when it renews.</li>
+          <li>When you last visited and your email choices, so we know which emails to send.</li>
         </ul>
         <p>
           You can delete your account any time from{" "}
@@ -54,6 +55,22 @@ export default function PrivacyPage() {
             your account page
           </Link>
           . That deletes all of the above, for good.
+        </p>
+      </section>
+
+      <section>
+        <h2>Emails</h2>
+        <p>With an account, we send:</p>
+        <ul>
+          <li>One welcome email when you join.</li>
+          <li>A weekly verse every Sunday, only if you turn it on in Settings.</li>
+          <li>
+            One short note with a verse if you haven&apos;t visited in two weeks. You can turn this off in Settings.
+          </li>
+        </ul>
+        <p>
+          Every email except the welcome has an unsubscribe link. Accounts for children under 13 only get the welcome. We
+          never sell or share your email address, and we never send ads.
         </p>
       </section>
 
@@ -72,7 +89,8 @@ export default function PrivacyPage() {
             so it can play again without being made twice. Audio of your own answers is never saved.
           </li>
           <li>
-            <strong>Supabase</strong> stores accounts and saved data. <strong>Vercel</strong> hosts the website and
+            <strong>Supabase</strong> stores accounts and saved data. <strong>Resend</strong> delivers our emails and
+            receives only your email address and the email itself. <strong>Vercel</strong> hosts the website and
             counts visits without cookies or tracking you across other sites.
           </li>
           <li>

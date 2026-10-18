@@ -18,8 +18,14 @@ async function fetchVoiceTicket() {
   setVoiceTicket(ticket ?? null);
 }
 
+// Notes the visit for emails (and sends the welcome email the first time); once per page load
+async function sayHello() {
+  const token = await accessToken();
+  if (token) await fetch("/api/email/hello", { method: "POST", headers: { authorization: `Bearer ${token}` } }).catch(() => null);
+}
+
 // Mounted once in the layout: while someone is signed in, syncs settings and mala progress, and
-// keeps a voice ticket so read-aloud limits follow their account and plan
+// keeps a voice ticket so read-aloud limits follow their account and plan, and notes the visit for emails
 export function AccountSync() {
   const { user } = useAuth();
   const userId = user?.id;
@@ -41,6 +47,7 @@ export function AccountSync() {
       return;
     }
     void fetchVoiceTicket();
+    void sayHello();
     const t = window.setInterval(() => void fetchVoiceTicket(), TICKET_REFRESH_MS);
     return () => clearInterval(t);
   }, [userId]);

@@ -7,6 +7,7 @@ import { VOICES } from "@/lib/voices";
 import { speak, stopSpeaking } from "@/lib/speak";
 import { Diya } from "@/components/Diya";
 import { MorningVerse } from "@/components/MorningVerse";
+import { EmailPrefs } from "@/components/EmailPrefs";
 import { CheckIcon, SpeakerIcon, StopIcon } from "@/components/icons";
 
 const TEXT_SIZES: { id: TextSize; label: string; sample: string }[] = [
@@ -110,6 +111,7 @@ export default function SettingsPage() {
       />
 
       <MorningVerse />
+      <EmailPrefs />
 
       <Link
         href="/sources"
