@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Diya } from "@/components/Diya";
 import { useSettings } from "@/lib/settings";
 import { accountsEnabled, appleEnabled, googleEnabled, supabase } from "@/lib/supabase";
+import { isNativeApp } from "@/lib/native";
+import { nativeApple, nativeOAuth } from "@/lib/native-auth";
 
 type Mode = "signin" | "signup" | "forgot";
 
@@ -35,6 +37,11 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [sent, setSent] = useState<"" | "confirm" | "reset">("");
+  // A sign-in that failed in the iPhone app comes back here as ?error=...
+  useEffect(() => {
+    const failed = new URLSearchParams(window.location.search).get("error");
+    if (failed) setError(friendly(failed)); // eslint-disable-line react-hooks/set-state-in-effect -- read once from the address
+  }, []);
   // Children under 13 need a parent to make the account (US children's privacy law)
   const { ageGroup } = useSettings();
   const [parent, setParent] = useState(false);
@@ -104,6 +111,15 @@ export default function LoginPage() {
   };
 
   const oauth = async (provider: "google" | "apple") => {
+    // In the iPhone app: Apple's own sheet, or Google in Safari's sheet (Google won't sign in
+    // inside an app's web view). The Google sign-in finishes in NativeBridge when the app reopens.
+    if (isNativeApp()) {
+      setError("");
+      const problem = provider === "apple" ? await nativeApple() : await nativeOAuth("google");
+      if (problem) setError(friendly(problem));
+      else if (provider === "apple") router.push("/");
+      return;
+    }
     const { error } = (await supabase()?.auth.signInWithOAuth({
       provider,
       options: { redirectTo: window.location.origin },

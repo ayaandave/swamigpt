@@ -82,5 +82,16 @@
 	<string>SwamiGPT turns your spoken question into text so you can ask out loud.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.swamigpt.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.swamigpt.app</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
