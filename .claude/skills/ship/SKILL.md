@@ -13,6 +13,7 @@ Pushing `main` deploys swamigpt.com straight away, so every step below must pass
 3. **Checks** (each must pass; on a failure, fix it or stop and explain in plain words):
    - `npx eslint .` — errors fail; the known `react-hooks/exhaustive-deps` warning in MeditationPlayer is fine.
    - `npx tsc --noEmit -p .`
+   - `npm test` (unit tests in `tests/`)
    - `npx next build` (run it in the background if it may pass two minutes). The build writes `.next` in this folder, which can break a `next dev` that's running from it: tell the user to restart their dev server afterwards if one is running.
 4. **Test what changed** when it shows in the browser: `npx next start -p 3312` in the background, load the changed pages, check for errors, then stop it (`pkill -f "next start -p 3312"`). Never spend real AI or voice credits in tests; mock `/api/ask` and `/api/speak` instead.
 5. **Commit and push.** Work on a branch (`git checkout -b <short-name>` if on main), commit with a clear message that ends with the attribution lines from the session, then `git checkout main && git merge --ff-only <branch> && git push origin main`.

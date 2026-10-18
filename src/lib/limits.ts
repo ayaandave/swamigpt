@@ -19,7 +19,7 @@ const QUESTIONS_PER_SITE = Number(process.env.QUESTIONS_DAILY_PER_SITE ?? 400);
 
 // The first four groups of an IPv6 address (its /64 network), written out in full, so every
 // address in one network counts as one guest: "2001:db8::1" and "2001:db8::2" are the same.
-function ipv6Network(address: string): string {
+export function ipv6Network(address: string): string {
   let a = address.replace(/^\[|\]$/g, "").split("%")[0];
   const v4 = a.match(/(\d+\.\d+\.\d+\.\d+)$/); // "::ffff:1.2.3.4": an IPv4 address in IPv6 form
   if (v4) return v4[1];

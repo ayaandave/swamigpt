@@ -23,7 +23,7 @@ Stack: Next.js 16.4 (App Router, cacheComponents, `proxy` not middleware), React
 - ElevenLabs credits are limited: prefer saved audio (`c=1`), and never loop requests to `/api/speak`.
 
 ## Working here
-- Before deploying: `npx eslint .`, `npx tsc --noEmit -p .`, `npx next build` (or run `/ship`).
+- Before deploying: `npx eslint .`, `npx tsc --noEmit -p .`, `npm test`, `npx next build` (or run `/ship`).
 - Test answer quality with `/answer-check` after changing the prompt or `/api/ask`.
 - If the dev server serves stale CSS or code, restart it (`next dev -p 3311`).
 - The header uses px sizes (not rem) so it fits phones at the largest text size; root font size is 125%.

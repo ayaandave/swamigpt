@@ -59,7 +59,7 @@ function unlockBrowserSpeech() {
 
 // Splits text into pieces of whole sentences. ElevenLabs charges for every character it's
 // sent, so asking for one piece at a time means stopping early only costs what was heard.
-function chunks(text: string): string[] {
+export function chunks(text: string): string[] {
   const sentences = text.match(/[^.!?]+[.!?]+["')\]]*\s*|[^.!?]+$/g) ?? [text];
   const out: string[] = [];
   let buf = "";
