@@ -9,7 +9,10 @@ const config: CapacitorConfig = {
   webDir: "cap-shell",
   backgroundColor: "#f2e3c6",
   server: {
-    url: "https://www.swamigpt.com",
+    // CAP_DEV_URL=http://localhost:3311 npx cap sync ios points a Simulator build at the local dev
+    // server, to test app features before they're live. Real builds always use the live site.
+    url: process.env.CAP_DEV_URL ?? "https://www.swamigpt.com",
+    cleartext: Boolean(process.env.CAP_DEV_URL),
     // Shown when the site can't load (no internet and the page wasn't saved before)
     errorPath: "offline.html",
   },
