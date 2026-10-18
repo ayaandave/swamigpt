@@ -197,9 +197,9 @@ export default function LoginPage() {
           />
         </label>
         {mode !== "forgot" && (
-          <label className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5">
             <span className="flex items-baseline justify-between">
-              <span className="font-semibold">Password</span>
+              <label htmlFor="password" className="font-semibold">Password</label>
               {mode === "signin" && (
                 <button
                   type="button"
@@ -212,6 +212,7 @@ export default function LoginPage() {
             </span>
             <span className="flex items-center rounded-2xl border-2 border-sandal-edge bg-[#fbf3e2] focus-within:border-kesar-deep">
               <input
+                id="password"
                 type={showPassword ? "text" : "password"}
                 required
                 minLength={8}
@@ -223,13 +224,14 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword((s) => !s)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
                 className="min-h-12 px-4 text-[0.95rem] font-semibold text-kajal-soft hover:text-kajal"
               >
                 {showPassword ? "Hide" : "Show"}
               </button>
             </span>
             {mode === "signup" && <span className="text-[0.9rem] text-kajal-soft">At least 8 characters.</span>}
-          </label>
+          </div>
         )}
 
         {error && (

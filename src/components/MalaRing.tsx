@@ -37,6 +37,10 @@ export function MalaRing({
   const r = Math.min(size * 0.055, ((Math.PI * 2 * R * (span / 360)) / Math.max(total, 1)) * 0.4);
   // Rounded so server and browser agree to the last digit (their trig can differ in the 15th place)
   const round = (n: number) => Math.round(n * 100) / 100;
+  // An invisible strip across each bead that can be opened, as wide as the gap to its neighbours
+  // and reaching well inside and outside the ring, so a fingertip doesn't have to land exactly
+  const hitWide = round(Math.max(r, R * Math.sin((step * Math.PI) / 360)) * 2);
+  const hitLong = round(r * 4.4);
   const at = (deg: number, radius = R) => [
     round(c + radius * Math.cos((deg * Math.PI) / 180)),
     round(c + radius * Math.sin((deg * Math.PI) / 180)),
@@ -99,6 +103,17 @@ export function MalaRing({
               onKeyDown={open ? (e) => (e.key === "Enter" || e.key === " ") && onBead(i) : undefined}
               className={open ? "mala-bead-open outline-none" : undefined}
             >
+              {open && (
+                <rect
+                  x={-hitLong / 2}
+                  y={-hitWide / 2}
+                  width={hitLong}
+                  height={hitWide}
+                  transform={`rotate(${round(angleOf(i))})`}
+                  fill="#000"
+                  fillOpacity={0}
+                />
+              )}
               {isFresh && <circle r={r} className="mala-ripple" fill="none" stroke="#ffb347" strokeWidth={2.5} />}
               {(isFresh || (celebrate && earned)) && (
                 <circle

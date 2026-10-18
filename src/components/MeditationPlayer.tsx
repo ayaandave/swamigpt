@@ -237,7 +237,7 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
           <BackIcon className="size-6" />
           End
         </Link>
-        <p className="font-display text-[1.1rem]">{meditation.title}</p>
+        <h1 className="font-display text-[1.1rem]">{meditation.title}</h1>
       </div>
 
       <div className="relative flex flex-1 flex-col items-center justify-center px-4 py-4 text-center sm:py-8">
