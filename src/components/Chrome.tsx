@@ -6,7 +6,8 @@ import { useSettings, type TextSize } from "@/lib/settings";
 import { accountsEnabled, useAuth } from "@/lib/supabase";
 import { Diya } from "./Diya";
 import { AvatarBadge } from "./AvatarPicker";
-import { AskIcon, HomeIcon, LearnIcon, MeditateIcon, PersonIcon, SettingsIcon } from "./icons";
+import { AskIcon, HomeIcon, LearnIcon, MeditateIcon, MoneyIcon, PersonIcon, SettingsIcon } from "./icons";
+import { useIsAdmin } from "@/lib/admin";
 
 const SIZES: TextSize[] = ["regular", "large", "larger"];
 const SIZE_LABEL: Record<TextSize, string> = { regular: "Aa", large: "Aa+", larger: "Aa++" };
@@ -18,11 +19,18 @@ const TABS = [
   { href: "/meditate", label: "Meditate", Icon: MeditateIcon, also: [] },
 ];
 
+// The owner also gets the private money page as a tab (shown only when the server says so)
+const MONEY_TAB = { href: "/admin", label: "Money", Icon: MoneyIcon, also: [] as string[] };
+function useTabs() {
+  return useIsAdmin() ? [...TABS, MONEY_TAB] : TABS;
+}
+
 const isActive = (path: string, href: string, also: string[]) =>
   href === "/" ? path === "/" || also.some((p) => path.startsWith(p)) : [href, ...also].some((p) => path.startsWith(p));
 
 export function Header() {
   const path = usePathname();
+  const tabs = useTabs();
   const { textSize, update } = useSettings();
   const next = SIZES[(SIZES.indexOf(textSize) + 1) % SIZES.length];
 
@@ -36,7 +44,7 @@ export function Header() {
       {/* On big screens the four sections sit up here; phones keep the tab bar at the bottom */}
       <nav aria-label="Main" className="hidden md:block">
         <ul className="flex items-center gap-1">
-          {TABS.map(({ href, label, also }) => {
+          {tabs.map(({ href, label, also }) => {
             const active = isActive(path, href, also);
             return (
               <li key={href}>
@@ -82,13 +90,14 @@ export function Header() {
 
 export function BottomNav() {
   const path = usePathname();
+  const tabs = useTabs();
   return (
     <nav
       aria-label="Main"
       className="fixed inset-x-0 bottom-0 z-30 border-t-2 md:hidden border-sandal-edge bg-sandal/95 pb-[env(safe-area-inset-bottom)] backdrop-blur"
     >
-      <ul className="mx-auto grid max-w-3xl grid-cols-4">
-        {TABS.map(({ href, label, Icon, also }) => {
+      <ul className={`mx-auto grid max-w-3xl ${tabs.length === 5 ? "grid-cols-5" : "grid-cols-4"}`}>
+        {tabs.map(({ href, label, Icon, also }) => {
           const active = isActive(path, href, also);
           return (
             <li key={href}>

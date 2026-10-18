@@ -129,3 +129,13 @@ export const ReadIcon = ({ className }: P) => (
     <path d="M9 9h4M9 12h4" />
   </svg>
 );
+
+// Three rising bars: the private money page
+export const MoneyIcon = ({ className }: P) => (
+  <svg {...base} className={className}>
+    <path d="M4 20h16" />
+    <path d="M7 16.5v-4" />
+    <path d="M12 16.5v-8" />
+    <path d="M17 16.5V5" />
+  </svg>
+);
