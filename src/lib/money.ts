@@ -22,7 +22,7 @@ export const ONE_TIME_COSTS: { name: string; dollars: number; date: string; note
     name: "Higgsfield API credits",
     dollars: 10,
     date: "2026-10-18",
-    note: "Homepage images and video. $2.14 used so far, $7.86 left in the wallet (lasts a year)",
+    note: "Homepage images and scroll film. $8.25 used so far, $1.75 left in the wallet (lasts a year)",
   },
 ];
 
