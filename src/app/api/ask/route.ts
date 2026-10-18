@@ -133,6 +133,11 @@ export async function POST(request: Request) {
   if (left === -2) {
     return Response.json({ error: "site_limit" }, { status: 429 });
   }
+  // Deeper study thinks harder and reads more (about three times the cost), so it uses a second
+  // question when one is left. With only one left, the deeper answer still comes, as the last one.
+  if (depth === "deeper" && left !== null && left > 0) {
+    await takeQuestion(request).catch(() => null);
+  }
 
   // Search on the follow-up plus the previous question, so "what about at work?" still finds something
   const searchText = [lesson?.title, reading?.translation, history.at(-1)?.question, question].filter(Boolean).join("\n");

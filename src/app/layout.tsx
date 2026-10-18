@@ -43,6 +43,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: settingsScript }} />
       </head>
       <body className="min-h-dvh" suppressHydrationWarning>
+        {/* In the iPhone app the page runs under the clock and battery; this keeps a calm strip
+            behind them so scrolled text never shows through. Zero height in a normal browser. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-x-0 top-0 z-30 h-[env(safe-area-inset-top)] bg-sandal/90 backdrop-blur-md"
+        />
         <Header />
         <main className="mx-auto w-full max-w-3xl px-4 pb-40 sm:px-6 md:pb-20">{children}</main>
         <BottomNav />

@@ -235,7 +235,7 @@ function Answer({
           onClick={() => onReask(depth === "simpler" ? "deeper" : "simpler")}
           className="min-h-14 rounded-full border-2 border-sandal-edge px-6 text-[1rem] font-semibold hover:border-kajal disabled:opacity-50"
         >
-          {depth === "simpler" ? "Go deeper" : "Say it more simply"}
+          {depth === "simpler" ? "Go deeper (uses 2)" : "Say it more simply"}
         </button>
       </div>
       {!answer.notice && <ReportAnswer question={turn.question} answer={answer} depth={depth} />}

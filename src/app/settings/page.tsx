@@ -23,7 +23,7 @@ const SPEEDS = [
 
 const DEPTHS: { id: Depth; label: string; note: string }[] = [
   { id: "simpler", label: "Simple and warm", note: "Stories and everyday examples" },
-  { id: "deeper", label: "Deeper study", note: "Sanskrit terms and different schools of thought" },
+  { id: "deeper", label: "Deeper study", note: "Sanskrit terms and different schools of thought. Each answer uses 2 of your daily questions" },
 ];
 
 export default function SettingsPage() {
