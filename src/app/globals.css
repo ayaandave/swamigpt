@@ -345,4 +345,10 @@ body::before {
     animation: none !important;
     transition: none !important;
   }
+  /* Blur Text headings show at once, sharp, instead of fading in */
+  .blur-text [aria-hidden] {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
 }

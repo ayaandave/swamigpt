@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { HomeAsk } from "./HomeAsk";
+import CountUp from "../reactbits/CountUp";
 import { FILM_SEEN_KEY } from "@/lib/film";
 import "./home-film.css";
 
@@ -228,14 +229,24 @@ export function HomeFilm() {
             4,000+ real verses. <em>One for every question.</em>
           </h2>
           <ul className="hf-stats hf-reveal">
+            {/* The numbers count up once, when this chapter scrolls into view */}
             <li>
-              <b>4,000+</b>passages
+              <b>
+                <CountUp to={4000} separator="," suffix="+" duration={1.8} />
+              </b>
+              passages
             </li>
             <li>
-              <b>7</b>sacred texts
+              <b>
+                <CountUp to={7} duration={1.2} />
+              </b>
+              sacred texts
             </li>
             <li>
-              <b>0</b>made-up quotes
+              <b>
+                <CountUp from={0} to={50} direction="down" duration={1.8} />
+              </b>
+              made-up quotes
             </li>
           </ul>
           <p className="hf-lede hf-reveal">Before it answers, SwamiGPT searches every passage by meaning, then quotes only what it finds, word for word.</p>

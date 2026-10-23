@@ -6,6 +6,7 @@ import { lessonHref, type LearningPath } from "@/lib/lessons";
 import { useProgress } from "@/lib/progress";
 import { useIsClient } from "@/lib/store";
 import { MalaRing } from "./MalaRing";
+import GradientText from "./reactbits/GradientText";
 import { BackIcon, CheckIcon } from "./icons";
 
 // A path's lessons as a timeline: beads on a string, done ones filled, the next one glowing.
@@ -31,7 +32,12 @@ export function PathTimeline({ path }: { path: LearningPath }) {
 
       <header className="mt-6 flex flex-col items-center text-center">
         <p className="text-[0.9rem] font-semibold text-tulsi">{path.forWhom}</p>
-        <h1 className="mt-1 font-display text-[2.3rem] leading-tight">{path.title}</h1>
+        <h1 className="mt-1 font-display text-[2.3rem] leading-tight">
+          {/* A slow saffron flow, dark enough to stay easy to read on the sandal page */}
+          <GradientText colors={["#9a4a0b", "#c25e10", "#7a2e08", "#9a4a0b"]} animationSpeed={10}>
+            {path.title}
+          </GradientText>
+        </h1>
         <p className="mt-2 max-w-[40ch] text-[1.05rem] text-kajal-soft">{path.description}</p>
         <div className="mt-4">
           <MalaRing

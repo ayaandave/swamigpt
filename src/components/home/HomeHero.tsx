@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
+import BlurText from "../reactbits/BlurText";
 
 // The home screen's opening: the ghats of Varanasi at dawn, filling the whole screen, with fog
 // drifting over the Ganga. The photo leans gently with the pointer (or scroll, on phones).
@@ -57,9 +58,16 @@ export function HomeHero({ children }: { children?: ReactNode }) {
 
       <div className="hero-content absolute inset-0 flex flex-col">
         <div className="mx-auto w-full max-w-3xl px-6 text-center">
-          <h1 className="font-display text-[clamp(2.4rem,7.5vw,4rem)] leading-[1.05] text-kajal">
-            Ask the scriptures anything.
-          </h1>
+          {/* The words drift into focus once, when the page opens */}
+          <BlurText
+            as="h1"
+            text="Ask the scriptures anything."
+            animateBy="words"
+            direction="bottom"
+            delay={110}
+            trigger="load"
+            className="justify-center font-display text-[clamp(2.4rem,7.5vw,4rem)] leading-[1.05] text-kajal"
+          />
           <p className="mx-auto mt-3 max-w-[30ch] text-[1.1rem] leading-snug text-kajal-soft sm:max-w-[40ch] sm:text-[1.2rem]">
             Real answers from Hindu scriptures like the Bhagavad Gita, the Upanishads and the Ramayana, in words
             you&apos;ll actually understand. Free.

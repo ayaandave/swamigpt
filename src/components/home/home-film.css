@@ -44,7 +44,7 @@ html.film-on header .border-sandal-edge { border-color: rgba(244,230,203,.35); }
 .hf-go { align-self: flex-start; font-weight: 700; color: var(--kajal); background: var(--kesar); padding: 12px 22px; border-radius: 999px; }
 .hf-go.ghost { background: rgba(244,230,203,.1); border: 1px solid rgba(244,230,203,.3); color: var(--sandal); }
 .hf-ask { color: var(--kajal); }
-.hf-stats { display: grid; grid-template-columns: repeat(3, minmax(0, max-content)); gap: 10px 22px; margin: 0; padding: 0; list-style: none; color: var(--sandal-dim); }
+.hf-stats { display: grid; grid-template-columns: repeat(3, minmax(0, max-content)); gap: 10px 40px; margin: 0; padding: 0; list-style: none; color: var(--sandal-dim); }
 .hf-stats b { display: block; font-family: var(--font-display); font-weight: 400; font-size: 1.8rem; color: var(--sandal); }
 .hf-chat { display: flex; flex-direction: column; gap: 12px; }
 .hf-bubble { align-self: flex-end; max-width: 85%; min-height: 1.4em; background: rgba(244,230,203,.95); color: var(--kajal); border-radius: 20px 20px 4px 20px; padding: 12px 16px; }
