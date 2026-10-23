@@ -10,8 +10,8 @@ import "./home-film.css";
 // from the upside-down tree of Gita 15.1, into its leaves, down a falling leaf to the glacier,
 // along the river to a still lake, and out to the sea of Mundaka Upanishad 3.2.8. Each chapter
 // pins the film to a moment, so scrolling down plays it and scrolling up rewinds it.
-// Shown only to new visitors: a script in the page head marks returning, signed-in and iPhone-app
-// visitors before first paint, and CSS hides this for them (see FILM_SEEN_SCRIPT).
+// Shown only on a first visit from a laptop or desktop: a script in the page head marks phones,
+// the iPhone app and returning visitors before first paint, and CSS hides this for them (see FILM_SEEN_SCRIPT).
 
 
 const BEADS = 18;
