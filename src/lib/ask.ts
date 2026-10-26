@@ -99,7 +99,7 @@ async function fetchAnswer(
             }
           : {
               paragraphs: [
-                "That's your 3 free questions for today. Sign in, free, for more each day, and to keep our conversations.",
+                `That's your ${PLUS.questions.guest} free questions for today. Sign in, free, for more each day, and to keep our conversations.`,
               ],
               verses: [],
               notice: "limit",

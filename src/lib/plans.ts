@@ -4,6 +4,6 @@ export const PLUS = {
   // Web checkout appears once RevenueCat's public web key is set (Vercel env)
   enabled: Boolean(process.env.NEXT_PUBLIC_REVENUECAT_WEB_KEY),
   webKey: process.env.NEXT_PUBLIC_REVENUECAT_WEB_KEY ?? "",
-  questions: { guest: 3, free: 5, plus: 20 },
+  questions: { guest: 8, free: 10, plus: 20 },
   readAloud: { free: 3, plus: 28 }, // answers read in Swamiji's voice, about this many a month
 };

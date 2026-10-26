@@ -1,4 +1,4 @@
-// Daily question limits: 3 a day for guests, 5 for free accounts, 20 with Plus, and a ceiling for
+// Daily question limits: 8 a day for guests, 10 for free accounts, 20 with Plus, and a ceiling for
 // the whole site (set in the database's take_question function). Server only: the server works out
 // who is asking, so nobody can claim to be someone else or skip the count. On the live site, if the
 // limits can't be checked, paid answers and voices are refused rather than left unlimited.
