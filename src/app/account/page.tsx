@@ -7,7 +7,7 @@ import { forgetAccountOnThisDevice } from "@/lib/account-sync";
 import { DeleteAccount } from "@/components/DeleteAccount";
 import { Journey } from "@/components/Journey";
 import { Diya } from "@/components/Diya";
-import { PLUS, usePlus } from "@/lib/plus";
+import { PLUS, plusSold, usePlus } from "@/lib/plus";
 import { supabase, useAuth } from "@/lib/supabase";
 
 export default function AccountPage() {
@@ -58,7 +58,7 @@ export default function AccountPage() {
       <Journey />
 
       <div className="mt-8 flex flex-col gap-3">
-        {PLUS.enabled && (
+        {plusSold() && (
           <Link
             href="/plus"
             className="flex min-h-16 items-center justify-between rounded-2xl border-2 border-sandal-edge px-5 font-semibold hover:border-kajal"

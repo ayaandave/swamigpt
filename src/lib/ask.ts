@@ -4,6 +4,7 @@ import type { AgeGroup, Depth } from "./settings";
 import { askSwami as mockAnswer } from "./mock/answers";
 import { CRISIS, CRISIS_HELP, type SwamiAnswer } from "./swami";
 import { PLUS } from "./plans";
+import { plusSold } from "./plus";
 import { accessToken, supabase } from "./supabase";
 
 export type PastTurn = { question: string; answer: SwamiAnswer };
@@ -81,7 +82,7 @@ async function fetchAnswer(
         };
       }
       if (error === "limit") {
-        if (token && (!PLUS.enabled || (await hasPlus()))) {
+        if (token && (!plusSold() || (await hasPlus()))) {
           return {
             paragraphs: ["That's all the questions for today. Rest with what we talked about, and come back tomorrow."],
             verses: [],
