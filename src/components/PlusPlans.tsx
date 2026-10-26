@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { Package, Purchases } from "@revenuecat/purchases-js";
-import { PLUS, usePlus } from "@/lib/plus";
+import { PLUS, plusSold, usePlus } from "@/lib/plus";
+import { isNativeApp } from "@/lib/native";
+import { useIsClient } from "@/lib/store";
 import { accessToken, useAuth } from "@/lib/supabase";
 
 // Web checkout through RevenueCat (Stripe underneath). The iPhone app will use Apple's in-app
@@ -24,6 +26,7 @@ const button =
 
 export function PlusPlans() {
   const { ready, user } = useAuth();
+  const isClient = useIsClient();
   const { plus, recheck } = usePlus();
   const [packages, setPackages] = useState<Package[] | null>(null);
   const [manageUrl, setManageUrl] = useState<string | null>(null);
@@ -31,7 +34,7 @@ export function PlusPlans() {
   const [problem, setProblem] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!PLUS.enabled || !user) return;
+    if (!plusSold() || !user) return;
     let live = true;
     void purchases(user.id)
       .then(async (p) => {
@@ -83,7 +86,9 @@ export function PlusPlans() {
   };
 
   let body: React.ReactNode;
-  if (!PLUS.enabled) {
+  if (isClient && isNativeApp()) {
+    body = <p className="text-[1.05rem]">Everything in the SwamiGPT app is free.</p>;
+  } else if (!plusSold()) {
     body = <p className="text-[1.05rem]">Plus is almost ready. Everything on SwamiGPT is free until then.</p>;
   } else if (!ready) {
     body = <div className="h-32" />;
