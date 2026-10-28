@@ -83,7 +83,7 @@ export async function GET(request: Request) {
 // /api/card?id=site: the leaf and the name, for pages that have no verse of their own
 async function siteCard() {
   const svg = (await readFile(join(process.cwd(), "src/app/icon.svg"), "utf8")).replace('rx="26"', 'rx="0"');
-  const lamp = `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
+  const mark = `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
   const line = "A calm guide to the Gita, the Upanishads and meditation";
   const data = await font(`SwamiGPT${line}.com`).catch(() => null);
   return new ImageResponse(
@@ -102,7 +102,7 @@ async function siteCard() {
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- drawn into a PNG, not shown on a page */}
-        <img src={lamp} width={260} height={260} alt="" style={{ borderRadius: 48 }} />
+        <img src={mark} width={260} height={260} alt="" style={{ borderRadius: 48 }} />
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <div style={{ display: "flex", fontSize: 92, color: FLAME }}>SwamiGPT</div>
           <div style={{ display: "flex", fontSize: 40, lineHeight: 1.3, maxWidth: 640 }}>{line}</div>
