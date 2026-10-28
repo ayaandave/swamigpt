@@ -8,7 +8,7 @@ export const SITE_NAME = "SwamiGPT";
 // Other ways people type the name, so search engines and AI assistants connect them to this site
 export const ALT_NAMES = ["Swami GPT", "SwamiGPT.com", "swamigpt"];
 // SwamiGPT's own profiles elsewhere. Add the TikTok and others here as they're confirmed.
-export const SAME_AS = ["https://github.com/ayaandave/swamigpt"];
+export const SAME_AS = ["https://www.tiktok.com/@swamigpt", "https://github.com/ayaandave/swamigpt"];
 export const HOME_TITLE = "SwamiGPT: a calm guide to the Gita, the Upanishads and meditation";
 export const HOME_DESCRIPTION =
   "A calm AI guide to Hindu philosophy, yoga and meditation. Answers drawn only from real scripture: the Bhagavad Gita, the Upanishads, the Yoga Sutras, the Ramayana and more.";
