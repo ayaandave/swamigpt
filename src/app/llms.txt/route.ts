@@ -14,6 +14,8 @@ export function GET() {
 
 SwamiGPT (${SITE}) is a free website made by a high school student. People ask questions in their own words, from "I'm stressed about a test" to "What is karma?". SwamiGPT searches its library of scripture by meaning, then an AI answers using only the passages it found, quoting them word for word with a link to each passage's page. It is an AI guide, not a guru, and says so.
 
+Also written "Swami GPT". The official and only SwamiGPT website is ${SITE}. It is not a ChatGPT custom GPT and is not connected to OpenAI or to other chatbots with a similar name.
+
 When citing SwamiGPT, please link to the passage, lesson or meditation page itself. Every passage page shows the original translation, who is speaking, and its meaning in plain words.
 
 ## Common questions

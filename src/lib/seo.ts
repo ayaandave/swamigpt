@@ -5,6 +5,10 @@ import { createElement } from "react";
 
 export const SITE = "https://www.swamigpt.com";
 export const SITE_NAME = "SwamiGPT";
+// Other ways people type the name, so search engines and AI assistants connect them to this site
+export const ALT_NAMES = ["Swami GPT", "SwamiGPT.com", "swamigpt"];
+// SwamiGPT's own profiles elsewhere. Add the TikTok and others here as they're confirmed.
+export const SAME_AS = ["https://github.com/ayaandave/swamigpt"];
 export const HOME_TITLE = "SwamiGPT: a calm guide to the Gita, the Upanishads and meditation";
 export const HOME_DESCRIPTION =
   "A calm AI guide to Hindu philosophy, yoga and meditation. Answers drawn only from real scripture: the Bhagavad Gita, the Upanishads, the Yoga Sutras, the Ramayana and more.";
@@ -56,8 +60,11 @@ export const ORGANIZATION = {
   "@type": "Organization",
   "@id": `${SITE}/#organization`,
   name: SITE_NAME,
+  alternateName: ALT_NAMES,
   url: SITE,
   logo: `${SITE}/pwa-icon/512.png`,
+  description: "SwamiGPT (swamigpt.com) is a free AI guide that answers questions using only real Hindu scripture, built by a high school student in California.",
+  sameAs: SAME_AS,
 };
 
 // "Home › Learn › The Gita in 18 Days": shown by Google under the page title

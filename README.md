@@ -1,18 +1,22 @@
 # SwamiGPT
 
-A calm AI guide to Hindu philosophy, yoga and meditation, for anyone: students, elders, and people of every faith.
+**Try it: [www.swamigpt.com](https://www.swamigpt.com)**
 
-## Status
+SwamiGPT (also written Swami GPT) is a free AI guide that answers questions about life, Hindu philosophy, yoga and meditation using **only real Hindu scripture**. You ask in your own words; it searches a library of 4,000+ public-domain passages by meaning, and the AI answers using only the passages it found, quoting them word for word with a link to each one.
 
-Phase 1: the full frontend with mock data. Answers, voices and progress are placeholders.
+It was built by a high school student in California and is live at [swamigpt.com](https://www.swamigpt.com). It is not a ChatGPT custom GPT and is not connected to other chatbots with a similar name.
 
-- **Ask**: practical help for your situation first, then a verse and what it means for you
-- **Meditate**: guided sessions with a breathing lamp and background sound
-- **Learn**: short lesson paths with mala-bead progress
-- **Today**: a daily verse and reflection
-- **Settings**: three voices, speech speed, text size, simple or deeper answers
+- **Ask:** practical help first, then a real verse, then what it means for you. "Deeper study" compares how different schools of Hindu thought read the same idea.
+- **Learn:** 47 five-minute lessons, with an interactive prayer-bead (mala) progress ring.
+- **Meditate:** guided meditations with a breathing circle and words that follow the voice.
+- **Today:** a new verse every morning with a small practice.
+- **Library:** the Bhagavad Gita, the Upanishads, the Yoga Sutras, Swami Vivekananda and the Ramayana, every passage on its own page.
 
-The Swami persona (used as the Claude system prompt in Phase 3) is in `src/lib/swami-prompt.ts`.
+An AI guide, not a guru. If someone seems to be in crisis, SwamiGPT points them to the 988 Suicide & Crisis Lifeline.
+
+## How it works
+
+Next.js (App Router, TypeScript), Tailwind CSS, Supabase (Postgres with row-level security, auth, storage), Vercel, the Claude API for answers, ElevenLabs for voices, and local `bge-small` embeddings for semantic search. The iPhone app is a Capacitor shell around the live site with native extras (daily-verse notifications, lock-screen meditation audio, offline pages).
 
 ## Run locally
 
@@ -21,12 +25,4 @@ npm install
 npm run dev
 ```
 
-## Roadmap
-
-1. Frontend with mock data (done)
-2. Scripture library in Supabase (pgvector)
-3. Claude answers with citations
-4. ElevenLabs voices
-5. Accounts and saved progress
-6. Full content for paths, meditations and daily verses
-7. Beta and launch
+Secrets go in `.env.local` (never committed).

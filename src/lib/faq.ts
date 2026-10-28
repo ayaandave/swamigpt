@@ -16,6 +16,10 @@ export const FAQ: { q: string; a: string }[] = [
     a: "SwamiGPT is a free website that answers questions about life, Hindu philosophy, yoga and meditation using real Hindu scriptures. It also has short lessons, guided meditations, mantras and a verse for each day.",
   },
   {
+    q: "Is SwamiGPT the same as the “SwamiGPT” custom GPTs on ChatGPT?",
+    a: "No. SwamiGPT (also written Swami GPT) is its own free website at swamigpt.com, built by a high school student in California. It is not a ChatGPT custom GPT and is not connected to OpenAI or to other chatbots with a similar name. Its answers come only from its own library of real scripture.",
+  },
+  {
     q: "Where do SwamiGPT's answers come from?",
     a: `Before it answers, SwamiGPT searches a library of ${count} passages by meaning, not just by matching words. The AI then answers using only the passages it found. Every quoted passage links to its own page, so you can read it yourself.`,
   },

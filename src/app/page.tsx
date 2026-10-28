@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { HOME_DESCRIPTION, HOME_TITLE, JsonLd, ORGANIZATION, SITE, SITE_NAME, pageMeta } from "@/lib/seo";
+import { ALT_NAMES, HOME_DESCRIPTION, HOME_TITLE, JsonLd, ORGANIZATION, SITE, SITE_NAME, pageMeta } from "@/lib/seo";
 import { Suspense } from "react";
 import { HomeHero } from "@/components/home/HomeHero";
 import { HomeAsk } from "@/components/home/HomeAsk";
@@ -33,6 +33,7 @@ const SITE_DATA = {
       "@type": "WebSite",
       "@id": `${SITE}/#website`,
       name: SITE_NAME,
+      alternateName: ALT_NAMES,
       url: SITE,
       description: HOME_DESCRIPTION,
       inLanguage: "en",
@@ -42,6 +43,7 @@ const SITE_DATA = {
     {
       "@type": "WebApplication",
       name: SITE_NAME,
+      alternateName: ALT_NAMES,
       url: SITE,
       description: HOME_DESCRIPTION,
       applicationCategory: "EducationalApplication",
