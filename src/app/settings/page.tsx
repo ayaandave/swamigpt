@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useSettings, type Depth, type TextSize } from "@/lib/settings";
 import { VOICES } from "@/lib/voices";
 import { speak, stopSpeaking } from "@/lib/speak";
-import { Diya } from "@/components/Diya";
+import { Leaf } from "@/components/Leaf";
 import { MorningVerse } from "@/components/MorningVerse";
 import { EmailPrefs } from "@/components/EmailPrefs";
 import { CheckIcon, SpeakerIcon, StopIcon } from "@/components/icons";
@@ -57,7 +57,7 @@ export default function SettingsPage() {
                   chosen ? "border-kesar bg-sandal-deep" : "border-sandal-edge"
                 }`}
               >
-                <Diya size={52} state={sampling === v.id ? "speaking" : "idle"} />
+                <Leaf size={52} state={sampling === v.id ? "speaking" : "idle"} />
                 <div className="min-w-0 flex-1 basis-48">
                   <p className="font-display text-[1.4rem] leading-tight">{v.name}</p>
                   <p className="text-[0.95rem] text-kajal-soft">{v.description}</p>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Diya } from "@/components/Diya";
+import { Leaf } from "@/components/Leaf";
 
 export const metadata: Metadata = { title: "You're offline · SwamiGPT", robots: { index: false } };
 
@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "You're offline · SwamiGPT", robots:
 export default function OfflinePage() {
   return (
     <div className="flex flex-col items-center pt-16 text-center">
-      <Diya size={110} />
+      <Leaf size={110} />
       <h1 className="mt-4 font-display text-[2.2rem] leading-tight">You&apos;re offline</h1>
       <p className="mt-3 max-w-[34ch] text-[1.1rem] leading-relaxed text-kajal-soft">
         The lamp is still lit. Take a slow breath while your connection comes back. Pages you&apos;ve opened before

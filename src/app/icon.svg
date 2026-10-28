@@ -1,29 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
   <defs>
-    <radialGradient id="h" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#ffd38a" stop-opacity=".75"/>
-      <stop offset="55%" stop-color="#ffb347" stop-opacity=".25"/>
-      <stop offset="100%" stop-color="#ffb347" stop-opacity="0"/>
+    <radialGradient id="bg" cx="50%" cy="35%" r="75%">
+      <stop offset="0" stop-color="#3a2340"/>
+      <stop offset="1" stop-color="#140e18"/>
     </radialGradient>
-    <linearGradient id="f" x1="0" y1="1" x2="0" y2="0">
-      <stop offset="0%" stop-color="#d9741a"/>
-      <stop offset="45%" stop-color="#ffb347"/>
-      <stop offset="100%" stop-color="#ffe9b8"/>
-    </linearGradient>
-    <linearGradient id="c" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#b5602a"/>
-      <stop offset="100%" stop-color="#6e3413"/>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ffc566" stop-opacity=".45"/>
+      <stop offset="1" stop-color="#ffc566" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="g" x1=".15" y1="0" x2=".85" y2="1">
+      <stop offset="0" stop-color="#ffeab5"/>
+      <stop offset=".45" stop-color="#ffc566"/>
+      <stop offset="1" stop-color="#d9741a"/>
     </linearGradient>
   </defs>
-  <rect width="120" height="120" rx="26" fill="#f2e3c6"/>
-  <g transform="translate(12 6) scale(.8)">
-    <circle cx="60" cy="52" r="48" fill="url(#h)"/>
-    <path d="M60 14 C69 33 79 51 71 66 C67 74 53 74 49 66 C41 51 51 33 60 14 Z" fill="url(#f)"/>
-    <path d="M60 40 C64 50 67 58 63 64 C61 67 59 67 57 64 C53 58 56 50 60 40 Z" fill="#fff6dc"/>
-    <line x1="60" y1="70" x2="60" y2="80" stroke="#2b1b10" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="M12 82 Q60 74 108 82 Q100 114 60 118 Q20 114 12 82 Z" fill="url(#c)"/>
-    <ellipse cx="60" cy="81" rx="46" ry="5.5" fill="#4a2410"/>
-    <ellipse cx="60" cy="80" rx="40" ry="3" fill="#c98a2e" opacity=".7"/>
-    <circle cx="60" cy="100" r="3.2" fill="#a4281f"/>
-  </g>
+  <rect width="120" height="120" rx="26" fill="url(#bg)"/>
+  <circle cx="60" cy="58" r="50" fill="url(#glow)"/>
+  <!-- The golden peepal leaf: SwamiGPT's mark (src/components/Leaf.tsx draws the animated one) -->
+  <path d="M60 104 C59.5 100 58.5 96 57.5 92 C40 88 22 74 22 52 C22 34 38 20 60 13 C82 20 98 34 98 52 C98 74 80 88 62.5 92 C61.5 96 60.5 100 60 104 Z" fill="url(#g)"/>
+  <path d="M60 21 V90 M60 38 L45 31 M60 38 L75 31 M60 53 L40 45 M60 53 L80 45 M60 68 L43 63 M60 68 L77 63" stroke="#8a4410" stroke-width="2.4" stroke-linecap="round" fill="none" opacity=".75"/>
 </svg>

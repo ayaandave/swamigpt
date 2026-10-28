@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSettings, type TextSize } from "@/lib/settings";
 import { accountsEnabled, useAuth } from "@/lib/supabase";
-import { Diya } from "./Diya";
+import { Leaf } from "./Leaf";
 import { AvatarBadge } from "./AvatarPicker";
 import { AskIcon, HomeIcon, LearnIcon, MeditateIcon, MoneyIcon, PersonIcon, SettingsIcon } from "./icons";
 import { useIsAdmin } from "@/lib/admin";
@@ -38,7 +38,7 @@ export function Header() {
   return (
     <header className="relative z-10 mx-auto flex w-full max-w-3xl items-center md:max-w-5xl justify-between gap-2 px-[16px] pt-[max(16px,env(safe-area-inset-top))] sm:px-6">
       <Link href="/" className="flex min-h-[44px] min-w-0 items-center gap-1.5 rounded-full" aria-label="SwamiGPT home">
-        <Diya size={34} />
+        <Leaf size={34} />
         <span className="font-display text-[20px] tracking-tight sm:text-[24px]">SwamiGPT</span>
       </Link>
       {/* On big screens the four sections sit up here; phones keep the tab bar at the bottom */}

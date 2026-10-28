@@ -1,5 +1,5 @@
 // App icons for "Add to Home Screen" and installing: /pwa-icon/192.png, /pwa-icon/512.png and
-// /pwa-icon/maskable-512.png (with room around the lamp, since phones crop these into circles)
+// /pwa-icon/maskable-512.png (with room around the leaf, since phones crop these into circles)
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
@@ -22,7 +22,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ file: stri
   const inner = icon.maskable ? Math.round(icon.size * 0.8) : icon.size;
   return new ImageResponse(
     (
-      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#f2e3c6" }}>
+      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#140e18" }}>
         {/* eslint-disable-next-line @next/next/no-img-element -- drawn into a PNG, not shown on a page */}
         <img src={src} width={inner} height={inner} alt="" />
       </div>

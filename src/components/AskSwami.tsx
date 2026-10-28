@@ -9,7 +9,7 @@ import { useSettings, type Depth } from "@/lib/settings";
 import { saveTurn } from "@/lib/history";
 import { useAuth } from "@/lib/supabase";
 import { useIsClient } from "@/lib/store";
-import { Diya } from "./Diya";
+import { Leaf } from "./Leaf";
 import { VerseCard } from "./VerseCard";
 import { whoSays } from "@/lib/scripture/who";
 import { ListenButton } from "./ListenButton";
@@ -76,8 +76,8 @@ export function AskSwami({
       {!started ? (
         <section className="arrive flex flex-col items-center pt-6 text-center sm:pt-16">
           <div>
-            <Diya size={96} className="sm:hidden" />
-            <Diya size={150} className="hidden sm:block" />
+            <Leaf size={96} className="sm:hidden" />
+            <Leaf size={150} className="hidden sm:block" />
           </div>
           <h1 className="mt-4 font-display text-[2.4rem] leading-[1.1] sm:mt-6 sm:text-[3.2rem]">Namaste.</h1>
           <p className="mt-3 max-w-[30ch] text-[1.1rem] text-kajal-soft">
@@ -114,7 +114,7 @@ export function AskSwami({
               </h2>
               <div className="flex flex-col items-start gap-3 sm:flex-row sm:gap-4">
                 <div className="shrink-0 sm:pt-1">
-                  <Diya
+                  <Leaf
                     size={56}
                     state={!turn.answer ? "thinking" : speakingId === turn.id ? "speaking" : "idle"}
                   />

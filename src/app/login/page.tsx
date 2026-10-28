@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Diya } from "@/components/Diya";
+import { Leaf } from "@/components/Leaf";
 import { useSettings } from "@/lib/settings";
 import { accountsEnabled, appleEnabled, googleEnabled, supabase } from "@/lib/supabase";
 import { isNativeApp } from "@/lib/native";
@@ -49,7 +49,7 @@ export default function LoginPage() {
   if (!accountsEnabled) {
     return (
       <div className="flex flex-col items-center pt-12 text-center">
-        <Diya size={96} />
+        <Leaf size={96} />
         <h1 className="mt-4 font-display text-[2.2rem]">Accounts are coming soon</h1>
         <p className="mt-2 max-w-[34ch] text-[1.1rem] text-kajal-soft">
           You can keep using SwamiGPT without one. Your progress is saved on this device.
@@ -61,7 +61,7 @@ export default function LoginPage() {
   if (ageGroup === "under13" && !parent) {
     return (
       <div className="mx-auto flex max-w-md flex-col items-center pt-12 text-center">
-        <Diya size={96} />
+        <Leaf size={96} />
         <h1 className="mt-4 font-display text-[2.2rem] leading-tight">Ask a grown-up</h1>
         <p className="mt-3 max-w-[32ch] text-[1.15rem] leading-relaxed text-kajal-soft">
           A parent or guardian needs to sign in or make the account for you. You can keep using SwamiGPT without one.
@@ -130,7 +130,7 @@ export default function LoginPage() {
   if (sent) {
     return (
       <div className="flex flex-col items-center pt-12 text-center">
-        <Diya size={96} />
+        <Leaf size={96} />
         <h1 className="mt-4 font-display text-[2.2rem]">Check your email</h1>
         <p className="mt-2 max-w-[34ch] text-[1.15rem] leading-relaxed text-kajal-soft">
           {sent === "confirm"
@@ -150,7 +150,7 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto flex max-w-md flex-col items-center pt-8 text-center">
-      <Diya size={80} />
+      <Leaf size={80} />
       <h1 className="mt-3 font-display text-[2.2rem] leading-tight">{TITLES[mode]}</h1>
       <p className="mt-2 max-w-[32ch] text-[1.05rem] text-kajal-soft">
         {mode === "forgot"

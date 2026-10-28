@@ -80,7 +80,7 @@ export async function GET(request: Request) {
   );
 }
 
-// /api/card?id=site: the lamp and the name, for pages that have no verse of their own
+// /api/card?id=site: the leaf and the name, for pages that have no verse of their own
 async function siteCard() {
   const svg = (await readFile(join(process.cwd(), "src/app/icon.svg"), "utf8")).replace('rx="26"', 'rx="0"');
   const lamp = `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
