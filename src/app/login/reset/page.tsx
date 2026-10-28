@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Diya } from "@/components/Diya";
+import { Leaf } from "@/components/Leaf";
 import { supabase, useAuth } from "@/lib/supabase";
 
 // Where the "reset your password" email lands. Supabase signs the person in from the link,
@@ -28,7 +28,7 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="mx-auto flex max-w-md flex-col items-center pt-8 text-center">
-      <Diya size={80} />
+      <Leaf size={80} />
       <h1 className="mt-3 font-display text-[2.2rem] leading-tight">Choose a new password</h1>
       {!ready ? (
         <p className="mt-4 italic text-kajal-soft">One moment…</p>

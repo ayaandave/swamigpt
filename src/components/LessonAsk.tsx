@@ -7,7 +7,7 @@ import { saveTurn } from "@/lib/history";
 import { useSettings } from "@/lib/settings";
 import type { SwamiAnswer } from "@/lib/swami";
 import { useAuth } from "@/lib/supabase";
-import { Diya } from "./Diya";
+import { Leaf } from "./Leaf";
 import { VerseCard } from "./VerseCard";
 import { whoSays } from "@/lib/scripture/who";
 import { SendIcon } from "./icons";
@@ -45,7 +45,7 @@ export function LessonAsk({ lesson }: { lesson: LessonContext }) {
   return (
     <section className="mt-8 overflow-hidden rounded-[2rem] border-2 border-sandal-edge bg-[#fbf3e2]">
       <div className="flex items-center gap-3 px-5 pt-4">
-        <Diya size={34} state={thinking ? "thinking" : "idle"} />
+        <Leaf size={34} state={thinking ? "thinking" : "idle"} />
         <div>
           <h2 className="font-display text-[1.2rem] leading-snug">Ask the Swami about this lesson</h2>
           <p className="text-[0.9rem] text-kajal-soft">A quick question while you read</p>

@@ -9,7 +9,7 @@ import { speak, speechProgress, stopSpeaking } from "@/lib/speak";
 import { playChime } from "@/lib/sounds";
 import { useSettings, type VoiceId } from "@/lib/settings";
 import { VOICES } from "@/lib/voices";
-import { Diya } from "./Diya";
+import { Leaf } from "./Leaf";
 import { BackIcon, PauseIcon, PlayIcon } from "./icons";
 
 // Where a line tells you to breathe in or out, so the label and ring change as the voice says it
@@ -245,7 +245,7 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
           <div
             className={`absolute inset-0 rounded-full border-2 border-flame/40 bg-flame/10 transition-transform ease-in-out ${ring}`}
           />
-          <Diya size={110} onDark />
+          <Leaf size={110} onDark />
         </div>
 
         <p className="mt-4 min-h-[2.6rem] font-display text-[2rem] leading-tight text-flame">

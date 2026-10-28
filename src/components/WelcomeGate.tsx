@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useSettings, type AgeGroup } from "@/lib/settings";
-import { Diya } from "./Diya";
+import { Leaf } from "./Leaf";
 
 // First-visit gate: a quiet greeting and one question. Hidden by CSS before first paint once
 // answered (see settingsScript), so returning visitors go straight to the app. Never on the home
@@ -23,7 +23,7 @@ export function WelcomeGate() {
       className="welcome-gate fixed inset-0 z-50 flex flex-col items-center justify-center overflow-y-auto bg-sandal px-6 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] text-center"
     >
       <div className="arrive flex w-full max-w-md flex-col items-center">
-        <Diya size={120} />
+        <Leaf size={120} />
         <h1 id="welcome-title" className="mt-5 font-display text-[2.8rem] leading-[1.1]">
           Namaste.
         </h1>

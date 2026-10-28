@@ -6,7 +6,7 @@ import { AvatarBadge, AvatarPicker } from "@/components/AvatarPicker";
 import { forgetAccountOnThisDevice } from "@/lib/account-sync";
 import { DeleteAccount } from "@/components/DeleteAccount";
 import { Journey } from "@/components/Journey";
-import { Diya } from "@/components/Diya";
+import { Leaf } from "@/components/Leaf";
 import { PLUS, usePlus } from "@/lib/plus";
 import { supabase, useAuth } from "@/lib/supabase";
 
@@ -20,7 +20,7 @@ export default function AccountPage() {
   if (!user) {
     return (
       <div className="flex flex-col items-center pt-12 text-center">
-        <Diya size={96} />
+        <Leaf size={96} />
         <h1 className="mt-4 font-display text-[2.2rem]">You&apos;re not signed in</h1>
         <Link
           href="/login"

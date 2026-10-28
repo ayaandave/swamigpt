@@ -91,55 +91,40 @@ body::before {
   color: var(--kajal);
 }
 
-/* ---------- The diya ---------- */
-@keyframes flame-sway {
-  0%, 100% { transform: rotate(-2deg) scaleY(1); }
-  25% { transform: rotate(1.5deg) scaleY(1.04); }
-  50% { transform: rotate(-1deg) scaleY(0.97); }
-  75% { transform: rotate(2deg) scaleY(1.03); }
+/* ---------- The leaf (SwamiGPT's mark) ---------- */
+@keyframes leaf-sway {
+  0%, 100% { transform: rotate(-2.5deg); }
+  50% { transform: rotate(2.5deg); }
 }
-@keyframes flame-speak {
+@keyframes leaf-speak {
   0%, 100% { transform: scale(1); }
-  30% { transform: scale(1.08, 1.14); }
-  60% { transform: scale(0.97, 1.02); }
+  35% { transform: scale(1.06); }
+  65% { transform: scale(0.98); }
 }
-@keyframes halo-breathe {
-  0%, 100% { opacity: 0.55; transform: scale(1); }
-  50% { opacity: 0.85; transform: scale(1.06); }
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
 }
-.diya-flame {
-  transform-origin: 50% 92%;
-  transform-box: fill-box;
-  animation: flame-sway 3.2s ease-in-out infinite;
+/* It hangs from its stem, so it swings from the top */
+.leaf-body {
+  transform-origin: 50% 8%;
+  transform-box: view-box;
+  animation: leaf-sway 6s ease-in-out infinite;
 }
-.diya-speaking .diya-flame {
-  animation: flame-speak 0.7s ease-in-out infinite;
+.leaf-thinking .leaf-body {
+  animation-duration: 1.6s;
 }
-.diya-thinking .diya-flame {
-  animation-duration: 1.4s;
+.leaf-thinking .leaf-glow {
+  animation-duration: 1.6s;
 }
-.diya-halo {
+.leaf-speaking .leaf-body {
+  transform-origin: 50% 50%;
+  animation: leaf-speak 0.8s ease-in-out infinite;
+}
+.leaf-glow {
   transform-origin: center;
   transform-box: fill-box;
-  animation: halo-breathe 5s ease-in-out infinite;
-}
-
-@keyframes core-flicker {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  40% { opacity: 0.85; transform: scale(0.94, 1.05); }
-  70% { opacity: 0.95; transform: scale(1.04, 0.97); }
-}
-@keyframes glint {
-  0%, 100% { opacity: 0.55; }
-  50% { opacity: 0.95; }
-}
-.diya-core {
-  transform-origin: center;
-  transform-box: fill-box;
-  animation: core-flicker 1.6s ease-in-out infinite;
-}
-.diya-glint {
-  animation: glint 3.2s ease-in-out infinite;
+  animation: glow-breathe 5s ease-in-out infinite;
 }
 
 /* ---------- Home hero ---------- */
