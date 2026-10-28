@@ -13,6 +13,7 @@ import { searchPassages } from "@/lib/scripture/search";
 import { SWAMI_SYSTEM_PROMPT } from "@/lib/swami-prompt";
 import { CRISIS, CRISIS_HELP, type SwamiAnswer } from "@/lib/swami";
 import { takeQuestion } from "@/lib/limits";
+import { sealAnswer } from "@/lib/share";
 
 const Body = z.object({
   question: z.string().trim().min(1).max(2000),
@@ -217,6 +218,16 @@ export async function POST(request: Request) {
     };
     const practice = reply.practice && PRACTICES.get(reply.practice.slug);
     if (practice) answer.practice = { href: practice.href, title: practice.title, why: reply.practice!.why };
+    // Sealed so it can be shared as its own page. Never a crisis answer or a child's question:
+    // those stay private, so their Share button keeps sharing just the verse.
+    if (!answer.help && ageGroup !== "under13") {
+      answer.seal = sealAnswer({
+        question,
+        paragraphs: answer.paragraphs,
+        verses: answer.verses.map(({ verse, meaning }) => ({ id: verse.id, meaning })),
+        practice: answer.practice,
+      });
+    }
     return Response.json(answer);
   } catch (error) {
     if (error instanceof Anthropic.AuthenticationError) {

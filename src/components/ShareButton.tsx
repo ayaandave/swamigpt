@@ -18,15 +18,18 @@ function opening(paragraphs: string[]) {
   return out.trim();
 }
 
-// Share an answer: on phones, the share sheet with a picture of the verse; elsewhere, copy the text
+// Share an answer: on phones, the share sheet with a picture of the verse; elsewhere, copy the text.
+// The link opens this exact answer (swamigpt.com/s/<id>). Answers without a seal (crisis answers,
+// children's answers, old saved ones) link to the verse's page instead.
 export function ShareButton({ question, answer }: { question: string; answer: SwamiAnswer }) {
   const verse = answer.verses[0]?.verse;
-  const url = verse ? `${SITE}/v/${verse.id}` : SITE;
+  const id = answer.seal?.slice(0, 12);
+  const url = id ? `${SITE}/s/${id}` : verse ? `${SITE}/v/${verse.id}` : SITE;
   const text = [
     `“${question}”`,
     opening(answer.paragraphs),
     verse && `${whoSays(verse)}: “${verse.translation.replace(/\s*\n\s*/g, " ")}”`,
-    `Asked on SwamiGPT: ${url}`,
+    `Read the whole answer on SwamiGPT: ${url}`,
   ]
     .filter(Boolean)
     .join("\n\n");
@@ -48,7 +51,26 @@ export function ShareButton({ question, answer }: { question: string; answer: Sw
   }, [verse]);
 
   const [copied, setCopied] = useState(false);
+  // Saves the answer so its link works. Started on the tap but not waited for, because phones only
+  // open the share sheet straight from a tap; the link is known already, since it comes from the seal.
+  const save = () =>
+    answer.seal
+      ? fetch("/api/share", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          keepalive: true,
+          body: JSON.stringify({
+            question: question.trim(),
+            paragraphs: answer.paragraphs,
+            verses: answer.verses.map(({ verse, meaning }) => ({ id: verse.id, meaning })),
+            practice: answer.practice,
+            seal: answer.seal,
+          }),
+        }).catch(() => null)
+      : Promise.resolve(null);
+
   const share = async () => {
+    const saved = save();
     const files = card.current ? [card.current] : [];
     try {
       if (files.length && navigator.canShare?.({ files, text })) {
@@ -62,6 +84,7 @@ export function ShareButton({ question, answer }: { question: string; answer: Sw
     } catch (e) {
       if ((e as Error).name === "AbortError") return; // they closed the share sheet
     }
+    await saved;
     await navigator.clipboard?.writeText(text).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
