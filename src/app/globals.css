@@ -181,7 +181,14 @@ body::before {
 }
 /* Soft light over the sky, so the header and the words read clearly */
 .hero-veil {
-  background: linear-gradient(180deg, rgba(246, 236, 220, 0.7) 0%, rgba(246, 236, 220, 0.35) 30%, rgba(246, 236, 220, 0) 52%);
+  background: linear-gradient(180deg, rgba(246, 236, 220, 0.78) 0%, rgba(246, 236, 220, 0.5) 30%, rgba(246, 236, 220, 0) 58%);
+}
+/* The line under the headline sits over the ghats: a soft sandal glow keeps every word readable */
+.hero-sub {
+  text-shadow:
+    0 0 6px rgba(246, 236, 220, 0.95),
+    0 0 14px rgba(246, 236, 220, 0.9),
+    0 0 28px rgba(246, 236, 220, 0.75);
 }
 .hero-fog {
   background: radial-gradient(ellipse at 50% 50%, rgba(246, 234, 214, 0.5) 0%, rgba(246, 234, 214, 0.22) 45%, transparent 70%);

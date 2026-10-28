@@ -60,7 +60,7 @@ export function HomeHero({ children }: { children?: ReactNode }) {
           <h1 className="font-display text-[clamp(2.4rem,7.5vw,4rem)] leading-[1.05] text-kajal">
             Ask the scriptures anything.
           </h1>
-          <p className="mx-auto mt-3 max-w-[30ch] text-[1.1rem] leading-snug text-kajal-soft sm:max-w-[40ch] sm:text-[1.2rem]">
+          <p className="hero-sub mx-auto mt-3 max-w-[30ch] text-[1.1rem] font-semibold leading-snug text-kajal sm:max-w-[40ch] sm:text-[1.2rem]">
             Real answers from Hindu scriptures like the Bhagavad Gita, the Upanishads and the Ramayana, in words
             you&apos;ll actually understand. Free.
           </p>
