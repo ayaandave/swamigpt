@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 
 // The home screen's opening: the ghats of Varanasi at dawn, filling the whole screen, with fog
 // drifting over the Ganga. The photo leans gently with the pointer (or scroll, on phones).
@@ -58,7 +58,15 @@ export function HomeHero({ children }: { children?: ReactNode }) {
       <div className="hero-content absolute inset-0 flex flex-col">
         <div className="mx-auto w-full max-w-3xl px-6 text-center">
           <h1 className="font-display text-[clamp(2.4rem,7.5vw,4rem)] leading-[1.05] text-kajal">
-            Ask the scriptures anything.
+            {/* Each word rises in as the opening lifts (html[data-intro]); otherwise it simply shows */}
+            {"Ask the scriptures anything.".split(" ").map((w, i, all) => (
+              <span key={i}>
+                <span className="rise-w">
+                  <span style={{ "--w": i } as CSSProperties}>{w}</span>
+                </span>
+                {i < all.length - 1 && " "}
+              </span>
+            ))}
           </h1>
           <p className="hero-sub mx-auto mt-3 max-w-[30ch] text-[1.1rem] font-semibold leading-snug text-kajal sm:max-w-[40ch] sm:text-[1.2rem]">
             Real answers from Hindu scriptures like the Bhagavad Gita, the Upanishads and the Ramayana, in words
