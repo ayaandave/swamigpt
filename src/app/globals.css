@@ -129,6 +129,18 @@ html[data-text="large"] {
 html[data-text="larger"] {
   font-size: 125%;
 }
+/* Laptops sit further from the eye, so everything steps up once */
+@media (min-width: 1024px) {
+  html {
+    font-size: 112.5%;
+  }
+  html[data-text="large"] {
+    font-size: 125%;
+  }
+  html[data-text="larger"] {
+    font-size: 137.5%;
+  }
+}
 
 /* Sanskrit always in a Devanagari face, whatever the surrounding font */
 [lang="sa"] {
