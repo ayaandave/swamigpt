@@ -6,6 +6,8 @@ import { FILM_SEEN_SCRIPT } from "@/lib/film";
 import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/seo";
 import { BottomNav, Header } from "@/components/Chrome";
 import { WelcomeGate } from "@/components/WelcomeGate";
+import { BrandIntro } from "@/components/BrandIntro";
+import { INTRO_SCRIPT } from "@/lib/intro";
 import { AccountSync } from "@/components/AccountSync";
 import { NativeBridge } from "@/components/NativeBridge";
 import { PrivateAnalytics } from "@/components/PrivateAnalytics";
@@ -43,6 +45,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: settingsScript }} />
         <script dangerouslySetInnerHTML={{ __html: FILM_SEEN_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
       </head>
       <body className="min-h-dvh" suppressHydrationWarning>
         {/* In the iPhone app the page runs under the clock and battery; this keeps a calm strip
@@ -55,6 +58,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main className="mx-auto w-full max-w-3xl px-4 pb-40 sm:px-6 md:pb-20">{children}</main>
         <BottomNav />
         <WelcomeGate />
+        <BrandIntro />
         <AccountSync />
         <NativeBridge />
         {/* Visit counts without cookies or questions; reads the address, so it waits for the page in a Suspense */}
