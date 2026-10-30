@@ -45,8 +45,8 @@ export function InstallApp() {
   };
 
   return (
-    <section aria-label="Install SwamiGPT" className="mt-10 rounded-[2rem] border-2 border-sandal-edge px-6 py-5">
-      <p className="font-display text-[1.35rem] leading-tight">Keep SwamiGPT on your home screen</p>
+    <section aria-label="Install SwamiGPT" className="mt-10 rounded-2xl border border-sandal-edge px-6 py-5">
+      <p className="font-display text-[1.15rem] leading-tight">Keep SwamiGPT on your home screen</p>
       {kind === "android" ? (
         <p className="mt-1 text-[1rem] text-kajal-soft">It opens like an app, full screen, in one tap.</p>
       ) : (
@@ -59,7 +59,7 @@ export function InstallApp() {
           <button
             type="button"
             onClick={() => void install()}
-            className="min-h-12 rounded-full bg-kesar px-6 font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+            className="min-h-12 rounded-xl bg-kesar px-6 font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
           >
             Install
           </button>
@@ -70,7 +70,7 @@ export function InstallApp() {
             dismissed.set({ at: Date.now() });
             setKind(null);
           }}
-          className="min-h-12 rounded-full border-2 border-sandal-edge px-6 font-semibold hover:border-kajal"
+          className="min-h-12 rounded-xl border border-sandal-edge px-6 font-semibold hover:border-kajal"
         >
           Not now
         </button>

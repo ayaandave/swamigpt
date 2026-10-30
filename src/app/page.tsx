@@ -4,6 +4,7 @@ import { ALT_NAMES, HOME_DESCRIPTION, HOME_TITLE, JsonLd, ORGANIZATION, SITE, SI
 import { Suspense } from "react";
 import { HomeHero } from "@/components/home/HomeHero";
 import { HomeAsk } from "@/components/home/HomeAsk";
+import { PASSAGES } from "@/lib/scripture/library";
 import { ContinueLesson } from "@/components/home/ContinueLesson";
 import { TodayCard } from "@/components/home/TodayCard";
 import { PracticeStreak } from "@/components/PracticeStreak";
@@ -15,10 +16,10 @@ import { ExampleAnswer } from "@/components/home/ExampleAnswer";
 import { HomeFilm } from "@/components/home/HomeFilm";
 
 const TILES = [
-  { href: "/ask", title: "Ask", line: "Real answers from the scriptures, for your question", Icon: AskIcon, tone: "bg-kesar text-kajal" },
-  { href: "/learn", title: "Learn", line: "47 short lessons: the Gita, karma, yoga and stories of the gods", Icon: LearnIcon, tone: "bg-tulsi text-sandal" },
-  { href: "/meditate", title: "Meditate", line: "Guided meditations and mantras, read aloud", Icon: MeditateIcon, tone: "bg-night text-sandal" },
-  { href: "/learn#read", title: "Read", line: "The Gita, 10 Upanishads, the Yoga Sutras and Vivekananda", Icon: ReadIcon, tone: "bg-sandal-deep text-kajal" },
+  { href: "/ask", title: "Ask", line: "Real answers from the scriptures, for your question", Icon: AskIcon },
+  { href: "/learn", title: "Learn", line: "47 short lessons: the Gita, karma, yoga and stories of the gods", Icon: LearnIcon },
+  { href: "/meditate", title: "Meditate", line: "Guided meditations and mantras, read aloud", Icon: MeditateIcon },
+  { href: "/learn#read", title: "Read", line: "The Gita, 10 Upanishads, the Yoga Sutras and Vivekananda", Icon: ReadIcon },
 ];
 
 
@@ -66,7 +67,7 @@ export default function Home() {
       <HomeFilm />
       <div className="home-classic">
         <HomeHero>
-          <HomeAsk />
+          <HomeAsk passages={PASSAGES.length} />
         </HomeHero>
         <ContinueLesson />
         <PracticeStreak className="mt-6" />
@@ -74,13 +75,13 @@ export default function Home() {
 
       <ExampleAnswer />
 
-      <section aria-label="What you can do" className="mt-14 grid grid-cols-2 gap-3 [perspective:900px] sm:gap-4">
-        {TILES.map(({ href, title, line, Icon, tone }) => (
-          <Link key={href} href={href} className={`tile flex min-h-44 flex-col justify-between rounded-[1.75rem] p-5 ${tone}`}>
-            <Icon className="size-9" />
+      <section aria-label="What you can do" className="mt-12 grid grid-cols-2 gap-2.5 [perspective:900px] sm:gap-3">
+        {TILES.map(({ href, title, line, Icon }) => (
+          <Link key={href} href={href} className="tile flex min-h-36 flex-col justify-between rounded-2xl border border-sandal-edge bg-sandal-deep p-4 text-kajal hover:border-kesar/50">
+            <Icon className="size-7 text-kesar-deep" />
             <span>
-              <span className="block font-display text-[1.5rem] leading-tight">{title}</span>
-              <span className="mt-1 block text-[0.9rem] leading-snug opacity-85">{line}</span>
+              <span className="block font-display text-[1.1rem] leading-tight">{title}</span>
+              <span className="mt-1 block text-[0.85rem] leading-snug text-kajal-soft">{line}</span>
             </span>
           </Link>
         ))}
@@ -90,8 +91,8 @@ export default function Home() {
       <InstallApp />
 
       <section className="mt-14">
-        <h2 className="font-display text-[1.8rem] leading-tight">Why I built this</h2>
-        <div className="mt-4 flex max-w-[60ch] flex-col gap-4 text-[1.1rem] leading-[1.7]">
+        <h2 className="font-display text-[1.2rem] leading-tight">Why I built this</h2>
+        <div className="mt-4 flex max-w-[60ch] flex-col gap-3 text-[1rem] leading-[1.7] text-kajal-soft">
           <p>
             I&apos;m a high schooler. Last year I was stressed about everything: SATs, college, figuring out who I want
             to be. I wanted my Hindu scriptures to help, but they felt hard to understand and far from my everyday life.
@@ -100,7 +101,7 @@ export default function Home() {
             Then I got to meet <strong>Swami Paramatmananda</strong>. I asked him one question:{" "}
             <em>how do I stop being stressed, and how do I find what I&apos;m passionate about?</em>
           </p>
-          <p className="font-display text-[1.35rem] leading-snug text-kesar-deep">That same day, I started SwamiGPT.</p>
+          <p className="font-display text-[1.15rem] leading-snug text-kesar-deep">That same day, I started SwamiGPT.</p>
           <p className="text-kajal-soft">— the founder</p>
         </div>
       </section>

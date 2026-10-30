@@ -67,10 +67,10 @@ const SOURCES = [
 export default function SourcesPage() {
   return (
     <div className="pt-10">
-      <h1 className="font-display text-[2.4rem] leading-tight">Sources &amp; safety</h1>
+      <h1 className="font-display text-[1.75rem] leading-tight">Sources &amp; safety</h1>
 
       <section className="mt-8">
-        <h2 className="font-display text-[1.6rem]">How SwamiGPT answers</h2>
+        <h2 className="font-display text-[1.3rem]">How SwamiGPT answers</h2>
         <div className="mt-3 flex max-w-[60ch] flex-col gap-3 text-[1.05rem] leading-relaxed">
           <p>
             SwamiGPT is an AI guide, not a guru. It doesn&apos;t replace a teacher, a temple, a parent or a doctor,
@@ -89,8 +89,8 @@ export default function SourcesPage() {
       </section>
 
       <section className="mt-10">
-        <h2 className="font-display text-[1.6rem]">Texts and translations</h2>
-        <ul className="mt-4 border-t-2 border-sandal-edge">
+        <h2 className="font-display text-[1.3rem]">Texts and translations</h2>
+        <ul className="mt-4 border-t border-sandal-edge">
           {SOURCES.map((s) => (
             <li key={s.text} className="border-b border-sandal-edge py-4">
               <p className="font-semibold">{s.text}</p>
@@ -116,19 +116,19 @@ export default function SourcesPage() {
 
       <section className="mt-10">
         <JsonLd data={faqData} />
-        <h2 className="font-display text-[1.6rem]">Common questions</h2>
+        <h2 className="font-display text-[1.3rem]">Common questions</h2>
         <div className="mt-4 flex max-w-[60ch] flex-col gap-6">
           {FAQ.map(({ q, a }) => (
             <div key={q}>
-              <h3 className="font-display text-[1.25rem] leading-snug">{q}</h3>
+              <h3 className="font-display text-[1.1rem] leading-snug">{q}</h3>
               <p className="mt-1 text-[1.05rem] leading-relaxed">{a}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="mt-10 rounded-[2rem] bg-tulsi px-7 py-6 text-sandal">
-        <h2 className="font-display text-[1.6rem]">If you are struggling</h2>
+      <section className="mt-10 rounded-2xl bg-sandal-deep border border-kesar/40 px-7 py-6 text-kajal">
+        <h2 className="font-display text-[1.3rem]">If you are struggling</h2>
         <p className="mt-2 max-w-[56ch] text-[1.05rem] leading-relaxed">
           If you are thinking about hurting yourself, or you are in danger, please talk to a real person now.
         </p>

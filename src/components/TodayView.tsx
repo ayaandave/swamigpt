@@ -11,7 +11,7 @@ import { VerseCard } from "./VerseCard";
 import { ListenButton } from "./ListenButton";
 
 const pill =
-  "inline-flex min-h-14 items-center rounded-full border-2 border-kajal px-6 text-[1rem] font-semibold hover:bg-sandal-deep";
+  "inline-flex min-h-14 items-center rounded-xl border border-kajal px-6 text-[1rem] font-semibold hover:bg-sandal-deep";
 
 // Today's verse: the passage, a reflection, read aloud, a question for the day and a practice
 export function TodayView({ entries }: { entries: Daily[] }) {
@@ -31,14 +31,14 @@ export function TodayView({ entries }: { entries: Daily[] }) {
   return (
     <div className="pt-10">
       <p className="text-[1rem] font-semibold text-kesar-deep">{dateLabel}</p>
-      <h1 className="mt-1 font-display text-[2.4rem] leading-tight">Today&apos;s verse</h1>
+      <h1 className="mt-1 font-display text-[1.75rem] leading-tight">Today&apos;s verse</h1>
 
       <p className="mt-6 font-display text-[1.15rem] text-kajal-soft">{whoSays(verse)}:</p>
       <div className="mt-3">
         <VerseCard verse={verse} />
       </div>
 
-      <p className="mt-8 max-w-[58ch] font-display text-[1.35rem] leading-relaxed">{daily.reflection}</p>
+      <p className="mt-8 max-w-[58ch] font-display text-[1.15rem] leading-relaxed">{daily.reflection}</p>
 
       <div className="mt-6 flex flex-wrap gap-3">
         <ListenButton
@@ -52,17 +52,17 @@ export function TodayView({ entries }: { entries: Daily[] }) {
         </Link>
       </div>
 
-      <aside className="mt-10 rounded-[2rem] bg-tulsi px-7 py-6 text-sandal">
-        <p className="text-[0.9rem] font-semibold text-sandal/80">A question for your day</p>
-        <p className="mt-1 font-display text-[1.35rem] leading-snug">{daily.question}</p>
+      <aside className="mt-10 rounded-2xl bg-sandal-deep border border-kesar/40 px-7 py-6 text-kajal">
+        <p className="text-[0.9rem] font-semibold text-kajal-soft">A question for your day</p>
+        <p className="mt-1 font-display text-[1.15rem] leading-snug">{daily.question}</p>
       </aside>
 
       <Link
         href={daily.practice.href}
-        className="mt-4 flex min-h-16 flex-col justify-center rounded-[2rem] border-2 border-sandal-edge px-7 py-4 hover:border-kesar hover:bg-sandal-deep"
+        className="mt-4 flex min-h-16 flex-col justify-center rounded-2xl border border-sandal-edge px-7 py-4 hover:border-kesar hover:bg-sandal-deep"
       >
         <span className="text-[0.85rem] font-semibold text-kesar-deep">Try this today · {daily.practice.kind}</span>
-        <span className="font-display text-[1.3rem]">{daily.practice.title}</span>
+        <span className="font-display text-[1.15rem]">{daily.practice.title}</span>
       </Link>
 
       <p className="mt-6">

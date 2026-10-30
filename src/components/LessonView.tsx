@@ -35,7 +35,7 @@ export function LessonView({ path, index, verse }: { path: LearningPath; index: 
     <div className="pt-8">
       <Link
         href={`/learn/${path.slug}`}
-        className="inline-flex min-h-12 items-center gap-1 rounded-full border-2 border-sandal-edge pl-2 pr-5 text-[0.95rem] font-semibold hover:border-kajal"
+        className="inline-flex min-h-12 items-center gap-1 rounded-full border border-sandal-edge pl-2 pr-5 text-[0.95rem] font-semibold hover:border-kajal"
       >
         <BackIcon className="size-6" />
         All lessons
@@ -45,7 +45,7 @@ export function LessonView({ path, index, verse }: { path: LearningPath; index: 
         <p className="text-[0.95rem] font-semibold text-kesar-deep">
           {path.title} · Lesson {index + 1} of {path.lessons.length}
         </p>
-        <h1 className="mt-1 font-display text-[2.2rem] leading-tight">{lesson.title}</h1>
+        <h1 className="mt-1 font-display text-[1.75rem] leading-tight">{lesson.title}</h1>
 
         <div className="mt-5">
           <ListenButton text={spoken} save />
@@ -60,9 +60,9 @@ export function LessonView({ path, index, verse }: { path: LearningPath; index: 
           {verse && <VerseCard verse={verse} />}
         </div>
 
-        <aside className="mt-8 rounded-[2rem] bg-tulsi px-7 py-6 text-sandal">
-          <p className="text-[0.9rem] font-semibold text-sandal/80">Sit with this</p>
-          <p className="mt-1 font-display text-[1.35rem] leading-snug">{lesson.reflect}</p>
+        <aside className="mt-8 rounded-2xl bg-sandal-deep border border-kesar/40 px-7 py-6 text-kajal">
+          <p className="text-[0.9rem] font-semibold text-kajal-soft">Sit with this</p>
+          <p className="mt-1 font-display text-[1.15rem] leading-snug">{lesson.reflect}</p>
         </aside>
 
         <LessonAsk
@@ -84,7 +84,7 @@ export function LessonView({ path, index, verse }: { path: LearningPath; index: 
             <button
               type="button"
               onClick={finish}
-              className="flex min-h-14 items-center gap-2 rounded-full bg-kesar px-7 text-[1.05rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+              className="flex min-h-14 items-center gap-2 rounded-xl bg-kesar px-7 text-[1.05rem] font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
             >
               <CheckIcon /> Mark lesson done
             </button>
@@ -95,7 +95,7 @@ export function LessonView({ path, index, verse }: { path: LearningPath; index: 
           {index > 0 ? (
             <Link
               href={lessonHref(path.slug, index - 1)}
-              className="flex min-h-16 flex-col justify-center rounded-2xl border-2 border-sandal-edge px-5 py-3 hover:border-kesar"
+              className="flex min-h-16 flex-col justify-center rounded-2xl border border-sandal-edge px-5 py-3 hover:border-kesar"
             >
               <span className="text-[0.85rem] text-kajal-soft">← Previous</span>
               <span className="line-clamp-2 font-display text-[1.05rem] leading-snug">{path.lessons[index - 1].title}</span>
@@ -106,7 +106,7 @@ export function LessonView({ path, index, verse }: { path: LearningPath; index: 
           {hasNext && (
             <Link
               href={lessonHref(path.slug, index + 1)}
-              className="flex min-h-16 flex-col items-end justify-center rounded-2xl border-2 border-sandal-edge px-5 py-3 text-right hover:border-kesar"
+              className="flex min-h-16 flex-col items-end justify-center rounded-2xl border border-sandal-edge px-5 py-3 text-right hover:border-kesar"
             >
               <span className="text-[0.85rem] text-kajal-soft">Next →</span>
               <span className="line-clamp-2 font-display text-[1.05rem] leading-snug">{path.lessons[index + 1].title}</span>

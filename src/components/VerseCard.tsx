@@ -1,57 +1,30 @@
 import type { Verse } from "@/lib/scripture/types";
 import { caption } from "@/lib/scripture/who";
 
-// Styled after a palm-leaf manuscript: long leaf, two binding holes.
-export function VerseCard({ verse, onDark = false }: { verse: Verse; onDark?: boolean }) {
+// A verse as a raised card: a thin gold line along the top, the Sanskrit in gold, the
+// transliteration, the translation, its meaning in plain words, and where it comes from.
+// `onDark` is kept for older callers; the card follows the theme either way.
+export function VerseCard({ verse }: { verse: Verse; onDark?: boolean }) {
   return (
-    <figure
-      className={`relative rounded-[2.5rem] px-8 py-7 sm:px-12 ${
-        onDark
-          ? "bg-night-soft text-sandal"
-          : "bg-sandal-deep text-kajal shadow-[inset_0_0_0_1px_var(--sandal-edge)]"
-      }`}
-    >
-      <span
-        aria-hidden="true"
-        className={`absolute left-3 top-1/2 size-2.5 -translate-y-1/2 rounded-full sm:left-5 ${
-          onDark ? "bg-night" : "bg-sandal"
-        } shadow-[inset_0_1px_2px_rgba(43,27,16,.35)]`}
-      />
-      <span
-        aria-hidden="true"
-        className={`absolute right-3 top-1/2 size-2.5 -translate-y-1/2 rounded-full sm:right-5 ${
-          onDark ? "bg-night" : "bg-sandal"
-        } shadow-[inset_0_1px_2px_rgba(43,27,16,.35)]`}
-      />
-
+    <figure className="verse-card relative m-0 rounded-2xl border border-sandal-edge bg-sandal-deep px-5 py-5 text-kajal sm:px-6">
       {verse.sanskrit && (
-        <p lang="sa" className="mb-4 font-display whitespace-pre-line text-[1.35rem] leading-[1.9]">
+        <p lang="sa" className="mb-3 whitespace-pre-line text-[1.15rem] leading-[1.75] text-kesar-deep">
           {verse.sanskrit}
         </p>
       )}
       {verse.transliteration && (
-        <p
-          className={`-mt-1 mb-4 whitespace-pre-line text-[0.85rem] italic leading-relaxed ${
-            onDark ? "text-sandal/70" : "text-kajal-soft"
-          }`}
-        >
+        <p className="mb-3 whitespace-pre-line text-[0.8rem] italic leading-relaxed text-kajal-soft">
           {verse.transliteration}
         </p>
       )}
-      <blockquote className="whitespace-pre-line font-display text-[1.15rem] leading-relaxed">
-        {verse.translation}
-      </blockquote>
+      <blockquote className="m-0 whitespace-pre-line text-[1.05rem] leading-relaxed">{verse.translation}</blockquote>
       {verse.plain && (
-        <p className={`mt-3 text-[1.05rem] leading-relaxed ${onDark ? "text-sandal/85" : "text-kajal-soft"}`}>
-          <span className="font-semibold">In plain words: </span>
+        <p className="mt-3 text-[0.95rem] leading-relaxed text-kajal-soft">
+          <span className="font-medium text-kajal">In plain words: </span>
           {verse.plain}
         </p>
       )}
-      <figcaption
-        className={`mt-4 text-[0.85rem] font-semibold ${onDark ? "text-flame" : "text-kesar-deep"}`}
-      >
-        {caption(verse)}
-      </figcaption>
+      <figcaption className="mt-4 font-mono text-[0.75rem] text-kesar-deep">{caption(verse)}</figcaption>
     </figure>
   );
 }

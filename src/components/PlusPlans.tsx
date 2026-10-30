@@ -96,7 +96,7 @@ export function PlusPlans() {
     body = (
       <>
         <p className="text-[1.05rem]">Sign in first (it&apos;s free), then come back here to choose a plan.</p>
-        <Link href="/login" className={`${button} mt-4 w-fit bg-kesar text-kajal hover:bg-kesar-deep hover:text-sandal`}>
+        <Link href="/login" className={`${button} mt-4 w-fit bg-kesar text-on-kesar hover:bg-kesar-deep hover:text-sandal`}>
           Sign in
         </Link>
       </>
@@ -104,7 +104,7 @@ export function PlusPlans() {
   } else if (plus) {
     body = (
       <>
-        <p className="font-display text-[1.5rem] leading-tight text-kesar-deep">You have Plus. Thank you.</p>
+        <p className="font-display text-[1.25rem] leading-tight text-kesar-deep">You have Plus. Thank you.</p>
         {manageUrl && (
           <a href={manageUrl} className="mt-3 inline-block font-semibold text-kesar-deep underline underline-offset-4">
             Manage or cancel your plan
@@ -132,7 +132,7 @@ export function PlusPlans() {
               type="button"
               disabled={busy}
               onClick={() => void buy(pkg)}
-              className={`${button} ${yearly ? "bg-kesar text-kajal hover:bg-kesar-deep hover:text-sandal" : "border-2 border-sandal-edge hover:border-kajal"}`}
+              className={`${button} ${yearly ? "bg-kesar text-on-kesar hover:bg-kesar-deep hover:text-sandal" : "border border-sandal-edge hover:border-kajal"}`}
             >
               <span>
                 {product.title}
@@ -155,7 +155,7 @@ export function PlusPlans() {
   }
 
   return (
-    <section aria-label="Plans" className="mt-10 max-w-2xl rounded-[2rem] bg-sandal-deep px-6 py-6">
+    <section aria-label="Plans" className="mt-10 max-w-2xl rounded-2xl bg-sandal-deep px-6 py-6">
       {body}
       {problem && (
         <p role="alert" className="mt-4 font-semibold text-kesar-deep">

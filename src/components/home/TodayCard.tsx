@@ -15,11 +15,11 @@ export function TodayCard({ entries }: { entries: Daily[] }) {
   return (
     <Link
       href="/today"
-      className="tile mt-10 block rounded-[2rem] bg-night px-7 py-6 text-sandal"
+      className="tile mt-10 block rounded-2xl bg-night px-7 py-6 text-kajal"
     >
       <span className="text-[0.85rem] font-semibold uppercase tracking-[0.12em] text-flame">Today&apos;s verse</span>
-      <span className="mt-2 block text-[0.95rem] text-sandal/75">{whoSays(verse)}:</span>
-      <span className="mt-1 line-clamp-3 block font-display text-[1.3rem] leading-snug">{verse.translation}</span>
+      <span className="mt-2 block text-[0.95rem] text-kajal-soft">{whoSays(verse)}:</span>
+      <span className="mt-1 line-clamp-3 block font-display text-[1.15rem] leading-snug">{verse.translation}</span>
       <span className="mt-3 block text-[0.95rem] font-semibold text-flame">Read and reflect →</span>
     </Link>
   );

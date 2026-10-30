@@ -29,7 +29,7 @@ export default function ResetPasswordPage() {
   return (
     <div className="mx-auto flex max-w-md flex-col items-center pt-8 text-center">
       <Leaf size={80} />
-      <h1 className="mt-3 font-display text-[2.2rem] leading-tight">Choose a new password</h1>
+      <h1 className="mt-3 font-display text-[1.75rem] leading-tight">Choose a new password</h1>
       {!ready ? (
         <p className="mt-4 italic text-kajal-soft">One moment…</p>
       ) : !user ? (
@@ -41,7 +41,7 @@ export default function ResetPasswordPage() {
         <form onSubmit={submit} className="mt-8 flex w-full flex-col gap-4 text-left">
           <label className="flex flex-col gap-1.5">
             <span className="font-semibold">New password</span>
-            <span className="flex items-center rounded-2xl border-2 border-sandal-edge bg-[#fbf3e2] focus-within:border-kesar-deep">
+            <span className="flex items-center rounded-2xl border border-sandal-edge bg-sandal-deep focus-within:border-kesar-deep">
               <input
                 type={show ? "text" : "password"}
                 required
@@ -69,7 +69,7 @@ export default function ResetPasswordPage() {
           <button
             type="submit"
             disabled={busy}
-            className="mt-2 min-h-14 rounded-full bg-kesar text-[1.1rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal disabled:opacity-60"
+            className="mt-2 min-h-14 rounded-full bg-kesar text-[1.1rem] font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal disabled:opacity-60"
           >
             {busy ? "Saving…" : "Save new password"}
           </button>

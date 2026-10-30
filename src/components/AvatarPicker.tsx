@@ -14,7 +14,7 @@ export function AvatarBadge({ fallback, size }: { fallback: string; size: number
     <span
       aria-hidden="true"
       style={{ width: size, height: size, fontSize: a ? size * (a.devanagari ? 0.62 : 0.55) : size * 0.42 }}
-      className={`flex shrink-0 items-center justify-center rounded-full leading-none ${a ? a.tone : "bg-tulsi font-display text-sandal"} ${a?.devanagari ? DEVANAGARI : ""}`}
+      className={`flex shrink-0 items-center justify-center rounded-full leading-none ${a ? a.tone : "bg-kesar font-display text-on-kesar"} ${a?.devanagari ? DEVANAGARI : ""}`}
     >
       {a ? a.symbol : fallback}
     </span>
@@ -25,7 +25,7 @@ export function AvatarPicker() {
   const { avatar, update } = useSettings();
   return (
     <fieldset className="mt-6">
-      <legend className="font-display text-[1.3rem]">Your picture</legend>
+      <legend className="font-display text-[1.15rem]">Your picture</legend>
       <p className="mt-1 text-[0.95rem] text-kajal-soft">Pick one to show on your account.</p>
       <div className="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-6">
         {AVATARS.map((a) => (

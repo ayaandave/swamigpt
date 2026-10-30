@@ -7,8 +7,9 @@ import { SendIcon } from "../icons";
 
 const EXAMPLES = ["I'm stressed about a test", "What is karma?", "How do I find my passion?", "Who is Krishna?"];
 
-// The home screen's question box, sitting on the photo: asking opens the chat with the question already sent
-export function HomeAsk() {
+// The home screen's question box: a gold-edged field that shows how many passages are ready to
+// search, and four example questions. Asking opens the chat with the question already sent.
+export function HomeAsk({ passages }: { passages?: number }) {
   const router = useRouter();
   const [draft, setDraft] = useState("");
   const id = useId(); // the home page can show this box more than once
@@ -27,35 +28,47 @@ export function HomeAsk() {
           e.preventDefault();
           go(draft);
         }}
-        className="flex items-center gap-2 rounded-full border-2 border-white/70 bg-white/80 py-2 pr-2 pl-6 shadow-[0_18px_40px_-18px_rgba(43,27,16,0.55)] backdrop-blur-md focus-within:border-kesar"
+        className="gold-edge rounded-2xl"
       >
-        <label htmlFor={id} className="sr-only">
-          Your question
-        </label>
-        <input
-          id={id}
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          placeholder="What’s on your mind?"
-          maxLength={500}
-          className="min-h-12 min-w-0 flex-1 bg-transparent text-[1.1rem] placeholder:text-kajal-soft/80 focus:outline-none"
-        />
-        <button
-          type="submit"
-          aria-label="Ask"
-          className="flex size-12 shrink-0 items-center justify-center rounded-full bg-kesar text-kajal hover:bg-kesar-deep hover:text-sandal"
-        >
-          <SendIcon className="size-6" />
-        </button>
+        <div className="rounded-[15px] bg-sandal-deep px-4 pt-3 pb-2.5">
+          <label htmlFor={id} className="sr-only">
+            Your question
+          </label>
+          <input
+            id={id}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            placeholder="What’s on your mind?"
+            maxLength={500}
+            className="min-h-11 w-full bg-transparent text-[1rem] text-kajal placeholder:text-kajal-soft focus:outline-none"
+          />
+          <div className="flex items-center justify-between gap-3">
+            <span className="font-mono text-[0.75rem] text-kajal-soft">
+              {passages ? (
+                <>
+                  <span className="text-kesar-deep">{passages.toLocaleString("en-US")}</span> passages ready
+                </>
+              ) : (
+                "Real scripture only"
+              )}
+            </span>
+            <button
+              type="submit"
+              aria-label="Ask"
+              className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-kajal text-sandal hover:opacity-85"
+            >
+              <SendIcon className="size-5" />
+            </button>
+          </div>
+        </div>
       </form>
-      {/* One swipeable row on phones, so the photo stays visible; wrapped and centred on wider screens */}
-      <ul className="scrollbar-none -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-visible sm:px-0">
+      <ul className="mt-3 grid grid-cols-2 gap-2">
         {EXAMPLES.map((q) => (
-          <li key={q} className="shrink-0">
+          <li key={q}>
             <button
               type="button"
               onClick={() => go(q)}
-              className="min-h-11 rounded-full border-2 border-white/60 bg-white/45 px-4 text-[0.95rem] font-semibold text-kajal backdrop-blur-md hover:border-kesar hover:bg-white/70"
+              className="min-h-11 w-full rounded-xl border border-sandal-edge bg-sandal-deep px-3 py-2 text-left text-[0.875rem] leading-snug text-kajal hover:border-kesar/60"
             >
               {q}
             </button>

@@ -224,15 +224,15 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
         : "scale-[.8] duration-[3000ms]";
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-night pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)] text-sandal">
+    <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-night pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)] text-kajal">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(255,179,71,.16),transparent_60%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(227,179,65,.12),transparent_60%)]"
       />
       <div className="relative mx-auto flex w-full max-w-3xl items-center justify-between px-4 pt-4 sm:px-6">
         <Link
           href="/meditate"
-          className="flex min-h-12 items-center gap-1 rounded-full border-2 border-sandal/25 pl-2 pr-5 font-semibold hover:border-sandal/60"
+          className="flex min-h-12 items-center gap-1 rounded-full border border-kajal/25 pl-2 pr-5 font-semibold hover:border-kajal/60"
         >
           <BackIcon className="size-6" />
           End
@@ -243,40 +243,40 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
       <div className="relative flex flex-1 flex-col items-center justify-center px-4 py-4 text-center sm:py-8">
         <div className="relative flex size-[13rem] items-center justify-center sm:size-[20rem]">
           <div
-            className={`absolute inset-0 rounded-full border-2 border-flame/40 bg-flame/10 transition-transform ease-in-out ${ring}`}
+            className={`absolute inset-0 rounded-full border border-flame/40 bg-flame/10 transition-transform ease-in-out ${ring}`}
           />
           <Leaf size={110} onDark />
         </div>
 
-        <p className="mt-4 min-h-[2.6rem] font-display text-[2rem] leading-tight text-flame">
+        <p className="mt-4 min-h-[2.6rem] font-display text-[1.5rem] leading-tight text-flame">
           {running ? (breath === "in" ? "Breathe in" : breath === "out" ? "Breathe out" : "Breathe gently") : done ? "Om shanti" : elapsed ? "Paused" : "When you are ready"}
         </p>
-        <p className="mt-3 min-h-[5.5rem] max-w-[36ch] text-[1.15rem] leading-relaxed text-sandal/85" aria-live="polite">
+        <p className="mt-3 min-h-[5.5rem] max-w-[36ch] text-[1.15rem] leading-relaxed text-kajal-soft" aria-live="polite">
           {line ?? meditation.description}
         </p>
 
         <button
           type="button"
           onClick={toggle}
-          className="mt-6 flex min-h-16 items-center gap-3 rounded-full bg-flame px-9 text-[1.15rem] font-bold text-kajal hover:bg-sandal"
+          className="mt-6 flex min-h-16 items-center gap-3 rounded-xl bg-flame px-9 text-[1.15rem] font-bold text-kajal hover:bg-sandal"
         >
           {running ? <PauseIcon /> : <PlayIcon />}
           {running ? "Pause" : done ? "Begin again" : elapsed ? "Continue" : "Begin"}
         </button>
-        <p className="mt-4 text-[1rem] tabular-nums text-sandal/70">
+        <p className="mt-4 text-[1rem] tabular-nums text-kajal-soft">
           {fmt(Math.min(elapsed, total))} of {fmt(total)}
         </p>
       </div>
 
       <div className="relative mx-auto mb-8 flex w-full max-w-3xl flex-col gap-6 px-4 sm:px-6">
         <fieldset>
-          <legend className="mb-3 px-1 text-[0.9rem] font-semibold text-sandal/80">Voice</legend>
+          <legend className="mb-3 px-1 text-[0.9rem] font-semibold text-kajal-soft">Voice</legend>
           <div className="grid grid-cols-3 gap-2">
             {VOICES.map((v) => (
               <label
                 key={v.id}
-                className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border-2 px-3 text-center text-[0.95rem] font-semibold has-focus-visible:outline-4 has-focus-visible:outline-offset-2 has-focus-visible:outline-flame ${
-                  meditationVoice === v.id ? "border-flame bg-flame/15 text-flame" : "border-sandal/20 hover:border-sandal/50"
+                className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border px-3 text-center text-[0.95rem] font-semibold has-focus-visible:outline-4 has-focus-visible:outline-offset-2 has-focus-visible:outline-flame ${
+                  meditationVoice === v.id ? "border-flame bg-flame/15 text-flame" : "border-kajal/20 hover:border-kajal/50"
                 }`}
               >
                 <input
@@ -294,13 +294,13 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
         </fieldset>
 
         <fieldset>
-          <legend className="mb-3 px-1 text-[0.9rem] font-semibold text-sandal/80">Background sound</legend>
+          <legend className="mb-3 px-1 text-[0.9rem] font-semibold text-kajal-soft">Background sound</legend>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {SOUNDS.map((s) => (
               <label
                 key={s.id}
-                className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border-2 px-3 text-center text-[0.95rem] font-semibold has-focus-visible:outline-4 has-focus-visible:outline-offset-2 has-focus-visible:outline-flame ${
-                  sound === s.id ? "border-flame bg-flame/15 text-flame" : "border-sandal/20 hover:border-sandal/50"
+                className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border px-3 text-center text-[0.95rem] font-semibold has-focus-visible:outline-4 has-focus-visible:outline-offset-2 has-focus-visible:outline-flame ${
+                  sound === s.id ? "border-flame bg-flame/15 text-flame" : "border-kajal/20 hover:border-kajal/50"
                 }`}
               >
                 <input

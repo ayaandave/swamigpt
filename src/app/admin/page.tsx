@@ -39,7 +39,7 @@ export default function MoneyPage() {
   if (!user || state === "denied") {
     return (
       <div className="pt-16 text-center">
-        <h1 className="font-display text-[2rem]">Page not found</h1>
+        <h1 className="font-display text-[1.5rem]">Page not found</h1>
         <Link href="/" className="mt-4 inline-flex min-h-11 items-center font-semibold text-kesar-deep underline underline-offset-4">
           Go home
         </Link>
@@ -71,12 +71,12 @@ export default function MoneyPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-[0.85rem] font-semibold uppercase tracking-[0.14em] text-kesar-deep">Money · private</p>
-          <h1 className="mt-1 font-display text-[2.4rem] leading-tight">{money.month}</h1>
+          <h1 className="mt-1 font-display text-[1.75rem] leading-tight">{money.month}</h1>
         </div>
         <button
           type="button"
           onClick={() => void load()}
-          className="min-h-11 rounded-full border-2 border-sandal-edge px-5 text-[0.95rem] font-semibold hover:border-kajal"
+          className="min-h-11 rounded-xl border border-sandal-edge px-5 text-[0.95rem] font-semibold hover:border-kajal"
         >
           Refresh
         </button>
@@ -89,7 +89,7 @@ export default function MoneyPage() {
       {/* The headline: this month so far against the budget */}
       <section aria-label="This month" className="mt-8">
         <p className="text-[1rem] text-kajal-soft">Spent this month so far</p>
-        <p className="font-display text-[3.4rem] leading-none">{usdExact(total)}</p>
+        <p className="font-display text-[2.25rem] leading-none">{usdExact(total)}</p>
         <p className="mt-2 text-[1.05rem]">
           of your {usd(money.budget)} budget · on track for about <strong>{usd(projected)}</strong> by the end of the month
         </p>
@@ -110,8 +110,8 @@ export default function MoneyPage() {
 
       {/* Where it goes */}
       <section aria-labelledby="where" className="mt-12">
-        <h2 id="where" className="font-display text-[1.6rem]">Where it goes</h2>
-        <ul className="mt-3 border-t-2 border-sandal-edge">
+        <h2 id="where" className="font-display text-[1.3rem]">Where it goes</h2>
+        <ul className="mt-3 border-t border-sandal-edge">
           <Row
             name="Claude (answers)"
             value={claude.ok ? usdExact(claude.monthToDate) : "—"}
@@ -133,9 +133,9 @@ export default function MoneyPage() {
       {/* One-time spending */}
       {money.oneTime.length > 0 && (
         <section aria-labelledby="one-time" className="mt-12">
-          <h2 id="one-time" className="font-display text-[1.6rem]">One-time spending</h2>
+          <h2 id="one-time" className="font-display text-[1.3rem]">One-time spending</h2>
           <p className="mt-1 text-[0.95rem] text-kajal-soft">Top-ups and one-off purchases. {usdExact(oneTimeAll)} in total so far.</p>
-          <ul className="mt-3 border-t-2 border-sandal-edge">
+          <ul className="mt-3 border-t border-sandal-edge">
             {money.oneTime.map((o) => (
               <Row key={o.name + o.date} name={o.name} value={usdExact(o.dollars)} note={`${short(o.date)} · ${o.note}`} problem={false} />
             ))}
@@ -146,7 +146,7 @@ export default function MoneyPage() {
       {/* Claude by day */}
       {claude.ok && (
         <section aria-labelledby="by-day" className="mt-12">
-          <h2 id="by-day" className="font-display text-[1.6rem]">Claude spending by day</h2>
+          <h2 id="by-day" className="font-display text-[1.3rem]">Claude spending by day</h2>
           <Bars
             points={claude.byDay.map((d) => ({ label: short(d.day), value: d.dollars }))}
             format={usdExact}
@@ -168,7 +168,7 @@ export default function MoneyPage() {
       {/* ElevenLabs quota */}
       {voice.ok && (
         <section aria-labelledby="voice" className="mt-12">
-          <h2 id="voice" className="font-display text-[1.6rem]">Voice characters</h2>
+          <h2 id="voice" className="font-display text-[1.3rem]">Voice characters</h2>
           <p className="mt-2 text-[1.05rem]">
             <strong>{voice.charactersUsed.toLocaleString()}</strong> of {voice.characterLimit.toLocaleString()} used
             {voice.resetsAt && <> · resets {new Date(voice.resetsAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</>}
@@ -184,7 +184,7 @@ export default function MoneyPage() {
 
       {/* Use of the site */}
       <section aria-labelledby="use" className="mt-12">
-        <h2 id="use" className="font-display text-[1.6rem]">How much SwamiGPT is used</h2>
+        <h2 id="use" className="font-display text-[1.3rem]">How much SwamiGPT is used</h2>
         {usage.ok ? (
           <>
             <dl className="mt-3 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4">
@@ -219,7 +219,7 @@ function Row({ name, value, note, problem }: { name: string; value: string; note
         <span className="block font-semibold">{name}</span>
         <span className={`block text-[0.9rem] ${problem ? "text-kumkum" : "text-kajal-soft"}`}>{note}</span>
       </span>
-      <span className="shrink-0 font-display text-[1.4rem] tabular-nums">{value}</span>
+      <span className="shrink-0 font-display text-[1.2rem] tabular-nums">{value}</span>
     </li>
   );
 }
@@ -228,7 +228,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <dt className="text-[0.85rem] text-kajal-soft">{label}</dt>
-      <dd className="font-display text-[1.8rem] leading-tight">{value}</dd>
+      <dd className="font-display text-[1.5rem] leading-tight">{value}</dd>
     </div>
   );
 }

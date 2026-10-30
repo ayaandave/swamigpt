@@ -23,7 +23,7 @@ export function PathTimeline({ path }: { path: LearningPath }) {
     <div className="pt-8">
       <Link
         href="/learn"
-        className="inline-flex min-h-12 items-center gap-1 rounded-full border-2 border-sandal-edge pl-2 pr-5 text-[0.95rem] font-semibold hover:border-kajal"
+        className="inline-flex min-h-12 items-center gap-1 rounded-full border border-sandal-edge pl-2 pr-5 text-[0.95rem] font-semibold hover:border-kajal"
       >
         <BackIcon className="size-6" />
         All paths
@@ -31,7 +31,7 @@ export function PathTimeline({ path }: { path: LearningPath }) {
 
       <header className="mt-6 flex flex-col items-center text-center">
         <p className="text-[0.9rem] font-semibold text-tulsi">{path.forWhom}</p>
-        <h1 className="mt-1 font-display text-[2.3rem] leading-tight">{path.title}</h1>
+        <h1 className="mt-1 font-display text-[1.75rem] leading-tight">{path.title}</h1>
         <p className="mt-2 max-w-[40ch] text-[1.05rem] text-kajal-soft">{path.description}</p>
         <div className="mt-4">
           <MalaRing
@@ -46,7 +46,7 @@ export function PathTimeline({ path }: { path: LearningPath }) {
         {isClient && (
           <Link
             href={lessonHref(path.slug, finished ? 0 : next)}
-            className="mt-5 flex min-h-14 items-center rounded-full bg-kesar px-8 text-[1.05rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+            className="mt-5 flex min-h-14 items-center rounded-xl bg-kesar px-8 text-[1.05rem] font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
           >
             {finished ? "Read it again from the start" : done.length === 0 ? "Start lesson 1" : `Continue: lesson ${next + 1}`}
           </Link>
@@ -65,7 +65,7 @@ export function PathTimeline({ path }: { path: LearningPath }) {
                 <span
                   aria-hidden="true"
                   className={`absolute top-10 bottom-0 left-[1.2rem] w-0.5 -translate-x-1/2 ${
-                    isDone ? "bg-[#9a4f1e]" : "bg-sandal-edge"
+                    isDone ? "bg-kesar" : "bg-sandal-edge"
                   }`}
                 />
               )}
@@ -73,10 +73,10 @@ export function PathTimeline({ path }: { path: LearningPath }) {
                 aria-hidden="true"
                 className={`relative z-10 mt-3 flex size-10 shrink-0 items-center justify-center rounded-full font-display text-[1rem] ${
                   isDone
-                    ? "bg-[radial-gradient(circle_at_35%_30%,#e0a368,#9a4f1e_45%,#4a210b)] text-sandal"
+                    ? "bg-[radial-gradient(circle_at_35%_30%,#f6dc95,#c8961f_45%,#5a4310)] text-black"
                     : isNext
-                      ? "bg-kesar text-kajal shadow-[0_0_0_6px_rgba(217,116,26,0.25)]"
-                      : "border-2 border-sandal-edge bg-[radial-gradient(circle_at_35%_30%,#fbf3e2,#e8d2a8)] text-kajal-soft"
+                      ? "bg-kesar text-on-kesar shadow-[0_0_0_6px_var(--glow)]"
+                      : "border border-sandal-edge bg-sandal-deep text-kajal-soft"
                 }`}
               >
                 {isDone ? <CheckIcon className="size-5" /> : i + 1}
@@ -84,7 +84,7 @@ export function PathTimeline({ path }: { path: LearningPath }) {
               <Link
                 href={lessonHref(path.slug, i)}
                 aria-current={isNext ? "step" : undefined}
-                className={`flex min-h-16 flex-1 flex-col justify-center rounded-2xl border-2 px-5 py-3 hover:border-kesar ${
+                className={`flex min-h-16 flex-1 flex-col justify-center rounded-2xl border px-5 py-3 hover:border-kesar ${
                   isNext ? "border-kesar bg-sandal-deep" : "border-transparent hover:bg-sandal-deep/60"
                 }`}
               >
@@ -93,7 +93,7 @@ export function PathTimeline({ path }: { path: LearningPath }) {
                   {isDone && " · done"}
                   {isNext && " · up next"}
                 </span>
-                <span className="font-display text-[1.25rem] leading-snug">{lesson.title}</span>
+                <span className="font-display text-[1.1rem] leading-snug">{lesson.title}</span>
               </Link>
             </li>
           );

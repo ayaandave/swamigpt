@@ -51,8 +51,8 @@ export function Header() {
                 <Link
                   href={href}
                   aria-current={active ? "page" : undefined}
-                  className={`flex min-h-[44px] items-center rounded-full px-4 text-[16px] font-semibold ${
-                    active ? "bg-kesar/20 text-kesar-deep" : "text-kajal-soft hover:text-kajal"
+                  className={`flex min-h-[44px] items-center rounded-xl px-4 text-[16px] font-semibold ${
+                    active ? "text-kesar" : "text-kajal-soft hover:text-kajal"
                   }`}
                 >
                   {label}
@@ -66,7 +66,7 @@ export function Header() {
         <button
           type="button"
           onClick={() => update({ textSize: next })}
-          className="flex h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full border-2 border-sandal-edge text-[14px] font-semibold hover:border-kajal lg:px-4"
+          className="flex h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full border border-sandal-edge text-[14px] font-semibold hover:border-kajal lg:px-4"
           aria-label={`Text size: ${textSize}. Tap to make text ${next === "regular" ? "regular" : "bigger"}.`}
         >
           <span className="font-display text-[17px] leading-none">{SIZE_LABEL[textSize]}</span>
@@ -75,7 +75,7 @@ export function Header() {
         <Link
           href="/settings"
           aria-label="Voice and settings"
-          className="flex h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full border-2 border-sandal-edge text-[14px] font-semibold hover:border-kajal lg:px-4"
+          className="flex h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full border border-sandal-edge text-[14px] font-semibold hover:border-kajal lg:px-4"
         >
           <SettingsIcon className="size-[24px]" />
           <span className="hidden lg:inline">Voice &amp; settings</span>
@@ -94,7 +94,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Main"
-      className="fixed inset-x-0 bottom-0 z-30 border-t-2 md:hidden border-sandal-edge bg-sandal/95 pb-[env(safe-area-inset-bottom)] backdrop-blur"
+      className="fixed inset-x-0 bottom-0 z-30 border-t md:hidden border-sandal-edge bg-sandal/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl"
     >
       <ul className={`mx-auto grid max-w-3xl ${tabs.length === 5 ? "grid-cols-5" : "grid-cols-4"}`}>
         {tabs.map(({ href, label, Icon, also }) => {
@@ -104,17 +104,11 @@ export function BottomNav() {
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`flex min-h-[4.5rem] flex-col items-center justify-center gap-1 text-[0.8rem] font-semibold ${
-                  active ? "text-kesar-deep" : "text-kajal-soft hover:text-kajal"
+                className={`flex min-h-16 flex-col items-center justify-center gap-1 text-[0.75rem] font-medium ${
+                  active ? "text-kesar" : "text-kajal-soft hover:text-kajal"
                 }`}
               >
-                <span
-                  className={`flex h-9 w-14 items-center justify-center rounded-full transition-colors ${
-                    active ? "bg-kesar/25" : ""
-                  }`}
-                >
-                  <Icon className="size-7" />
-                </span>
+                <Icon className="size-6" />
                 {label}
               </Link>
             </li>

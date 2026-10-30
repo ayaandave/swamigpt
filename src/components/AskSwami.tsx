@@ -36,7 +36,7 @@ export function AskSwami({
   const { depth: defaultDepth, ageGroup } = useSettings();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [draft, setDraft] = useState(initialDraft);
-  const [speakingId, setSpeakingId] = useState<number | null>(null);
+  const [, setSpeakingId] = useState<number | null>(null);
   const thinking = turns.some((t) => !t.answer);
   const lastRef = useRef<HTMLElement>(null);
   const nextId = useRef(1);
@@ -79,7 +79,7 @@ export function AskSwami({
             <Leaf size={96} className="sm:hidden" />
             <Leaf size={150} className="hidden sm:block" />
           </div>
-          <h1 className="mt-4 font-display text-[2.4rem] leading-[1.1] sm:mt-6 sm:text-[3.2rem]">Namaste.</h1>
+          <h1 className="mt-4 font-display text-[1.75rem] leading-[1.1] sm:mt-6 sm:text-[3.2rem]">Namaste.</h1>
           <p className="mt-3 max-w-[30ch] text-[1.1rem] text-kajal-soft">
             Ask about anything in your life, or about the Gita, karma or meditation. Every answer comes from real scripture.
           </p>
@@ -92,7 +92,7 @@ export function AskSwami({
                   <button
                     type="button"
                     onClick={() => ask(q)}
-                    className="w-full min-h-16 rounded-2xl border-2 border-sandal-edge px-5 py-3 text-left font-display text-[1.1rem] leading-snug hover:border-kesar hover:bg-sandal-deep"
+                    className="w-full min-h-16 rounded-2xl border border-sandal-edge px-5 py-3 text-left font-display text-[1.1rem] leading-snug hover:border-kesar hover:bg-sandal-deep"
                   >
                     {q}
                   </button>
@@ -107,20 +107,16 @@ export function AskSwami({
             <article
               key={turn.id}
               ref={i === turns.length - 1 ? lastRef : undefined}
-              className="flex scroll-mt-6 flex-col gap-6"
+              className="flex scroll-mt-6 flex-col gap-3"
             >
-              <h2 className="border-l-4 border-kesar pl-5 font-display text-[1.6rem] leading-snug">
-                {turn.question}
-              </h2>
-              <div className="flex flex-col items-start gap-3 sm:flex-row sm:gap-4">
-                <div className="shrink-0 sm:pt-1">
-                  <Leaf
-                    size={56}
-                    state={!turn.answer ? "thinking" : speakingId === turn.id ? "speaking" : "idle"}
-                  />
-                </div>
+              <h2 className="font-display text-[1.1rem] leading-snug">{turn.question}</h2>
+              <Sources turn={turn} />
+              <div className="flex flex-col items-start gap-3">
                 {!turn.answer ? (
-                  <p className="text-[1.05rem] italic text-kajal-soft sm:pt-4">Swami is reflecting…</p>
+                  <div className="flex items-center gap-3">
+                    <Leaf size={40} state="thinking" />
+                    <p className="text-[0.95rem] text-kajal-soft">Searching the scriptures…</p>
+                  </div>
                 ) : (
                   <Answer
                     turn={turn as Required<Turn>}
@@ -173,16 +169,16 @@ function Answer({
   ].join(" ");
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col gap-5">
+    <div className="flex min-w-0 flex-1 flex-col gap-4">
       {answer.paragraphs.map((p, i) => (
-        <p key={i} className="max-w-[62ch] text-[1.1rem] leading-[1.75]">
+        <p key={i} className="max-w-[62ch] text-[1rem] leading-[1.7] text-kajal">
           {p}
         </p>
       ))}
       {answer.help && (
         <a
           href={answer.help.href}
-          className="flex min-h-16 flex-col justify-center rounded-2xl bg-tulsi px-6 py-3 text-sandal"
+          className="flex min-h-16 flex-col justify-center rounded-2xl bg-sandal-deep border border-kesar/40 px-6 py-3 text-kajal"
         >
           <span className="text-[0.85rem]">{answer.help.text}</span>
           <span className="text-[1.2rem] font-bold">{answer.help.label}</span>
@@ -191,7 +187,7 @@ function Answer({
       {answer.signInPrompt && (
         <Link
           href="/login"
-          className="flex min-h-14 w-fit items-center rounded-full bg-kesar px-7 text-[1.05rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+          className="flex min-h-14 w-fit items-center rounded-xl bg-kesar px-7 text-[1.05rem] font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
         >
           Sign in for more questions
         </Link>
@@ -199,29 +195,28 @@ function Answer({
       {answer.plusPrompt && (
         <Link
           href="/plus"
-          className="flex min-h-14 w-fit items-center rounded-full bg-kesar px-7 text-[1.05rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+          className="flex min-h-14 w-fit items-center rounded-xl bg-kesar px-7 text-[1.05rem] font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
         >
           See SwamiGPT Plus
         </Link>
       )}
       {answer.verses.map(({ verse, meaning }) => (
-        <div key={verse.id} className="mt-3 flex flex-col gap-4">
-          <p className="font-display text-[1.15rem] text-kajal-soft">
-            {whoSays(verse)}:
-          </p>
+        <div key={verse.id} className="mt-1 flex flex-col gap-3">
+          <p className="text-[0.9rem] text-kajal-soft">{whoSays(verse)}:</p>
           <VerseCard verse={verse} />
-          <p className="max-w-[62ch] border-l-4 border-tulsi pl-5 text-[1.1rem] font-semibold leading-[1.7] text-tulsi">
-            {meaning}
+          <p className="max-w-[62ch] text-[1rem] leading-[1.65] text-kajal">
+            <span className="font-medium text-kesar-deep">For you: </span>
+            {meaning.replace(/^for you,?(\s+this means)?\s*[,:]?\s*/i, "")}
           </p>
         </div>
       ))}
       {answer.practice && (
         <Link
           href={answer.practice.href}
-          className="mt-2 flex min-h-16 flex-col justify-center rounded-2xl border-2 border-sandal-edge px-6 py-3 hover:border-kesar hover:bg-sandal-deep"
+          className="mt-2 flex min-h-16 flex-col justify-center rounded-2xl border border-sandal-edge px-6 py-3 hover:border-kesar hover:bg-sandal-deep"
         >
           <span className="text-[0.85rem] font-semibold text-kesar-deep">Try this next</span>
-          <span className="font-display text-[1.2rem]">{answer.practice.title}</span>
+          <span className="font-display text-[1.1rem]">{answer.practice.title}</span>
           <span className="text-[1rem] text-kajal-soft">{answer.practice.why}</span>
         </Link>
       )}
@@ -233,7 +228,7 @@ function Answer({
           type="button"
           disabled={disabled}
           onClick={() => onReask(depth === "simpler" ? "deeper" : "simpler")}
-          className="min-h-14 rounded-full border-2 border-sandal-edge px-6 text-[1rem] font-semibold hover:border-kajal disabled:opacity-50"
+          className="min-h-14 rounded-xl border border-sandal-edge px-6 text-[1rem] font-semibold hover:border-kajal disabled:opacity-50"
         >
           {depth === "simpler" ? "Go deeper (uses 2)" : "Say it more simply"}
         </button>
@@ -299,7 +294,7 @@ function AskBox({
         e.preventDefault();
         onAsk(draft);
       }}
-      className={`flex rounded-[1.75rem] border-2 border-kajal bg-[#fbf3e2] p-2 shadow-[0_6px_0_var(--sandal-edge)] focus-within:border-kesar-deep ${
+      className={`flex rounded-2xl border border-kajal bg-sandal-deep p-2 shadow-[0_0_0_1px_var(--sandal-edge),0_12px_40px_-20px_var(--glow)] focus-within:border-kesar-deep ${
         compact ? "items-end gap-2" : "flex-col gap-1 sm:flex-row sm:items-end sm:gap-2"
       }`}
     >
@@ -321,7 +316,7 @@ function AskBox({
         }}
         placeholder={listening ? "Listening… speak your question" : placeholder}
         className={`min-h-14 w-full min-w-0 flex-1 resize-none bg-transparent font-display leading-snug outline-none placeholder:text-kajal-soft/70 ${
-          compact ? "px-3 py-3.5 text-[1.1rem] sm:text-[1.25rem]" : "px-4 py-3 text-[1.25rem]"
+          compact ? "px-3 py-3.5 text-[1.1rem] sm:text-[1.25rem]" : "px-4 py-3 text-[1.1rem]"
         }`}
       />
       <div className="flex items-center justify-end gap-2">
@@ -337,7 +332,7 @@ function AskBox({
             aria-pressed={listening}
             aria-label={listening ? "Stop listening" : "Speak your question"}
             className={`flex size-14 shrink-0 items-center justify-center rounded-full ${
-              listening ? "animate-pulse bg-kumkum text-sandal" : "bg-sandal-deep hover:bg-sandal-edge"
+              listening ? "animate-pulse bg-kumkum text-white" : "bg-sandal-deep hover:bg-sandal-edge"
             }`}
           >
             <MicIcon />
@@ -346,12 +341,26 @@ function AskBox({
         <button
           type="submit"
           disabled={disabled || !draft.trim()}
-          className="flex min-h-14 shrink-0 items-center gap-2 rounded-full bg-kesar px-5 font-semibold text-kajal hover:bg-kesar-deep hover:text-sandal disabled:bg-sandal-deep disabled:text-kajal-soft"
+          className="flex min-h-14 shrink-0 items-center gap-2 rounded-xl bg-kesar px-5 font-semibold text-on-kesar hover:bg-kesar-deep hover:text-sandal disabled:bg-sandal-deep disabled:text-kajal-soft"
         >
           <SendIcon className="size-6" />
           <span className={compact ? "sr-only sm:not-sr-only" : undefined}>Ask</span>
         </button>
       </div>
     </form>
+  );
+}
+
+// "Searching…" while the answer comes, then which texts it quotes: the small technical line that
+// shows the answer was built from real passages
+function Sources({ turn }: { turn: Turn }) {
+  if (!turn.answer) return null;
+  const texts = [...new Set(turn.answer.verses.map(({ verse }) => verse.source.replace(/\s+[\d.:]+$/, "")))];
+  if (!texts.length) return null;
+  return (
+    <p className="flex items-center gap-2 font-mono text-[0.75rem] text-kajal-soft">
+      <span aria-hidden="true" className="size-1.5 rounded-full bg-kesar shadow-[0_0_8px_var(--kesar)]" />
+      Quoting {turn.answer.verses.length} {turn.answer.verses.length === 1 ? "passage" : "passages"} · {texts.join(", ")}
+    </p>
   );
 }

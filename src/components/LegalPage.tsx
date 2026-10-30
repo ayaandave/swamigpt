@@ -7,7 +7,7 @@ export const UPDATED = "October 13, 2026";
 export function LegalPage({ title, intro, children }: { title: string; intro: string; children: React.ReactNode }) {
   return (
     <div className="pt-10">
-      <h1 className="font-display text-[2.4rem] leading-tight">{title}</h1>
+      <h1 className="font-display text-[1.75rem] leading-tight">{title}</h1>
       <p className="mt-1 text-[0.95rem] text-kajal-soft">Last updated {UPDATED}</p>
       <p className="mt-4 max-w-[62ch] text-[1.1rem] leading-[1.7]">{intro}</p>
       <div className="mt-6 flex max-w-[62ch] flex-col gap-8 text-[1.05rem] leading-[1.7] [&_h2]:font-display [&_h2]:text-[1.5rem] [&_h2]:leading-tight [&_li]:mt-1.5 [&_p]:mt-2 [&_ul]:mt-2 [&_ul]:list-disc [&_ul]:pl-6">

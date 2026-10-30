@@ -50,21 +50,21 @@ export default async function MantraPage(props: PageProps<"/meditate/mantra/[slu
         Meditate
       </Link>
 
-      <p lang="sa" className="mt-6 font-display text-[1.6rem] text-kesar-deep">
+      <p lang="sa" className="mt-6 font-display text-[1.3rem] text-kesar-deep">
         {m.sanskritName}
       </p>
-      <h1 className="font-display text-[2.4rem] leading-tight">{m.title}</h1>
+      <h1 className="font-display text-[1.75rem] leading-tight">{m.title}</h1>
       <p className="mt-3 max-w-[60ch] text-[1.1rem] leading-[1.7]">{m.about}</p>
       {m.audio && <MantraListen audio={m.audio} title={m.title} />}
 
       {m.parts.map((part, i) => (
         <section key={i} aria-label={part.name ?? m.title} className="mt-10">
-          {part.name && <h2 className="font-display text-[1.6rem] leading-tight">{part.name}</h2>}
+          {part.name && <h2 className="font-display text-[1.3rem] leading-tight">{part.name}</h2>}
 
-          <div className="mt-4 rounded-[2rem] border-2 border-sandal-edge bg-white/40 px-6 py-6">
+          <div className="mt-4 rounded-2xl border border-sandal-edge bg-white/40 px-6 py-6">
             {part.lines.map((line) => (
               <p key={line.sa} className="py-1.5">
-                <span lang="sa" className="block font-display text-[1.45rem] leading-[1.7]">
+                <span lang="sa" className="block font-display text-[1.25rem] leading-[1.7]">
                   {line.sa}
                 </span>
                 <span className="block text-[1rem] italic text-kajal-soft">{line.tr}</span>
@@ -83,7 +83,7 @@ export default async function MantraPage(props: PageProps<"/meditate/mantra/[slu
           </dl>
 
           <h3 className="mt-6 text-[0.85rem] font-semibold uppercase tracking-[0.12em] text-kesar-deep">What it means</h3>
-          <p className="mt-2 max-w-[60ch] font-display text-[1.25rem] leading-snug">{part.meaning}</p>
+          <p className="mt-2 max-w-[60ch] font-display text-[1.1rem] leading-snug">{part.meaning}</p>
 
           <p className="mt-4 text-[0.95rem] text-kajal-soft">
             From {part.source}.
@@ -100,7 +100,7 @@ export default async function MantraPage(props: PageProps<"/meditate/mantra/[slu
       ))}
 
       <section className="mt-10">
-        <h2 className="font-display text-[1.6rem] leading-tight">How to say it</h2>
+        <h2 className="font-display text-[1.3rem] leading-tight">How to say it</h2>
         <p className="mt-2 max-w-[60ch] text-[1.1rem] leading-[1.7]">{m.howTo}</p>
         {m.note && <p className="mt-3 max-w-[60ch] text-[0.95rem] text-kajal-soft">{m.note}</p>}
       </section>

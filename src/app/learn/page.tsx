@@ -12,9 +12,9 @@ export default function LearnPage() {
 
   return (
     <div className="pt-10">
-      <h1 className="font-display text-[2.4rem] leading-tight">Learn</h1>
+      <h1 className="font-display text-[1.75rem] leading-tight">Learn</h1>
 
-      <h2 className="mt-8 font-display text-[1.6rem] leading-tight">Learning paths</h2>
+      <h2 className="mt-8 font-display text-[1.3rem] leading-tight">Learning paths</h2>
       <p className="mt-2 max-w-[44ch] text-[1.1rem] text-kajal-soft">
         Short lessons, a few minutes each. Every lesson you finish adds a bead to your mala, a string of prayer beads.
       </p>
@@ -26,11 +26,11 @@ export default function LearnPage() {
             <li key={p.slug}>
               <Link
                 href={`/learn/${p.slug}`}
-                className="flex items-center gap-4 rounded-[2rem] border-2 border-sandal-edge py-5 pr-3 pl-6 hover:border-kesar hover:bg-sandal-deep/60 sm:pl-8"
+                className="flex items-center gap-4 rounded-2xl border border-sandal-edge py-5 pr-3 pl-6 hover:border-kesar hover:bg-sandal-deep/60 sm:pl-8"
               >
                 <span className="min-w-0 flex-1">
                   <span className="text-[0.85rem] font-semibold text-tulsi">{p.forWhom}</span>
-                  <span className="mt-1 block font-display text-[1.5rem] leading-tight">{p.title}</span>
+                  <span className="mt-1 block font-display text-[1.25rem] leading-tight">{p.title}</span>
                   <span className="mt-2 block max-w-[52ch] text-[1rem] text-kajal-soft">{p.description}</span>
                   <span className="mt-3 block text-[0.9rem] font-semibold text-kesar-deep">
                     {done.length === 0 ? "Start →" : `${done.length} of ${p.totalLessons} done · Continue →`}
@@ -46,10 +46,10 @@ export default function LearnPage() {
       </ul>
 
       <section id="read" aria-labelledby="read-title" className="mt-12 scroll-mt-6">
-        <h2 id="read-title" className="font-display text-[1.6rem] leading-tight">
+        <h2 id="read-title" className="font-display text-[1.3rem] leading-tight">
           Read the scriptures
         </h2>
-        <ul className="mt-4 border-t-2 border-sandal-edge">
+        <ul className="mt-4 border-t border-sandal-edge">
           {TEXTS.map((t) => (
             <li key={t.id} className="border-b border-sandal-edge">
               <Link
@@ -57,10 +57,10 @@ export default function LearnPage() {
                 className="group flex items-center justify-between gap-4 py-5 pr-1 hover:bg-sandal-deep/40"
               >
                 <span>
-                  <span className="block font-display text-[1.45rem] leading-tight">{t.title}</span>
+                  <span className="block font-display text-[1.25rem] leading-tight">{t.title}</span>
                   <span className="mt-1 block text-[0.95rem] leading-snug text-kajal-soft">{t.description}</span>
                 </span>
-                <span aria-hidden="true" className="font-display text-[1.6rem] text-kesar-deep transition-transform group-hover:translate-x-1">
+                <span aria-hidden="true" className="font-display text-[1.3rem] text-kesar-deep transition-transform group-hover:translate-x-1">
                   →
                 </span>
               </Link>

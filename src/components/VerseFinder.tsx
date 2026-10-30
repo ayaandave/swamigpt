@@ -51,7 +51,7 @@ export function VerseFinder() {
           e.preventDefault();
           find(query);
         }}
-        className="flex items-center gap-2 rounded-full border-2 border-kajal bg-[#fbf3e2] p-1.5 pl-5 focus-within:border-kesar-deep"
+        className="flex items-center gap-2 rounded-full border border-kajal bg-sandal-deep p-1.5 pl-5 focus-within:border-kesar-deep"
       >
         <label htmlFor="verse-finder" className="sr-only">
           Find verses about
@@ -68,7 +68,7 @@ export function VerseFinder() {
           type="submit"
           disabled={busy || !query.trim()}
           aria-label="Find verses"
-          className="flex size-12 shrink-0 items-center justify-center rounded-full bg-kesar text-kajal hover:bg-kesar-deep hover:text-sandal disabled:bg-sandal-deep disabled:text-kajal-soft"
+          className="flex size-12 shrink-0 items-center justify-center rounded-full bg-kesar text-on-kesar hover:bg-kesar-deep hover:text-sandal disabled:bg-sandal-deep disabled:text-kajal-soft"
         >
           <SendIcon className="size-6" />
         </button>
@@ -81,7 +81,7 @@ export function VerseFinder() {
               key={idea}
               type="button"
               onClick={() => find(idea)}
-              className="min-h-11 rounded-full border-2 border-sandal-edge px-4 text-[0.95rem] hover:border-kesar"
+              className="min-h-11 rounded-xl border border-sandal-edge px-4 text-[0.95rem] hover:border-kesar"
             >
               {idea}
             </button>
@@ -121,7 +121,7 @@ export function VerseFinder() {
                   <li key={r.id}>
                     <Link
                       href={r.href}
-                      className="block rounded-2xl border-2 border-sandal-edge px-5 py-4 hover:border-kesar hover:bg-sandal-deep/60"
+                      className="block rounded-2xl border border-sandal-edge px-5 py-4 hover:border-kesar hover:bg-sandal-deep/60"
                     >
                       <span className="font-display text-[1.1rem] text-kesar-deep">{r.source}</span>
                       <span className="ml-2 text-[0.85rem] text-kajal-soft">{r.speaker ?? r.by}</span>

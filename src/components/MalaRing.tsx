@@ -64,28 +64,28 @@ export function MalaRing({
     >
       <defs>
         <radialGradient id={`bead-${id}`} cx="35%" cy="30%" r="75%">
-          <stop offset="0%" stopColor="#e0a368" />
-          <stop offset="45%" stopColor="#9a4f1e" />
-          <stop offset="100%" stopColor="#4a210b" />
+          <stop offset="0%" stopColor="#f6dc95" />
+          <stop offset="45%" stopColor="#c8961f" />
+          <stop offset="100%" stopColor="#5a4310" />
         </radialGradient>
         <radialGradient id={`empty-${id}`} cx="35%" cy="30%" r="75%">
-          <stop offset="0%" stopColor="#fbf3e2" />
-          <stop offset="100%" stopColor="#e8d2a8" />
+          <stop offset="0%" stopColor="var(--sandal-edge)" />
+          <stop offset="100%" stopColor="var(--sandal-edge)" />
         </radialGradient>
         <radialGradient id={`guru-${id}`} cx="35%" cy="30%" r="75%">
-          <stop offset="0%" stopColor="#e06a52" />
-          <stop offset="55%" stopColor="#a4281f" />
-          <stop offset="100%" stopColor="#5c120c" />
+          <stop offset="0%" stopColor="#f6dc95" />
+          <stop offset="55%" stopColor="#e3b341" />
+          <stop offset="100%" stopColor="#7a5a14" />
         </radialGradient>
         <radialGradient id={`glow-${id}`}>
-          <stop offset="0%" stopColor="#ffd38a" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#ffb347" stopOpacity="0" />
+          <stop offset="0%" stopColor="#f1d38a" stopOpacity="0.9" />
+          <stop offset="100%" stopColor="#e3b341" stopOpacity="0" />
         </radialGradient>
       </defs>
 
       <g ref={groupRef} style={{ transformOrigin: `${c}px ${c}px` }}>
         {/* the thread */}
-        <circle cx={c} cy={c} r={R} fill="none" stroke="#c98a2e" strokeWidth={Math.max(1.5, size * 0.006)} opacity="0.7" />
+        <circle cx={c} cy={c} r={R} fill="none" stroke="var(--sandal-edge)" strokeWidth={Math.max(1.5, size * 0.006)} opacity="0.7" />
 
         {Array.from({ length: total }, (_, i) => {
           const [x, y] = at(angleOf(i));
@@ -114,7 +114,7 @@ export function MalaRing({
                   fillOpacity={0}
                 />
               )}
-              {isFresh && <circle r={r} className="mala-ripple" fill="none" stroke="#ffb347" strokeWidth={2.5} />}
+              {isFresh && <circle r={r} className="mala-ripple" fill="none" stroke="#e3b341" strokeWidth={2.5} />}
               {(isFresh || (celebrate && earned)) && (
                 <circle
                   r={r * 2.4}
@@ -127,7 +127,7 @@ export function MalaRing({
                 <circle
                   r={r}
                   fill={earned ? `url(#bead-${id})` : `url(#empty-${id})`}
-                  stroke={earned ? "#3a1a08" : "#d6ba86"}
+                  stroke={earned ? "#5a4310" : "var(--sandal-edge)"}
                   strokeWidth={earned ? 0.8 : 1.5}
                 />
                 {earned && <circle cx={-r * 0.3} cy={-r * 0.35} r={r * 0.22} fill="#fff4e0" opacity="0.55" />}
@@ -137,7 +137,7 @@ export function MalaRing({
                   <circle
                     key={k}
                     r={Math.max(2.5, r * (k % 2 ? 0.26 : 0.36))}
-                    fill={k % 2 ? "#ffc65c" : "#d9741a"}
+                    fill={k % 2 ? "#f1d38a" : "#e3b341"}
                     className="mala-spark"
                     style={
                       {
@@ -153,10 +153,10 @@ export function MalaRing({
 
         {/* guru bead and tassel */}
         <g transform={`translate(${gx} ${gy})`}>
-          <circle r={r * 1.45} fill={`url(#guru-${id})`} stroke="#3a0d08" strokeWidth={0.8} />
+          <circle r={r * 1.45} fill={`url(#guru-${id})`} stroke="#5a4310" strokeWidth={0.8} />
           <circle cx={-r * 0.45} cy={-r * 0.5} r={r * 0.3} fill="#fff4e0" opacity="0.45" />
           <g className={`mala-tassel ${fresh !== null ? "mala-tassel-swing" : ""}`}>
-            <rect x={-r * 0.35} y={r * 1.35} width={r * 0.7} height={r * 0.7} rx={r * 0.15} fill="#9a4a0b" />
+            <rect x={-r * 0.35} y={r * 1.35} width={r * 0.7} height={r * 0.7} rx={r * 0.15} fill="#c8961f" />
             {[-0.5, -0.25, 0, 0.25, 0.5].map((dx) => (
               <line
                 key={dx}
@@ -164,7 +164,7 @@ export function MalaRing({
                 y1={r * 2}
                 x2={dx * r * 1.4}
                 y2={r * 4.6}
-                stroke="#d9741a"
+                stroke="#e3b341"
                 strokeWidth={Math.max(1.5, r * 0.22)}
                 strokeLinecap="round"
               />
@@ -174,15 +174,15 @@ export function MalaRing({
       </g>
 
       {/* count in the middle */}
-      <text x={c} y={c - size * 0.01} textAnchor="middle" className="font-display" fontSize={size * 0.14} fill="#2b1b10">
+      <text x={c} y={c - size * 0.01} textAnchor="middle" className="font-display" fontSize={size * 0.14} fill="var(--kajal)">
         {done.length}
-        <tspan fontSize={size * 0.07} fill="#5a4330">
+        <tspan fontSize={size * 0.07} fill="var(--kajal-soft)">
           {" "}
           / {total}
         </tspan>
       </text>
       {size >= 160 && (
-        <text x={c} y={c + size * 0.09} textAnchor="middle" fontSize={size * 0.05} fill="#5a4330">
+        <text x={c} y={c + size * 0.09} textAnchor="middle" fontSize={size * 0.05} fill="var(--kajal-soft)">
           {done.length === 1 ? "bead" : "beads"}
         </text>
       )}

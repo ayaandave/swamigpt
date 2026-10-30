@@ -31,23 +31,23 @@ export function MantraListen({ audio, title }: { audio: MantraAudio; title: stri
   };
 
   const switchClass = (on: boolean) =>
-    `min-h-11 rounded-full border-2 px-4 text-[0.95rem] font-semibold ${
+    `min-h-11 rounded-xl border px-4 text-[0.95rem] font-semibold ${
       on ? "border-kesar bg-kesar/15 text-kajal" : "border-sandal-edge text-kajal-soft hover:border-kajal"
     }`;
 
   return (
-    <section aria-label={`Listen to ${title}`} className="mt-8 rounded-[2rem] bg-sandal-deep px-6 py-6">
+    <section aria-label={`Listen to ${title}`} className="mt-8 rounded-2xl bg-sandal-deep px-6 py-6">
       <div className="flex items-center gap-5">
         <button
           type="button"
           onClick={toggle}
           aria-label={playing ? "Pause" : `Listen to ${title}`}
-          className="flex size-16 shrink-0 items-center justify-center rounded-full bg-kesar text-kajal hover:bg-kesar-deep hover:text-sandal"
+          className="flex size-16 shrink-0 items-center justify-center rounded-full bg-kesar text-on-kesar hover:bg-kesar-deep hover:text-sandal"
         >
           {playing ? <PauseIcon className="size-7" /> : <PlayIcon className="size-7" />}
         </button>
         <div>
-          <p className="font-display text-[1.3rem] leading-tight">Listen and chant along</p>
+          <p className="font-display text-[1.15rem] leading-tight">Listen and chant along</p>
           <p className="text-[0.95rem] text-kajal-soft">Close your eyes and let the sound carry you.</p>
         </div>
       </div>

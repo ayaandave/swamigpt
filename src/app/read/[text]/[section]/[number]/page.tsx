@@ -77,7 +77,7 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
       <Link href={`/read/${p.textId}/${p.section}`} className="inline-flex min-h-11 items-center text-[0.95rem] font-semibold text-kesar-deep hover:underline">
         ← {p.sectionName}
       </Link>
-      <h1 className="mt-3 font-display text-[2.2rem] leading-tight">{p.source}</h1>
+      <h1 className="mt-3 font-display text-[1.75rem] leading-tight">{p.source}</h1>
       {attribution(p) && <p className="mt-1 text-[1rem] text-kajal-soft">{attribution(p)}</p>}
 
       <div className="mt-6">
@@ -93,7 +93,7 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
         />
         <Link
           href={`/ask?ask=${encodeURIComponent(question)}&about=${encodeURIComponent(p.id)}`}
-          className="inline-flex min-h-14 items-center rounded-full border-2 border-kajal px-6 text-[1rem] font-semibold hover:bg-sandal-deep"
+          className="inline-flex min-h-14 items-center rounded-xl border border-kajal px-6 text-[1rem] font-semibold hover:bg-sandal-deep"
         >
           Ask the Swami about this
         </Link>
@@ -101,12 +101,12 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
 
       {firstThoughts && commentator && (
         <section className="mt-10">
-          <h2 className="font-display text-[1.5rem]">{commentator} explains</h2>
+          <h2 className="font-display text-[1.25rem]">{commentator} explains</h2>
           <div className="mt-3 flex max-w-[62ch] flex-col gap-4 text-[1.05rem] leading-[1.75]">
             <p>{firstThoughts}</p>
             {moreThoughts.length > 0 && (
               <details className="group">
-                <summary className="inline-flex min-h-12 cursor-pointer list-none items-center rounded-full border-2 border-sandal-edge px-5 font-semibold hover:border-kajal group-open:hidden">
+                <summary className="inline-flex min-h-12 cursor-pointer list-none items-center rounded-xl border border-sandal-edge px-5 font-semibold hover:border-kajal group-open:hidden">
                   Keep reading
                 </summary>
                 <div className="flex flex-col gap-4">
@@ -124,7 +124,7 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
         {prev ? (
           <Link
             href={passageHref(prev)}
-            className="flex min-h-16 flex-col justify-center rounded-2xl border-2 border-sandal-edge px-5 py-3 hover:border-kesar"
+            className="flex min-h-16 flex-col justify-center rounded-2xl border border-sandal-edge px-5 py-3 hover:border-kesar"
           >
             <span className="text-[0.85rem] text-kajal-soft">← Previous</span>
             <span className="font-display text-[1.15rem]">{shortRef(prev)}</span>
@@ -135,7 +135,7 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
         {next && (
           <Link
             href={passageHref(next)}
-            className="flex min-h-16 flex-col items-end justify-center rounded-2xl border-2 border-sandal-edge px-5 py-3 text-right hover:border-kesar"
+            className="flex min-h-16 flex-col items-end justify-center rounded-2xl border border-sandal-edge px-5 py-3 text-right hover:border-kesar"
           >
             <span className="text-[0.85rem] text-kajal-soft">Next →</span>
             <span className="font-display text-[1.15rem]">{shortRef(next)}</span>

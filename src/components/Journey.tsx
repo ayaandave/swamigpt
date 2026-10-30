@@ -19,14 +19,14 @@ export function Journey() {
   ];
   return (
     <section aria-labelledby="journey" className="mt-8">
-      <h2 id="journey" className="font-display text-[1.6rem] leading-tight">
+      <h2 id="journey" className="font-display text-[1.3rem] leading-tight">
         Your journey
       </h2>
       <dl className="mt-3 grid grid-cols-2 gap-3">
         {stats.map(([label, value]) => (
-          <div key={label} className="rounded-2xl border-2 border-sandal-edge px-4 py-3">
+          <div key={label} className="rounded-2xl border border-sandal-edge px-4 py-3">
             <dt className="text-[0.85rem] text-kajal-soft">{label}</dt>
-            <dd className="font-display text-[1.4rem] leading-tight">{value}</dd>
+            <dd className="font-display text-[1.2rem] leading-tight">{value}</dd>
           </div>
         ))}
       </dl>

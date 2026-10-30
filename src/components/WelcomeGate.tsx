@@ -24,26 +24,26 @@ export function WelcomeGate() {
     >
       <div className="arrive flex w-full max-w-md flex-col items-center">
         <Leaf size={120} />
-        <h1 id="welcome-title" className="mt-5 font-display text-[2.8rem] leading-[1.1]">
+        <h1 id="welcome-title" className="mt-5 font-display text-[2rem] leading-[1.1]">
           Namaste.
         </h1>
         <p className="mt-3 max-w-[26ch] text-[1.15rem] text-kajal-soft">
           A calm guide to life, the mind and the old teachings.
         </p>
         <div className="mt-10 w-full">
-          <p className="mb-4 font-display text-[1.3rem]">How old are you?</p>
+          <p className="mb-4 font-display text-[1.15rem]">How old are you?</p>
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               onClick={() => choose("under13")}
-              className="min-h-16 rounded-2xl border-2 border-sandal-edge px-4 text-[1.1rem] font-semibold hover:border-kesar hover:bg-sandal-deep"
+              className="min-h-16 rounded-2xl border border-sandal-edge px-4 text-[1.1rem] font-semibold hover:border-kesar hover:bg-sandal-deep"
             >
               Under 13
             </button>
             <button
               type="button"
               onClick={() => choose("13plus")}
-              className="min-h-16 rounded-2xl bg-kesar px-4 text-[1.1rem] font-semibold text-kajal hover:bg-kesar-deep hover:text-sandal"
+              className="min-h-16 rounded-2xl bg-kesar px-4 text-[1.1rem] font-semibold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
             >
               13 or older
             </button>

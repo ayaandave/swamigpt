@@ -61,9 +61,9 @@ export default async function SectionPage(props: PageProps<"/read/[text]/[sectio
           {t.short} · {label}
         </p>
       )}
-      <h1 className="mt-1 font-display text-[2.2rem] leading-tight">{s.name}</h1>
+      <h1 className="mt-1 font-display text-[1.75rem] leading-tight">{s.name}</h1>
 
-      <ol className="mt-8 border-t-2 border-sandal-edge">
+      <ol className="mt-8 border-t border-sandal-edge">
         {s.passages.map((p, i) => {
           // Upanishads and prose books have parts within a section: label each new one
           // ("Part 1.2", or the chapter title when there is one)
@@ -73,7 +73,7 @@ export default async function SectionPage(props: PageProps<"/read/[text]/[sectio
           return (
             <li key={p.id} className="border-b border-sandal-edge">
               {newPart && (
-                <h2 className="pt-8 pb-2 font-display text-[1.3rem] text-kajal-soft">
+                <h2 className="pt-8 pb-2 font-display text-[1.15rem] text-kajal-soft">
                   {p.partName ? `${part}. ${p.partName}` : `Part ${part}`}
                 </h2>
               )}

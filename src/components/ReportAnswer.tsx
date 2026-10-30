@@ -68,10 +68,10 @@ export function ReportAnswer({ question, answer, depth }: { question: string; an
         e.preventDefault();
         void send();
       }}
-      className="flex flex-col gap-4 rounded-2xl border-2 border-sandal-edge px-5 py-5"
+      className="flex flex-col gap-4 rounded-2xl border border-sandal-edge px-5 py-5"
     >
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-2 font-display text-[1.2rem]">What&apos;s wrong with this answer?</legend>
+        <legend className="mb-2 font-display text-[1.1rem]">What&apos;s wrong with this answer?</legend>
         {REASONS.map((r) => (
           <label
             key={r.id}
@@ -95,7 +95,7 @@ export function ReportAnswer({ question, answer, depth }: { question: string; an
           value={note}
           onChange={(e) => setNote(e.target.value.slice(0, 500))}
           rows={3}
-          className="rounded-xl border-2 border-sandal-edge bg-white/60 px-4 py-3 text-[1.05rem] focus:border-kesar focus:outline-none"
+          className="rounded-xl border border-sandal-edge bg-white/60 px-4 py-3 text-[1.05rem] focus:border-kesar focus:outline-none"
         />
       </label>
       <p className="text-[0.9rem] text-kajal-soft">
@@ -107,14 +107,14 @@ export function ReportAnswer({ question, answer, depth }: { question: string; an
         <button
           type="submit"
           disabled={!reason || state === "sending"}
-          className="min-h-12 rounded-full bg-kesar px-6 text-[1rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal disabled:opacity-50"
+          className="min-h-12 rounded-xl bg-kesar px-6 text-[1rem] font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal disabled:opacity-50"
         >
           {state === "sending" ? "Sending…" : "Send report"}
         </button>
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="min-h-12 rounded-full border-2 border-sandal-edge px-6 text-[1rem] font-semibold hover:border-kajal"
+          className="min-h-12 rounded-xl border border-sandal-edge px-6 text-[1rem] font-semibold hover:border-kajal"
         >
           Cancel
         </button>

@@ -59,9 +59,9 @@ export function MalaCelebration({ total, done, fresh, onNext, onClose }: Props) 
           />
         ))}
 
-      <div className="arrive relative flex w-full max-w-sm flex-col items-center rounded-[2.5rem] bg-sandal px-6 pt-6 pb-7 text-center shadow-2xl">
+      <div className="arrive relative flex w-full max-w-sm flex-col items-center rounded-2xl bg-sandal px-6 pt-6 pb-7 text-center shadow-2xl">
         <MalaRing total={total} done={done} fresh={fresh} celebrate={complete} size={250} />
-        <h2 id="bead-title" className="mt-1 font-display text-[1.8rem] leading-tight">
+        <h2 id="bead-title" className="mt-1 font-display text-[1.5rem] leading-tight">
           {complete ? "Your mala is complete" : "A new bead for your mala"}
         </h2>
         <p className="mt-2 text-[1.05rem] text-kajal-soft">
@@ -75,7 +75,7 @@ export function MalaCelebration({ total, done, fresh, onNext, onClose }: Props) 
               ref={primary}
               type="button"
               onClick={onNext}
-              className="min-h-14 rounded-full bg-kesar px-7 text-[1.05rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+              className="min-h-14 rounded-xl bg-kesar px-7 text-[1.05rem] font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
             >
               Next lesson
             </button>
@@ -84,7 +84,7 @@ export function MalaCelebration({ total, done, fresh, onNext, onClose }: Props) 
             ref={onNext && !complete ? undefined : primary}
             type="button"
             onClick={onClose}
-            className="min-h-14 rounded-full border-2 border-kajal px-7 text-[1.05rem] font-semibold hover:bg-kajal hover:text-sandal"
+            className="min-h-14 rounded-xl border border-kajal px-7 text-[1.05rem] font-semibold hover:bg-kajal hover:text-sandal"
           >
             {complete ? "Close" : "Stay here"}
           </button>

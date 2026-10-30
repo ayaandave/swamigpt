@@ -21,10 +21,10 @@ export default function AccountPage() {
     return (
       <div className="flex flex-col items-center pt-12 text-center">
         <Leaf size={96} />
-        <h1 className="mt-4 font-display text-[2.2rem]">You&apos;re not signed in</h1>
+        <h1 className="mt-4 font-display text-[1.75rem]">You&apos;re not signed in</h1>
         <Link
           href="/login"
-          className="mt-6 flex min-h-14 items-center rounded-full bg-kesar px-8 text-[1.05rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+          className="mt-6 flex min-h-14 items-center rounded-xl bg-kesar px-8 text-[1.05rem] font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
         >
           Sign in
         </Link>
@@ -42,13 +42,13 @@ export default function AccountPage() {
 
   return (
     <div className="pt-10">
-      <h1 className="font-display text-[2.4rem] leading-tight">Your account</h1>
-      <div className="mt-6 rounded-[2rem] bg-sandal-deep px-7 py-6">
+      <h1 className="font-display text-[1.75rem] leading-tight">Your account</h1>
+      <div className="mt-6 rounded-2xl bg-sandal-deep px-7 py-6">
         <div className="flex items-center gap-4">
           <AvatarBadge fallback={(user.email ?? "?")[0].toUpperCase()} size={72} />
           <div className="min-w-0">
             <p className="text-[0.9rem] font-semibold text-kajal-soft">Signed in as</p>
-            <p className="mt-1 break-all font-display text-[1.4rem]">{user.email}</p>
+            <p className="mt-1 break-all font-display text-[1.2rem]">{user.email}</p>
           </div>
         </div>
         <p className="mt-3 text-[0.95rem] text-kajal-soft">With SwamiGPT since {since}</p>
@@ -61,7 +61,7 @@ export default function AccountPage() {
         {plusSold() && (
           <Link
             href="/plus"
-            className="flex min-h-16 items-center justify-between rounded-2xl border-2 border-sandal-edge px-5 font-semibold hover:border-kajal"
+            className="flex min-h-16 items-center justify-between rounded-2xl border border-sandal-edge px-5 font-semibold hover:border-kajal"
           >
             <span>
               SwamiGPT Plus
@@ -74,20 +74,20 @@ export default function AccountPage() {
         )}
         <Link
           href="/account/history"
-          className="flex min-h-16 items-center justify-between rounded-2xl border-2 border-sandal-edge px-5 font-semibold hover:border-kajal"
+          className="flex min-h-16 items-center justify-between rounded-2xl border border-sandal-edge px-5 font-semibold hover:border-kajal"
         >
           Your conversations <span aria-hidden="true">→</span>
         </Link>
         <Link
           href="/settings"
-          className="flex min-h-16 items-center justify-between rounded-2xl border-2 border-sandal-edge px-5 font-semibold hover:border-kajal"
+          className="flex min-h-16 items-center justify-between rounded-2xl border border-sandal-edge px-5 font-semibold hover:border-kajal"
         >
           Voice &amp; settings <span aria-hidden="true">→</span>
         </Link>
         <button
           type="button"
           onClick={signOut}
-          className="min-h-14 rounded-full border-2 border-kajal px-7 text-[1.05rem] font-semibold hover:bg-kajal hover:text-sandal"
+          className="min-h-14 rounded-xl border border-kajal px-7 text-[1.05rem] font-semibold hover:bg-kajal hover:text-sandal"
         >
           Sign out
         </button>

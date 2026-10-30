@@ -68,9 +68,9 @@ async function Shared({ params }: Pick<PageProps<"/s/[id]">, "params">) {
   if (!a) {
     return (
       <div className="flex flex-col items-start gap-4 pt-10">
-        <h1 className="font-display text-[2rem] leading-tight">This answer isn&apos;t here.</h1>
+        <h1 className="font-display text-[1.5rem] leading-tight">This answer isn&apos;t here.</h1>
         <p className="text-[1.1rem] text-kajal-soft">The link may be mistyped, or it was just shared. Try again in a moment.</p>
-        <Link href="/ask" className="flex min-h-14 items-center rounded-full bg-kesar px-7 font-bold text-kajal">
+        <Link href="/ask" className="flex min-h-14 items-center rounded-xl bg-kesar px-7 font-bold text-on-kesar">
           Ask your own question
         </Link>
       </div>
@@ -79,7 +79,7 @@ async function Shared({ params }: Pick<PageProps<"/s/[id]">, "params">) {
   return (
     <article className="flex flex-col gap-6 pt-8">
       <p className="text-[0.85rem] font-bold tracking-[0.16em] text-kesar-deep uppercase">Shared from SwamiGPT</p>
-      <h1 className="border-l-4 border-kesar pl-5 font-display text-[1.7rem] leading-snug">{a.question}</h1>
+      <h1 className="border-l-4 border-kesar pl-5 font-display text-[1.4rem] leading-snug">{a.question}</h1>
       <div className="flex flex-col items-start gap-3 sm:flex-row sm:gap-4">
         <div className="shrink-0 sm:pt-1">
           <Leaf size={56} />
@@ -96,7 +96,7 @@ async function Shared({ params }: Pick<PageProps<"/s/[id]">, "params">) {
             </div>
           ))}
           {a.practice && (
-            <Link href={a.practice.href} className="mt-2 rounded-2xl border-2 border-sandal-edge px-5 py-4 hover:border-kajal">
+            <Link href={a.practice.href} className="mt-2 rounded-2xl border border-sandal-edge px-5 py-4 hover:border-kajal">
               <span className="block font-semibold">Try this: {a.practice.title}</span>
               <span className="block text-[1rem] text-kajal-soft">{a.practice.why}</span>
             </Link>
@@ -104,14 +104,14 @@ async function Shared({ params }: Pick<PageProps<"/s/[id]">, "params">) {
         </div>
       </div>
 
-      <section className="mt-6 flex flex-col items-start gap-3 rounded-[2rem] bg-sandal-deep p-6">
-        <h2 className="font-display text-[1.5rem] leading-tight">Have a question of your own?</h2>
+      <section className="mt-6 flex flex-col items-start gap-3 rounded-2xl bg-sandal-deep p-6">
+        <h2 className="font-display text-[1.25rem] leading-tight">Have a question of your own?</h2>
         <p className="text-[1.05rem] text-kajal-soft">
           SwamiGPT answers from real Hindu scripture, in words you&apos;ll actually understand. Free.
         </p>
         <Link
           href="/ask"
-          className="flex min-h-14 items-center rounded-full bg-kesar px-7 text-[1.05rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+          className="flex min-h-14 items-center rounded-xl bg-kesar px-7 text-[1.05rem] font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
         >
           Ask SwamiGPT
         </Link>

@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import { Atkinson_Hyperlegible_Next, Tiro_Devanagari_Sanskrit } from "next/font/google";
+import { Geist, Geist_Mono, Tiro_Devanagari_Sanskrit } from "next/font/google";
 import { settingsScript } from "@/lib/settings";
 import { FILM_SEEN_SCRIPT } from "@/lib/film";
 import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/seo";
@@ -18,11 +18,8 @@ const tiro = Tiro_Devanagari_Sanskrit({
   subsets: ["latin", "devanagari"],
 });
 
-const atkinson = Atkinson_Hyperlegible_Next({
-  variable: "--font-atkinson",
-  subsets: ["latin", "latin-ext"],
-  adjustFontFallback: false,
-});
+const geist = Geist({ variable: "--font-geist", subsets: ["latin", "latin-ext"] });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.swamigpt.com"),
@@ -33,13 +30,16 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f2e3c6",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    { media: "(prefers-color-scheme: light)", color: "#fbfbfa" },
+  ],
   viewportFit: "cover", // lets the safe-area insets reach under the iPhone notch and home bar
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${tiro.variable} ${atkinson.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${tiro.variable} ${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: settingsScript }} />
         <script dangerouslySetInnerHTML={{ __html: FILM_SEEN_SCRIPT }} />

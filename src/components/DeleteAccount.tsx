@@ -37,7 +37,7 @@ export function DeleteAccount() {
       <button
         type="button"
         onClick={() => setAsking(true)}
-        className="min-h-12 self-start rounded-full px-1 text-[0.95rem] font-semibold text-kajal-soft underline underline-offset-4 hover:text-kajal"
+        className="min-h-12 self-start rounded-xl px-1 text-[0.95rem] font-semibold text-kajal-soft underline underline-offset-4 hover:text-kajal"
       >
         Delete my account
       </button>
@@ -45,8 +45,8 @@ export function DeleteAccount() {
   }
 
   return (
-    <section aria-label="Delete your account" className="rounded-[2rem] border-2 border-kesar-deep px-6 py-5">
-      <p className="font-display text-[1.3rem] leading-snug">Delete your account?</p>
+    <section aria-label="Delete your account" className="rounded-2xl border border-kesar-deep px-6 py-5">
+      <p className="font-display text-[1.15rem] leading-snug">Delete your account?</p>
       <p className="mt-2 text-[1rem] leading-[1.6]">
         This deletes your sign-in, your conversations, your mala progress and your settings, for good. It can&apos;t be
         undone.
@@ -70,14 +70,14 @@ export function DeleteAccount() {
           type="button"
           disabled={busy}
           onClick={() => void remove(problem === "plus")}
-          className="min-h-12 rounded-full bg-kesar-deep px-6 font-bold text-sandal hover:bg-kajal disabled:opacity-60"
+          className="min-h-12 rounded-xl bg-kesar-deep px-6 font-bold text-sandal hover:bg-kajal disabled:opacity-60"
         >
           {busy ? "Deleting…" : problem === "plus" ? "Delete anyway" : "Yes, delete everything"}
         </button>
         <button
           type="button"
           onClick={() => setAsking(false)}
-          className="min-h-12 rounded-full border-2 border-sandal-edge px-6 font-semibold hover:border-kajal"
+          className="min-h-12 rounded-xl border border-sandal-edge px-6 font-semibold hover:border-kajal"
         >
           Keep my account
         </button>

@@ -19,8 +19,8 @@ export function PracticeStreak({ className = "" }: { className?: string }) {
         : `${total} ${total === 1 ? "day" : "days"} of practice so far`;
 
   return (
-    <section aria-label="Your practice" className={`rounded-[1.75rem] bg-sandal-deep px-5 py-4 ${className}`}>
-      <p className="flex items-center gap-2 font-display text-[1.25rem] leading-tight">
+    <section aria-label="Your practice" className={`rounded-2xl bg-sandal-deep px-5 py-4 ${className}`}>
+      <p className="flex items-center gap-2 font-display text-[1.1rem] leading-tight">
         <Leaf size={26} />
         {line}
       </p>
@@ -28,7 +28,7 @@ export function PracticeStreak({ className = "" }: { className?: string }) {
         {week.map((d, i) => (
           <li key={i} className="flex flex-col items-center gap-1">
             <span
-              className={`size-5 rounded-full ${d.done ? "bg-kesar" : "border-2 border-sandal-edge"} ${d.today ? "ring-2 ring-kajal/40 ring-offset-2 ring-offset-sandal-deep" : ""}`}
+              className={`size-5 rounded-full ${d.done ? "bg-kesar" : "border border-sandal-edge"} ${d.today ? "ring-2 ring-kajal/40 ring-offset-2 ring-offset-sandal-deep" : ""}`}
               aria-label={d.done ? "practised" : "not yet"}
             />
             <span className="text-[0.75rem] text-kajal-soft">{d.label}</span>

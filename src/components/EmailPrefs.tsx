@@ -59,7 +59,7 @@ export function EmailPrefs() {
         aria-checked={on}
         aria-label={label}
         onClick={() => void set(change(!on))}
-        className={`min-h-12 shrink-0 rounded-full px-6 font-semibold ${on ? "bg-tulsi text-sandal" : "border-2 border-kajal"}`}
+        className={`min-h-12 shrink-0 rounded-xl px-6 font-semibold ${on ? "bg-tulsi text-sandal" : "border border-kajal"}`}
       >
         {on ? "On" : "Off"}
       </button>
@@ -68,7 +68,7 @@ export function EmailPrefs() {
 
   return (
     <section className="mt-12">
-      <h2 className="font-display text-[1.6rem]">Emails</h2>
+      <h2 className="font-display text-[1.3rem]">Emails</h2>
       {prefs.child ? (
         <p className="mt-1 text-[1rem] text-kajal-soft">Accounts for children under 13 don&apos;t get emails beyond the welcome.</p>
       ) : (

@@ -25,7 +25,7 @@ export function ExampleAnswer() {
       <p id="example" className="text-[0.85rem] font-semibold uppercase tracking-[0.14em] text-kesar-deep">
         A real answer from SwamiGPT
       </p>
-      <p className="mt-3 border-l-4 border-kesar pl-5 font-display text-[1.6rem] leading-snug sm:text-[1.9rem]">
+      <p className="mt-3 border-l-4 border-kesar pl-5 font-display text-[1.3rem] leading-snug sm:text-[1.9rem]">
         &ldquo;{QUESTION}&rdquo;
       </p>
       <div className="mt-6 flex max-w-[62ch] flex-col gap-4 text-[1.1rem] leading-[1.75]">
@@ -47,7 +47,7 @@ export function ExampleAnswer() {
       <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
         <Link
           href="/ask"
-          className="inline-flex min-h-14 items-center rounded-full bg-kesar px-7 text-[1.05rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+          className="inline-flex min-h-14 items-center rounded-xl bg-kesar px-7 text-[1.05rem] font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
         >
           Ask your own question
         </Link>

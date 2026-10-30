@@ -50,7 +50,7 @@ export default function LoginPage() {
     return (
       <div className="flex flex-col items-center pt-12 text-center">
         <Leaf size={96} />
-        <h1 className="mt-4 font-display text-[2.2rem]">Accounts are coming soon</h1>
+        <h1 className="mt-4 font-display text-[1.75rem]">Accounts are coming soon</h1>
         <p className="mt-2 max-w-[34ch] text-[1.1rem] text-kajal-soft">
           You can keep using SwamiGPT without one. Your progress is saved on this device.
         </p>
@@ -62,14 +62,14 @@ export default function LoginPage() {
     return (
       <div className="mx-auto flex max-w-md flex-col items-center pt-12 text-center">
         <Leaf size={96} />
-        <h1 className="mt-4 font-display text-[2.2rem] leading-tight">Ask a grown-up</h1>
+        <h1 className="mt-4 font-display text-[1.75rem] leading-tight">Ask a grown-up</h1>
         <p className="mt-3 max-w-[32ch] text-[1.15rem] leading-relaxed text-kajal-soft">
           A parent or guardian needs to sign in or make the account for you. You can keep using SwamiGPT without one.
         </p>
         <button
           type="button"
           onClick={() => setParent(true)}
-          className="mt-8 min-h-14 rounded-full bg-kesar px-8 text-[1.05rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+          className="mt-8 min-h-14 rounded-xl bg-kesar px-8 text-[1.05rem] font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
         >
           I&apos;m a parent or guardian
         </button>
@@ -131,7 +131,7 @@ export default function LoginPage() {
     return (
       <div className="flex flex-col items-center pt-12 text-center">
         <Leaf size={96} />
-        <h1 className="mt-4 font-display text-[2.2rem]">Check your email</h1>
+        <h1 className="mt-4 font-display text-[1.75rem]">Check your email</h1>
         <p className="mt-2 max-w-[34ch] text-[1.15rem] leading-relaxed text-kajal-soft">
           {sent === "confirm"
             ? `We sent a link to ${email}. Tap it to finish creating your account.`
@@ -140,7 +140,7 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={() => switchTo("signin")}
-          className="mt-8 min-h-14 rounded-full border-2 border-kajal px-7 text-[1.05rem] font-semibold hover:bg-kajal hover:text-sandal"
+          className="mt-8 min-h-14 rounded-xl border border-kajal px-7 text-[1.05rem] font-semibold hover:bg-kajal hover:text-sandal"
         >
           Back to sign in
         </button>
@@ -151,7 +151,7 @@ export default function LoginPage() {
   return (
     <div className="mx-auto flex max-w-md flex-col items-center pt-8 text-center">
       <Leaf size={80} />
-      <h1 className="mt-3 font-display text-[2.2rem] leading-tight">{TITLES[mode]}</h1>
+      <h1 className="mt-3 font-display text-[1.75rem] leading-tight">{TITLES[mode]}</h1>
       <p className="mt-2 max-w-[32ch] text-[1.05rem] text-kajal-soft">
         {mode === "forgot"
           ? "Enter your email and we'll send you a link to choose a new password."
@@ -173,7 +173,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => oauth("google")}
-              className="flex min-h-14 items-center justify-center gap-3 rounded-full border-2 border-kajal bg-[#fbf3e2] text-[1.05rem] font-semibold hover:bg-sandal-deep"
+              className="flex min-h-14 items-center justify-center gap-3 rounded-full border border-kajal bg-sandal-deep text-[1.05rem] font-semibold hover:bg-sandal-deep"
             >
               <GoogleLogo /> Continue with Google
             </button>
@@ -193,7 +193,7 @@ export default function LoginPage() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="min-h-14 rounded-2xl border-2 border-sandal-edge bg-[#fbf3e2] px-4 text-[1.15rem] outline-none focus:border-kesar-deep"
+            className="min-h-14 rounded-2xl border border-sandal-edge bg-sandal-deep px-4 text-[1.15rem] outline-none focus:border-kesar-deep"
           />
         </label>
         {mode !== "forgot" && (
@@ -210,7 +210,7 @@ export default function LoginPage() {
                 </button>
               )}
             </span>
-            <span className="flex items-center rounded-2xl border-2 border-sandal-edge bg-[#fbf3e2] focus-within:border-kesar-deep">
+            <span className="flex items-center rounded-2xl border border-sandal-edge bg-sandal-deep focus-within:border-kesar-deep">
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -243,7 +243,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={busy}
-          className="mt-2 min-h-14 rounded-full bg-kesar text-[1.1rem] font-bold text-kajal hover:bg-kesar-deep hover:text-sandal disabled:opacity-60"
+          className="mt-2 min-h-14 rounded-full bg-kesar text-[1.1rem] font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal disabled:opacity-60"
         >
           {busy ? "Please wait…" : mode === "signin" ? "Sign in" : mode === "signup" ? "Create account" : "Send reset link"}
         </button>

@@ -3,12 +3,14 @@
 import { createLocalStore } from "./store";
 
 export type TextSize = "regular" | "large" | "larger";
+export type Theme = "system" | "dark" | "light";
 export type VoiceId = "swamiji" | "amma" | "sakshi";
 export type Depth = "simpler" | "deeper";
 export type AgeGroup = "under13" | "13plus";
 
 export type Settings = {
   textSize: TextSize;
+  theme: Theme; // "system" follows the phone
   voice: VoiceId;
   speed: number; // 0.65 – 0.95
   depth: Depth;
@@ -22,6 +24,7 @@ const KEY = "swamigpt.settings";
 
 const store = createLocalStore<Settings>(KEY, {
   textSize: "regular",
+  theme: "system",
   voice: "swamiji",
   speed: 0.8,
   depth: "simpler",
@@ -33,7 +36,7 @@ const store = createLocalStore<Settings>(KEY, {
 
 // Runs in <head> before first paint so the chosen text size never flickers
 // and returning visitors never see the welcome gate flash.
-export const settingsScript = `try{var s=JSON.parse(localStorage.getItem("${KEY}")||"{}"),d=document.documentElement.dataset;if(s.textSize&&s.textSize!=="regular")d.text=s.textSize;if(s.ageGroup)d.welcomed="1"}catch(e){}`;
+export const settingsScript = `try{var s=JSON.parse(localStorage.getItem("${KEY}")||"{}"),d=document.documentElement.dataset;if(s.textSize&&s.textSize!=="regular")d.text=s.textSize;if(s.theme==="dark"||s.theme==="light")d.theme=s.theme;if(s.ageGroup)d.welcomed="1"}catch(e){}`;
 
 export const getSettings = store.get;
 export const onSettingsChange = store.onChange;
@@ -47,6 +50,8 @@ function update(patch: Partial<Settings>) {
   if (next.textSize === "regular") delete document.documentElement.dataset.text;
   else document.documentElement.dataset.text = next.textSize;
   if (next.ageGroup) document.documentElement.dataset.welcomed = "1";
+  if (next.theme === "dark" || next.theme === "light") document.documentElement.dataset.theme = next.theme;
+  else delete document.documentElement.dataset.theme;
   store.set(next);
 }
 

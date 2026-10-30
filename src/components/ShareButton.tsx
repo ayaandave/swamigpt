@@ -94,7 +94,7 @@ export function ShareButton({ question, answer }: { question: string; answer: Sw
     <button
       type="button"
       onClick={() => void share()}
-      className="inline-flex min-h-14 items-center gap-2 rounded-full border-2 border-sandal-edge px-6 text-[1rem] font-semibold hover:border-kajal"
+      className="inline-flex min-h-14 items-center gap-2 rounded-xl border border-sandal-edge px-6 text-[1rem] font-semibold hover:border-kajal"
     >
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 13v5.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V13" />

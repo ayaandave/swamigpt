@@ -43,11 +43,11 @@ export function LessonAsk({ lesson }: { lesson: LessonContext }) {
   };
 
   return (
-    <section className="mt-8 overflow-hidden rounded-[2rem] border-2 border-sandal-edge bg-[#fbf3e2]">
+    <section className="mt-8 overflow-hidden rounded-2xl border border-sandal-edge bg-sandal-deep">
       <div className="flex items-center gap-3 px-5 pt-4">
         <Leaf size={34} state={thinking ? "thinking" : "idle"} />
         <div>
-          <h2 className="font-display text-[1.2rem] leading-snug">Ask the Swami about this lesson</h2>
+          <h2 className="font-display text-[1.1rem] leading-snug">Ask the Swami about this lesson</h2>
           <p className="text-[0.9rem] text-kajal-soft">A quick question while you read</p>
         </div>
       </div>
@@ -60,7 +60,7 @@ export function LessonAsk({ lesson }: { lesson: LessonContext }) {
                 key={q}
                 type="button"
                 onClick={() => ask(q)}
-                className="min-h-11 rounded-full border-2 border-sandal-edge bg-sandal px-4 text-[0.95rem] hover:border-kesar"
+                className="min-h-11 rounded-xl border border-sandal-edge bg-sandal px-4 text-[0.95rem] hover:border-kesar"
               >
                 {q}
               </button>
@@ -71,7 +71,7 @@ export function LessonAsk({ lesson }: { lesson: LessonContext }) {
         <div aria-live="polite" className="flex flex-col gap-8">
           {turns.map((t) => (
             <article key={t.id} className="flex flex-col gap-4">
-              <p className="border-l-4 border-kesar pl-4 font-display text-[1.2rem] leading-snug">{t.question}</p>
+              <p className="border-l-4 border-kesar pl-4 font-display text-[1.1rem] leading-snug">{t.question}</p>
               {!t.answer ? (
                 <p className="italic text-kajal-soft">Swami is reflecting…</p>
               ) : (
@@ -86,7 +86,7 @@ export function LessonAsk({ lesson }: { lesson: LessonContext }) {
             e.preventDefault();
             void ask(draft);
           }}
-          className={`flex items-end gap-2 rounded-[1.5rem] border-2 border-kajal bg-sandal p-1.5 focus-within:border-kesar-deep ${
+          className={`flex items-end gap-2 rounded-[1.5rem] border border-kajal bg-sandal p-1.5 focus-within:border-kesar-deep ${
             turns.length ? "mt-6" : ""
           }`}
         >
@@ -112,7 +112,7 @@ export function LessonAsk({ lesson }: { lesson: LessonContext }) {
             type="submit"
             disabled={thinking || !draft.trim()}
             aria-label="Ask"
-            className="flex size-12 shrink-0 items-center justify-center rounded-full bg-kesar text-kajal hover:bg-kesar-deep hover:text-sandal disabled:bg-sandal-deep disabled:text-kajal-soft"
+            className="flex size-12 shrink-0 items-center justify-center rounded-full bg-kesar text-on-kesar hover:bg-kesar-deep hover:text-sandal disabled:bg-sandal-deep disabled:text-kajal-soft"
           >
             <SendIcon className="size-6" />
           </button>
@@ -131,7 +131,7 @@ function InlineAnswer({ answer }: { answer: SwamiAnswer }) {
         </p>
       ))}
       {answer.help && (
-        <a href={answer.help.href} className="flex min-h-14 flex-col justify-center rounded-2xl bg-tulsi px-5 py-3 text-sandal">
+        <a href={answer.help.href} className="flex min-h-14 flex-col justify-center rounded-2xl bg-sandal-deep border border-kesar/40 px-5 py-3 text-kajal">
           <span className="text-[0.85rem]">{answer.help.text}</span>
           <span className="text-[1.1rem] font-bold">{answer.help.label}</span>
         </a>
@@ -139,7 +139,7 @@ function InlineAnswer({ answer }: { answer: SwamiAnswer }) {
       {answer.signInPrompt && (
         <Link
           href="/login"
-          className="flex min-h-12 w-fit items-center rounded-full bg-kesar px-6 font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+          className="flex min-h-12 w-fit items-center rounded-xl bg-kesar px-6 font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
         >
           Sign in for more questions
         </Link>
@@ -147,7 +147,7 @@ function InlineAnswer({ answer }: { answer: SwamiAnswer }) {
       {answer.plusPrompt && (
         <Link
           href="/plus"
-          className="flex min-h-12 w-fit items-center rounded-full bg-kesar px-6 font-bold text-kajal hover:bg-kesar-deep hover:text-sandal"
+          className="flex min-h-12 w-fit items-center rounded-xl bg-kesar px-6 font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
         >
           See SwamiGPT Plus
         </Link>
@@ -162,7 +162,7 @@ function InlineAnswer({ answer }: { answer: SwamiAnswer }) {
       {answer.practice && (
         <Link
           href={answer.practice.href}
-          className="flex min-h-14 flex-col justify-center rounded-2xl border-2 border-sandal-edge px-5 py-3 hover:border-kesar"
+          className="flex min-h-14 flex-col justify-center rounded-2xl border border-sandal-edge px-5 py-3 hover:border-kesar"
         >
           <span className="text-[0.85rem] font-semibold text-kesar-deep">Try this next</span>
           <span className="font-display text-[1.1rem]">{answer.practice.title}</span>
