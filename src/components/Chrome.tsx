@@ -52,7 +52,7 @@ export function Header() {
                   href={href}
                   aria-current={active ? "page" : undefined}
                   className={`flex min-h-[44px] items-center rounded-xl px-4 text-[16px] font-semibold ${
-                    active ? "text-kesar" : "text-kajal-soft hover:text-kajal"
+                    active ? "text-kesar-deep" : "text-kajal-soft hover:text-kajal"
                   }`}
                 >
                   {label}
@@ -105,7 +105,7 @@ export function BottomNav() {
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={`flex min-h-16 flex-col items-center justify-center gap-1 text-[0.75rem] font-medium ${
-                  active ? "text-kesar" : "text-kajal-soft hover:text-kajal"
+                  active ? "text-kesar-deep" : "text-kajal-soft hover:text-kajal"
                 }`}
               >
                 <Icon className="size-6" />

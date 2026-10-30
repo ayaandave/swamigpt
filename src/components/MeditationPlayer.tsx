@@ -9,7 +9,6 @@ import { speak, speechProgress, stopSpeaking } from "@/lib/speak";
 import { playChime } from "@/lib/sounds";
 import { useSettings, type VoiceId } from "@/lib/settings";
 import { VOICES } from "@/lib/voices";
-import { Leaf } from "./Leaf";
 import { BackIcon, PauseIcon, PlayIcon } from "./icons";
 
 // Where a line tells you to breathe in or out, so the label and ring change as the voice says it
@@ -214,71 +213,76 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
     if ("mediaSession" in navigator) navigator.mediaSession.playbackState = running ? "playing" : "paused";
   }, [running]);
 
-  // The ring fills as you breathe in and empties as you breathe out; otherwise it rests
-  const ring = !running
-    ? "scale-[.62] duration-1000"
+  // The orb grows as you breathe in and settles as you breathe out; otherwise it rests
+  const orb = !running
+    ? "scale-[.78] duration-1000"
     : breath === "in"
       ? "scale-100 duration-[4000ms]"
       : breath === "out"
-        ? "scale-[.62] duration-[6000ms]"
-        : "scale-[.8] duration-[3000ms]";
+        ? "scale-[.78] duration-[6000ms]"
+        : "scale-[.88] duration-[3000ms]";
+  const state = running
+    ? breath === "in"
+      ? "Breathe in"
+      : breath === "out"
+        ? "Breathe out"
+        : "Breathe gently"
+    : done
+      ? "Om shanti"
+      : elapsed
+        ? "Paused"
+        : "When you are ready";
+
+  // A small segmented control, like the mockup's voice picker
+  const seg = (on: boolean) =>
+    `flex min-h-10 flex-1 cursor-pointer items-center justify-center rounded-lg px-3 text-center text-[0.85rem] font-medium has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-kesar ${
+      on ? "bg-night-soft text-kajal" : "text-kajal-soft hover:text-kajal"
+    }`;
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-night pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)] text-kajal">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(227,179,65,.12),transparent_60%)]"
-      />
+    <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-sandal pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)] text-kajal">
       <div className="relative mx-auto flex w-full max-w-3xl items-center justify-between px-4 pt-4 sm:px-6">
         <Link
           href="/meditate"
-          className="flex min-h-12 items-center gap-1 rounded-full border border-kajal/25 pl-2 pr-5 font-semibold hover:border-kajal/60"
+          className="flex min-h-11 items-center gap-1 rounded-full border border-sandal-edge pl-2 pr-4 text-[0.9rem] font-medium hover:border-kajal-soft"
         >
-          <BackIcon className="size-6" />
+          <BackIcon className="size-5" />
           End
         </Link>
-        <h1 className="font-display text-[1.1rem]">{meditation.title}</h1>
+        <span className="font-mono text-[0.75rem] text-kajal-soft">{meditation.minutes} min</span>
       </div>
 
-      <div className="relative flex flex-1 flex-col items-center justify-center px-4 py-4 text-center sm:py-8">
-        <div className="relative flex size-[13rem] items-center justify-center sm:size-[20rem]">
-          <div
-            className={`absolute inset-0 rounded-full border border-flame/40 bg-flame/10 transition-transform ease-in-out ${ring}`}
-          />
-          <Leaf size={110} onDark />
+      <div className="relative flex flex-1 flex-col items-center justify-center px-4 py-6 text-center">
+        <p className="font-mono text-[0.75rem] text-kajal-soft">{meditation.title}</p>
+        <h1 className="mt-1 text-[1.4rem] font-medium tracking-tight">{state}</h1>
+
+        <div className="mt-10 flex size-[12rem] items-center justify-center sm:size-[15rem]" aria-hidden="true">
+          <div className={`orb orb-still size-full ${orb}`} />
         </div>
 
-        <p className="mt-4 min-h-[2.6rem] font-display text-[1.5rem] leading-tight text-flame">
-          {running ? (breath === "in" ? "Breathe in" : breath === "out" ? "Breathe out" : "Breathe gently") : done ? "Om shanti" : elapsed ? "Paused" : "When you are ready"}
-        </p>
-        <p className="mt-3 min-h-[5.5rem] max-w-[36ch] text-[1.15rem] leading-relaxed text-kajal-soft" aria-live="polite">
+        <p className="mt-10 min-h-[4.5rem] max-w-[34ch] text-[1rem] leading-relaxed text-kajal-soft" aria-live="polite">
           {line ?? meditation.description}
+        </p>
+        <p className="mt-2 font-mono text-[0.8rem] tabular-nums text-kajal-soft">
+          {fmt(Math.min(elapsed, total))} / {fmt(total)}
         </p>
 
         <button
           type="button"
           onClick={toggle}
-          className="mt-6 flex min-h-16 items-center gap-3 rounded-xl bg-flame px-9 text-[1.15rem] font-bold text-kajal hover:bg-sandal"
+          aria-label={running ? "Pause" : done ? "Begin again" : elapsed ? "Continue" : "Begin"}
+          className="mt-6 flex size-16 items-center justify-center rounded-full bg-kajal text-sandal hover:opacity-90"
         >
           {running ? <PauseIcon /> : <PlayIcon />}
-          {running ? "Pause" : done ? "Begin again" : elapsed ? "Continue" : "Begin"}
         </button>
-        <p className="mt-4 text-[1rem] tabular-nums text-kajal-soft">
-          {fmt(Math.min(elapsed, total))} of {fmt(total)}
-        </p>
       </div>
 
-      <div className="relative mx-auto mb-8 flex w-full max-w-3xl flex-col gap-6 px-4 sm:px-6">
+      <div className="relative mx-auto mb-8 flex w-full max-w-md flex-col gap-4 px-4">
         <fieldset>
-          <legend className="mb-3 px-1 text-[0.9rem] font-semibold text-kajal-soft">Voice</legend>
-          <div className="grid grid-cols-3 gap-2">
+          <legend className="mb-2 px-1 font-mono text-[0.75rem] text-kajal-soft">Voice</legend>
+          <div className="flex gap-1 rounded-xl border border-sandal-edge bg-sandal-deep p-1">
             {VOICES.map((v) => (
-              <label
-                key={v.id}
-                className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border px-3 text-center text-[0.95rem] font-semibold has-focus-visible:outline-4 has-focus-visible:outline-offset-2 has-focus-visible:outline-flame ${
-                  meditationVoice === v.id ? "border-flame bg-flame/15 text-flame" : "border-kajal/20 hover:border-kajal/50"
-                }`}
-              >
+              <label key={v.id} className={seg(meditationVoice === v.id)}>
                 <input
                   type="radio"
                   name="voice"
@@ -294,15 +298,10 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
         </fieldset>
 
         <fieldset>
-          <legend className="mb-3 px-1 text-[0.9rem] font-semibold text-kajal-soft">Background sound</legend>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <legend className="mb-2 px-1 font-mono text-[0.75rem] text-kajal-soft">Background sound</legend>
+          <div className="grid grid-cols-2 gap-1 rounded-xl border border-sandal-edge bg-sandal-deep p-1 sm:grid-cols-4">
             {SOUNDS.map((s) => (
-              <label
-                key={s.id}
-                className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border px-3 text-center text-[0.95rem] font-semibold has-focus-visible:outline-4 has-focus-visible:outline-offset-2 has-focus-visible:outline-flame ${
-                  sound === s.id ? "border-flame bg-flame/15 text-flame" : "border-kajal/20 hover:border-kajal/50"
-                }`}
-              >
+              <label key={s.id} className={seg(sound === s.id)}>
                 <input
                   type="radio"
                   name="sound"

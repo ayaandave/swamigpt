@@ -30,6 +30,10 @@
   --night-soft: #17171a;
   --flame: #e3b341;
   --glow: rgba(227, 179, 65, 0.33);
+  --orb-core: #f6dc95;
+  --orb-mid: #e3b341;
+  --orb-deep: #9c7419;
+  --orb-fade: color-mix(in srgb, #3a2a08 60%, var(--sandal));
   color-scheme: dark;
 }
 @media (prefers-color-scheme: light) {
@@ -48,6 +52,10 @@
     --night-soft: #f2f2ef;
     --flame: #8a6000;
     --glow: rgba(227, 179, 65, 0.28);
+    --orb-core: #fff4d1;
+    --orb-mid: #f0c75e;
+    --orb-deep: #c8961f;
+    --orb-fade: #f6ebcf;
     color-scheme: light;
   }
 }
@@ -66,6 +74,10 @@
   --night-soft: #f2f2ef;
   --flame: #8a6000;
   --glow: rgba(227, 179, 65, 0.28);
+  --orb-core: #fff4d1;
+  --orb-mid: #f0c75e;
+  --orb-deep: #c8961f;
+  --orb-fade: #f6ebcf;
   color-scheme: light;
 }
 
@@ -180,7 +192,7 @@ html:not([data-welcomed]) body:has(.welcome-gate) {
 .orb {
   position: relative;
   border-radius: 9999px;
-  background: radial-gradient(circle at 50% 55%, #f6dc95 0%, #e3b341 18%, #9c7419 42%, color-mix(in srgb, #3a2a08 60%, var(--sandal)) 64%, var(--sandal) 72%);
+  background: radial-gradient(circle at 50% 55%, var(--orb-core) 0%, var(--orb-mid) 18%, var(--orb-deep) 42%, var(--orb-fade) 64%, var(--sandal) 72%);
   box-shadow: 0 0 60px var(--glow);
 }
 .orb::after {
@@ -195,6 +207,12 @@ html:not([data-welcomed]) body:has(.welcome-gate) {
 }
 @keyframes orb-breathe {
   50% { transform: scale(1.04); box-shadow: 0 0 90px var(--glow); }
+}
+/* The meditation orb is moved by the breath itself, not by the idle animation */
+.orb.orb-still {
+  animation: none;
+  transition-property: transform, box-shadow;
+  transition-timing-function: ease-in-out;
 }
 
 /* A 1px gold gradient edge around the main question box */
