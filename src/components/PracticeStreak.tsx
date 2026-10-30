@@ -1,7 +1,7 @@
 "use client";
 
 import { usePractice } from "@/lib/practice";
-import { Leaf } from "./Leaf";
+import { Om } from "./Om";
 import { useIsClient } from "@/lib/store";
 
 // "3 days in a row", with the last week as small dots. Only shown once there's practice to show,
@@ -21,7 +21,7 @@ export function PracticeStreak({ className = "" }: { className?: string }) {
   return (
     <section aria-label="Your practice" className={`rounded-2xl bg-sandal-deep px-5 py-4 ${className}`}>
       <p className="flex items-center gap-2 font-display text-[1.1rem] leading-tight">
-        <Leaf size={26} />
+        <Om size={26} />
         {line}
       </p>
       <ol className="mt-3 flex gap-2" aria-label="The last seven days">

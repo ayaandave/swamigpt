@@ -9,7 +9,7 @@ import { pageMeta } from "@/lib/seo";
 import { SHARE_ID, type SharedAnswer } from "@/lib/share";
 import type { Verse } from "@/lib/scripture/types";
 import { VerseCard } from "@/components/VerseCard";
-import { Leaf } from "@/components/Leaf";
+import { Om } from "@/components/Om";
 
 // One answer someone shared from the Ask page, at swamigpt.com/s/<id>. Read fresh on every visit
 // (a link can be opened a moment before its answer finishes saving). The verse text always comes
@@ -82,7 +82,7 @@ async function Shared({ params }: Pick<PageProps<"/s/[id]">, "params">) {
       <h1 className="border-l-4 border-kesar pl-5 font-display text-[1.4rem] leading-snug">{a.question}</h1>
       <div className="flex flex-col items-start gap-3 sm:flex-row sm:gap-4">
         <div className="shrink-0 sm:pt-1">
-          <Leaf size={56} />
+          <Om size={56} />
         </div>
         <div className="flex min-w-0 flex-col gap-4 text-[1.1rem] leading-[1.7]">
           {a.paragraphs.map((p, i) => (

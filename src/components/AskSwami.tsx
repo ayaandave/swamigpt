@@ -9,7 +9,7 @@ import { useSettings, type Depth } from "@/lib/settings";
 import { saveTurn } from "@/lib/history";
 import { useAuth } from "@/lib/supabase";
 import { useIsClient } from "@/lib/store";
-import { Leaf } from "./Leaf";
+import { Om } from "./Om";
 import { VerseCard } from "./VerseCard";
 import { whoSays } from "@/lib/scripture/who";
 import { ListenButton } from "./ListenButton";
@@ -75,10 +75,7 @@ export function AskSwami({
     <div className="flex flex-col">
       {!started ? (
         <section className="arrive flex flex-col items-center pt-6 text-center sm:pt-16">
-          <div>
-            <Leaf size={96} className="sm:hidden" />
-            <Leaf size={150} className="hidden sm:block" />
-          </div>
+          <Om size={196} hero />
           <h1 className="mt-4 font-display text-[1.75rem] leading-[1.1] sm:mt-6 sm:text-[3.2rem]">Namaste.</h1>
           <p className="mt-3 max-w-[30ch] text-[1.1rem] text-kajal-soft">
             Ask about anything in your life, or about the Gita, karma or meditation. Every answer comes from real scripture.
@@ -114,7 +111,7 @@ export function AskSwami({
               <div className="flex flex-col items-start gap-3">
                 {!turn.answer ? (
                   <div className="flex items-center gap-3">
-                    <Leaf size={40} state="thinking" />
+                    <Om size={40} state="thinking" />
                     <p className="text-[0.95rem] text-kajal-soft">Searching the scriptures…</p>
                   </div>
                 ) : (

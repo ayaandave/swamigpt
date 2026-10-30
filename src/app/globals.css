@@ -34,7 +34,7 @@
   --orb-mid: #e3b341;
   --orb-deep: #9c7419;
   --orb-fade: color-mix(in srgb, #3a2a08 60%, var(--sandal));
-  --om-near: #f6dc95; /* the dot Om on home: nearest dots, farthest dots, the glow behind */
+  --om-near: #f6dc95; /* the dot Om (logo): nearest dots, farthest dots, the glow behind */
   --om-far: #9c7419;
   --om-glow: #e3b341;
   --intro-edge: #9c7419; /* the opening's gold letters: ends, middle, the shine that sweeps */
@@ -170,40 +170,10 @@ html:not([data-welcomed]) body:has(.welcome-gate) {
   color: var(--kajal);
 }
 
-/* ---------- The leaf (SwamiGPT's mark) ---------- */
-@keyframes leaf-sway {
-  0%, 100% { transform: rotate(-2.5deg); }
-  50% { transform: rotate(2.5deg); }
-}
-@keyframes leaf-speak {
-  0%, 100% { transform: scale(1); }
-  35% { transform: scale(1.06); }
-  65% { transform: scale(0.98); }
-}
-@keyframes glow-breathe {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.06); }
-}
-/* It hangs from its stem, so it swings from the top */
-.leaf-body {
-  transform-origin: 50% 8%;
-  transform-box: view-box;
-  animation: leaf-sway 6s ease-in-out infinite;
-}
-.leaf-thinking .leaf-body {
-  animation-duration: 1.6s;
-}
-.leaf-thinking .leaf-glow {
-  animation-duration: 1.6s;
-}
-.leaf-speaking .leaf-body {
-  transform-origin: 50% 50%;
-  animation: leaf-speak 0.8s ease-in-out infinite;
-}
-.leaf-glow {
-  transform-origin: center;
-  transform-box: fill-box;
-  animation: glow-breathe 5s ease-in-out infinite;
+/* ---------- The Om (SwamiGPT's mark, src/components/Om.tsx) ---------- */
+/* Above a question box it glows a little more */
+.om-hero {
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--om-glow) 45%, transparent));
 }
 
 /* ---------- The opening (src/components/BrandIntro.tsx, src/lib/intro.ts) ---------- */

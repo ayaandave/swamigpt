@@ -13,7 +13,7 @@ export const HOME_TITLE = "SwamiGPT: a calm guide to the Gita, the Upanishads an
 export const HOME_DESCRIPTION =
   "A calm AI guide to Hindu philosophy, yoga and meditation. Answers drawn only from real scripture: the Bhagavad Gita, the Upanishads, the Yoga Sutras, the Ramayana and more.";
 // The picture shown when a page without its own verse card is shared or listed
-export const DEFAULT_IMAGE = "/api/card?id=site&v=leaf"; // v= changes the address when the picture changes, so old copies aren't reused
+export const DEFAULT_IMAGE = "/api/card?id=site&v=om"; // v= changes the address when the picture changes, so old copies aren't reused
 
 // Title, description, the one true address of the page (so /ask?ask=... and other copies count as
 // this page), and the preview shown in search results, messages and social apps

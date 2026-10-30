@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useSettings, type Depth, type TextSize, type Theme } from "@/lib/settings";
 import { VOICES } from "@/lib/voices";
 import { speak, stopSpeaking } from "@/lib/speak";
-import { Leaf } from "@/components/Leaf";
+import { Om } from "@/components/Om";
 import { MorningVerse } from "@/components/MorningVerse";
 import { EmailPrefs } from "@/components/EmailPrefs";
 import { CheckIcon, SpeakerIcon, StopIcon } from "@/components/icons";
@@ -71,7 +71,7 @@ export default function SettingsPage() {
                   chosen ? "border-kesar/70" : "border-sandal-edge"
                 }`}
               >
-                <Leaf size={40} state={sampling === v.id ? "speaking" : "idle"} />
+                <Om size={40} state={sampling === v.id ? "speaking" : "idle"} />
                 <div className="min-w-0 flex-1 basis-48">
                   <p className="text-[1rem] font-medium leading-tight">{v.name}</p>
                   <p className="text-[0.85rem] text-kajal-soft">{v.description}</p>

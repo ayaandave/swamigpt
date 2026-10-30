@@ -10,6 +10,7 @@ import { caption, whoSays } from "@/lib/scripture/who";
 const SANDAL = "#f2e3c6";
 const FLAME = "#ffb347";
 const NIGHT = "#17142e";
+const GOLD = "#e3b341";
 
 // Lora, a serif close to the app's own (whose font tables the image renderer can't read),
 // fetched as TTF and cut down to just the letters on this card
@@ -80,7 +81,7 @@ export async function GET(request: Request) {
   );
 }
 
-// /api/card?id=site: the leaf and the name, for pages that have no verse of their own
+// /api/card?id=site: the Om and the name, for pages that have no verse of their own
 async function siteCard() {
   const svg = (await readFile(join(process.cwd(), "src/app/icon.svg"), "utf8")).replace('rx="26"', 'rx="0"');
   const mark = `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
@@ -96,7 +97,7 @@ async function siteCard() {
           alignItems: "center",
           gap: 64,
           padding: "0 96px",
-          background: `radial-gradient(ellipse at 30% 45%, #3a2a3a 0%, ${NIGHT} 70%)`,
+          background: "radial-gradient(ellipse at 30% 45%, #2a2110 0%, #000 70%)",
           color: SANDAL,
           fontFamily: data ? "Lora" : "serif",
         }}
@@ -104,7 +105,7 @@ async function siteCard() {
         {/* eslint-disable-next-line @next/next/no-img-element -- drawn into a PNG, not shown on a page */}
         <img src={mark} width={260} height={260} alt="" style={{ borderRadius: 48 }} />
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <div style={{ display: "flex", fontSize: 92, color: FLAME }}>SwamiGPT</div>
+          <div style={{ display: "flex", fontSize: 92, color: GOLD }}>SwamiGPT</div>
           <div style={{ display: "flex", fontSize: 40, lineHeight: 1.3, maxWidth: 640 }}>{line}</div>
           <div style={{ display: "flex", fontSize: 28, color: "rgba(242,227,198,0.75)" }}>swamigpt.com</div>
         </div>

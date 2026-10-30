@@ -19,7 +19,7 @@ export default function MeditatePage() {
     <div className="pt-10">
       <h1 className="text-[1.75rem] font-medium leading-tight tracking-tight">Meditate</h1>
       <p className="mt-2 max-w-[44ch] text-[0.95rem] text-kajal-soft">
-        Choose what fits this moment. The leaf will breathe with you.
+        Choose what fits this moment. The gold circle will breathe with you.
       </p>
       <MeditationStats />
       <PracticeStreak className="mt-5" />
