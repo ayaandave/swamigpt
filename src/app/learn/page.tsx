@@ -165,16 +165,20 @@ function CourseRow({ path, done, next }: { path: LearningPath; done: number[]; n
         </span>
       )}
 
-      <ul ref={row} className="tile-row scrollbar-none -mx-4 mt-3 flex gap-2.5 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6">
+      {/* Phones swipe through one row; wider screens have room to show every lesson as a grid */}
+      <ul
+        ref={row}
+        className="tile-row scrollbar-none -mx-4 mt-3 flex gap-2.5 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-4 sm:overflow-visible sm:px-0 md:grid-cols-5"
+      >
         {path.lessons.map((l, i) => {
           const isDone = done.includes(i);
           const isNext = i === next;
           return (
-            <li key={i} className="w-[7.4rem] shrink-0">
+            <li key={i} className="w-[7.4rem] shrink-0 sm:w-auto">
               <Link
                 href={lessonHref(path.slug, i)}
                 aria-label={`${unit(path)} ${i + 1}: ${l.title}${isDone ? ", done" : isNext ? ", next" : ""}`}
-                className={`gold-tile flex aspect-square flex-col justify-between rounded-2xl p-3 ${isNext ? "is-next" : ""} ${isDone ? "opacity-60" : ""}`}
+                className={`gold-tile flex aspect-square flex-col justify-between overflow-hidden rounded-2xl p-3 ${isNext ? "is-next" : ""} ${isDone ? "opacity-60" : ""}`}
               >
                 <span
                   className={`flex size-8 items-center justify-center rounded-[10px] ${isNext ? "bg-kesar text-black" : "gold-chip"}`}
