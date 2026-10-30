@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Geist, Geist_Mono, Tiro_Devanagari_Sanskrit } from "next/font/google";
 import { settingsScript } from "@/lib/settings";
-import { FILM_SEEN_SCRIPT } from "@/lib/film";
 import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/seo";
 import { BottomNav, Header } from "@/components/Chrome";
 import { WelcomeGate } from "@/components/WelcomeGate";
@@ -44,7 +43,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${tiro.variable} ${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: settingsScript }} />
-        <script dangerouslySetInnerHTML={{ __html: FILM_SEEN_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
       </head>
       <body className="min-h-dvh" suppressHydrationWarning>

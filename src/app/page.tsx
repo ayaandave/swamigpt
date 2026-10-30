@@ -13,7 +13,6 @@ import { dailyEntries } from "@/lib/daily";
 import { OldAskLink } from "@/components/home/OldAskLink";
 import { AskIcon, LearnIcon, MeditateIcon, ReadIcon } from "@/components/icons";
 import { ExampleAnswer } from "@/components/home/ExampleAnswer";
-import { HomeFilm } from "@/components/home/HomeFilm";
 
 const TILES = [
   { href: "/ask", title: "Ask", line: "Real answers from the scriptures, for your question", Icon: AskIcon },
@@ -63,15 +62,11 @@ export default function Home() {
       <Suspense>
         <OldAskLink />
       </Suspense>
-      {/* New visitors get the scroll film; returning, signed-in and app visitors get the quick home */}
-      <HomeFilm />
-      <div className="home-classic">
-        <HomeHero>
-          <HomeAsk passages={PASSAGES.length} />
-        </HomeHero>
-        <ContinueLesson />
-        <PracticeStreak className="mt-6" />
-      </div>
+      <HomeHero>
+        <HomeAsk passages={PASSAGES.length} />
+      </HomeHero>
+      <ContinueLesson />
+      <PracticeStreak className="mt-6" />
 
       <ExampleAnswer />
 

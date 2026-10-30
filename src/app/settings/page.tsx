@@ -19,7 +19,7 @@ const TEXT_SIZES: { id: TextSize; label: string; sample: string }[] = [
 const THEMES: { id: Theme; label: string; note: string }[] = [
   { id: "dark", label: "Dark", note: "Black and gold" },
   { id: "light", label: "Light", note: "Paper white and gold" },
-  { id: "system", label: "Match my phone", note: "Follows your phone's setting" },
+  { id: "system", label: "Match my phone", note: "Follows your phone's setting; dark on computers" },
 ];
 
 const SPEEDS = [

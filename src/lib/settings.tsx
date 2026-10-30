@@ -34,9 +34,13 @@ const store = createLocalStore<Settings>(KEY, {
   dailyVerse: { on: false, time: "07:30" },
 });
 
-// Runs in <head> before first paint so the chosen text size never flickers
+// "Match my phone" follows a phone's own light or dark setting; laptops and desktops (a mouse or
+// trackpad) stay dark unless Light is picked in Settings.
+const COMPUTER = "(hover: hover) and (pointer: fine)";
+
+// Runs in <head> before first paint so the chosen text size and theme never flicker
 // and returning visitors never see the welcome gate flash.
-export const settingsScript = `try{var s=JSON.parse(localStorage.getItem("${KEY}")||"{}"),d=document.documentElement.dataset;if(s.textSize&&s.textSize!=="regular")d.text=s.textSize;if(s.theme==="dark"||s.theme==="light")d.theme=s.theme;if(s.ageGroup)d.welcomed="1"}catch(e){}`;
+export const settingsScript = `try{var s=JSON.parse(localStorage.getItem("${KEY}")||"{}"),d=document.documentElement.dataset;if(s.textSize&&s.textSize!=="regular")d.text=s.textSize;if(s.theme==="dark"||s.theme==="light")d.theme=s.theme;else if(matchMedia("${COMPUTER}").matches)d.theme="dark";if(s.ageGroup)d.welcomed="1"}catch(e){}`;
 
 export const getSettings = store.get;
 export const onSettingsChange = store.onChange;
@@ -51,6 +55,7 @@ function update(patch: Partial<Settings>) {
   else document.documentElement.dataset.text = next.textSize;
   if (next.ageGroup) document.documentElement.dataset.welcomed = "1";
   if (next.theme === "dark" || next.theme === "light") document.documentElement.dataset.theme = next.theme;
+  else if (matchMedia(COMPUTER).matches) document.documentElement.dataset.theme = "dark";
   else delete document.documentElement.dataset.theme;
   store.set(next);
 }
