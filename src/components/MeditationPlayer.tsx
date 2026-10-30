@@ -215,12 +215,20 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
 
   // The orb grows as you breathe in and settles as you breathe out; otherwise it rests
   const orb = !running
-    ? "scale-[.78] duration-1000"
+    ? "scale-[.85] duration-1000"
     : breath === "in"
       ? "scale-100 duration-[4000ms]"
       : breath === "out"
         ? "scale-[.78] duration-[6000ms]"
         : "scale-[.88] duration-[3000ms]";
+  // The halo brightens as you breathe in and dims as you breathe out
+  const halo = !running
+    ? "opacity-75 scale-95 duration-1000"
+    : breath === "in"
+      ? "opacity-100 scale-110 duration-[4000ms]"
+      : breath === "out"
+        ? "opacity-60 scale-90 duration-[6000ms]"
+        : "opacity-80 scale-100 duration-[3000ms]";
   const state = running
     ? breath === "in"
       ? "Breathe in"
@@ -240,7 +248,7 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
     }`;
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-sandal pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)] text-kajal">
+    <div className="fixed inset-0 z-40 flex flex-col overflow-x-hidden overflow-y-auto bg-sandal pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)] text-kajal">
       <div className="relative mx-auto flex w-full max-w-3xl items-center justify-between px-4 pt-4 sm:px-6">
         <Link
           href="/meditate"
@@ -256,8 +264,9 @@ export function MeditationPlayer({ meditation }: { meditation: Meditation }) {
         <p className="font-mono text-[0.75rem] text-kajal-soft">{meditation.title}</p>
         <h1 className="mt-1 text-[1.4rem] font-medium tracking-tight">{state}</h1>
 
-        <div className="mt-10 flex size-[12rem] items-center justify-center sm:size-[15rem]" aria-hidden="true">
-          <div className={`orb orb-still size-full ${orb}`} />
+        <div className="relative mt-14 mb-4 flex size-[15rem] items-center justify-center sm:size-[19rem]" aria-hidden="true">
+          <div className={`orb-halo ${halo}`} />
+          <div className={`orb orb-still orb-glow size-full ${orb}`} />
         </div>
 
         <p className="mt-10 min-h-[4.5rem] max-w-[34ch] text-[1rem] leading-relaxed text-kajal-soft" aria-live="polite">

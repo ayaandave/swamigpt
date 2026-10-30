@@ -139,3 +139,38 @@ export const MoneyIcon = ({ className }: P) => (
     <path d="M17 16.5V5" />
   </svg>
 );
+
+// Two arrows chasing each other: karma, what we do comes back
+export const KarmaIcon = ({ className }: P) => (
+  <svg {...base} className={className}>
+    <path d="M19 12a7 7 0 0 1-12 4.9" />
+    <path d="M5 12a7 7 0 0 1 12-4.9" />
+    <path d="M17.5 3.5v4h-4" />
+    <path d="M6.5 20.5v-4h4" />
+  </svg>
+);
+
+// Rama's bow and arrow
+export const BowIcon = ({ className }: P) => (
+  <svg {...base} className={className}>
+    <path d="M6 3.5c7 2 10.5 9.5 14.5 14.5" />
+    <path d="M6 3.5 20.5 18" />
+    <path d="M3.5 20.5 15 9" />
+    <path d="M3.5 20.5v-3.2M3.5 20.5h3.2" />
+  </svg>
+);
+
+// A diya, the small oil lamp
+export const LampIcon = ({ className }: P) => (
+  <svg {...base} className={className}>
+    <path d="M3.5 13.5h17c-.8 3.5-4.2 5.5-8.5 5.5s-7.7-2-8.5-5.5z" />
+    <path d="M12 4c1.6 1.9 2.4 3.4 2.4 4.7a2.4 2.4 0 0 1-4.8 0C9.6 7.4 10.4 5.9 12 4z" />
+  </svg>
+);
+
+// A crescent moon, for sleep
+export const MoonIcon = ({ className }: P) => (
+  <svg {...base} className={className}>
+    <path d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10z" />
+  </svg>
+);

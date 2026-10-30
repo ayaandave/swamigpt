@@ -279,6 +279,88 @@ html[data-intro] main {
   transition-timing-function: ease-in-out;
 }
 
+/* Meditation: a big glowing orb with a soft halo and light slowly flowing inside it */
+.orb.orb-glow {
+  background: radial-gradient(circle at 50% 50%, var(--orb-core) 0%, var(--orb-mid) 30%, color-mix(in srgb, var(--orb-deep) 85%, transparent) 56%, color-mix(in srgb, var(--orb-deep) 28%, transparent) 76%, transparent 96%);
+  box-shadow: none;
+}
+.orb.orb-glow::after {
+  display: none;
+}
+.orb.orb-glow::before {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    color-mix(in srgb, var(--orb-core) 70%, transparent) 60deg,
+    transparent 140deg,
+    color-mix(in srgb, var(--orb-core) 45%, transparent) 220deg,
+    transparent 300deg
+  );
+  filter: blur(18px);
+  mix-blend-mode: screen;
+  opacity: 0.75;
+}
+.orb-halo {
+  position: absolute;
+  inset: -42%;
+  border-radius: 9999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--orb-mid) 85%, transparent) 0%, color-mix(in srgb, var(--kesar) 42%, transparent) 34%, color-mix(in srgb, var(--kesar) 16%, transparent) 52%, transparent 70%);
+  filter: blur(24px);
+  transition-property: transform, opacity;
+  transition-timing-function: ease-in-out;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .orb.orb-glow::before { animation: orb-flow 14s linear infinite; }
+  .orb-halo { animation: halo-shimmer 7s ease-in-out infinite; }
+}
+@keyframes orb-flow {
+  to { transform: rotate(360deg); }
+}
+@keyframes halo-shimmer {
+  50% { filter: blur(30px); }
+}
+
+/* Learn and Meditate: square gold tiles and the glowing card above them */
+.gold-tile {
+  border: 1px solid color-mix(in srgb, var(--kesar) 22%, var(--sandal-edge));
+  background: linear-gradient(160deg, color-mix(in srgb, var(--kesar) 15%, var(--sandal-deep)), var(--sandal-deep) 70%);
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+.gold-tile:hover {
+  border-color: color-mix(in srgb, var(--kesar) 60%, transparent);
+  box-shadow: 0 14px 34px -22px var(--glow);
+}
+.gold-tile:active {
+  transform: scale(0.97);
+}
+.gold-tile.is-next {
+  border-color: var(--kesar);
+  background: radial-gradient(circle at 75% 15%, color-mix(in srgb, var(--kesar) 34%, var(--sandal-deep)), var(--sandal-deep) 72%);
+  box-shadow: 0 0 28px -8px var(--glow);
+}
+.gold-chip {
+  border: 1px solid color-mix(in srgb, var(--kesar) 35%, var(--sandal-edge));
+  color: var(--kesar-deep);
+}
+.glow-card {
+  border: 1px solid color-mix(in srgb, var(--kesar) 40%, var(--sandal-edge));
+  background:
+    radial-gradient(circle at 88% 45%, color-mix(in srgb, var(--kesar) 30%, transparent), transparent 55%),
+    var(--sandal-deep);
+  box-shadow: 0 24px 60px -34px var(--glow);
+}
+.tile-row {
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1rem;
+}
+.tile-row > * {
+  scroll-snap-align: start;
+}
+
 /* A 1px gold gradient edge around the main question box */
 .gold-edge {
   padding: 1px;

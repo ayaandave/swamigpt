@@ -3,9 +3,10 @@ import type { Metadata } from "next";
 import { pageMeta } from "@/lib/seo";
 import { GROUPS, MEDITATIONS } from "@/lib/meditations";
 import { MANTRAS } from "@/lib/mantras";
+import { FeelingPicker } from "@/components/FeelingPicker";
 import { MeditationStats } from "@/components/MeditationStats";
 import { PracticeStreak } from "@/components/PracticeStreak";
-import { PlayIcon } from "@/components/icons";
+import { LampIcon, MeditateIcon, MoonIcon } from "@/components/icons";
 
 export const metadata: Metadata = pageMeta({
   title: "Guided meditations and mantras · SwamiGPT",
@@ -14,6 +15,9 @@ export const metadata: Metadata = pageMeta({
   path: "/meditate",
 });
 
+const GROUP_ICON = { quick: MeditateIcon, daily: LampIcon, sleep: MoonIcon };
+const groupTitle = (id: string) => GROUPS.find((g) => g.id === id)?.title ?? "";
+
 export default function MeditatePage() {
   return (
     <div className="pt-10">
@@ -21,60 +25,70 @@ export default function MeditatePage() {
       <p className="mt-2 max-w-[44ch] text-[0.95rem] text-kajal-soft">
         Choose what fits this moment. The gold circle will breathe with you.
       </p>
+
+      <FeelingPicker />
       <MeditationStats />
       <PracticeStreak className="mt-5" />
 
-      {GROUPS.map((g) => (
-        <section key={g.id} aria-labelledby={`group-${g.id}`} className="mt-10">
-          <h2 id={`group-${g.id}`} className="text-[1.1rem] font-medium tracking-tight">
-            {g.title}
+      <section aria-labelledby="sessions-title" className="mt-10">
+        <div className="flex items-baseline justify-between gap-4">
+          <h2 id="sessions-title" className="text-[1.1rem] font-medium tracking-tight">
+            Guided sessions
           </h2>
-          <p className="text-[0.85rem] text-kajal-soft">{g.note}</p>
-          <ul className="mt-3 flex flex-col gap-2.5">
-            {MEDITATIONS.filter((m) => m.group === g.id).map((m) => (
+          <span className="font-mono text-[0.72rem] text-kajal-soft">{MEDITATIONS.length} sessions</span>
+        </div>
+        <ul className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+          {MEDITATIONS.map((m) => {
+            const Icon = GROUP_ICON[m.group];
+            return (
               <li key={m.slug}>
                 <Link
                   href={`/meditate/${m.slug}`}
-                  className="group flex items-center gap-4 rounded-2xl border border-sandal-edge bg-sandal-deep p-4 text-kajal transition-colors hover:border-kesar/60"
+                  className="gold-tile flex aspect-square flex-col justify-between rounded-2xl p-3.5"
                 >
-                  <span className="flex size-12 shrink-0 flex-col items-center justify-center rounded-xl border border-sandal-edge font-mono text-kesar-deep">
-                    <span className="text-[1rem] leading-none">{m.minutes}</span>
-                    <span className="text-[0.6rem] text-kajal-soft">min</span>
+                  <span className="flex items-start justify-between">
+                    <span className="gold-chip flex size-9 items-center justify-center rounded-[10px]">
+                      <Icon className="size-5" />
+                    </span>
+                    <span className="font-mono text-[0.75rem] text-kesar-deep">{m.minutes} min</span>
                   </span>
-                  <span className="min-w-0 flex-1">
+                  <span className="min-w-0">
                     <span className="block text-[1rem] font-medium leading-snug tracking-tight">{m.title}</span>
-                    <span className="mt-0.5 block text-[0.8rem] leading-snug text-kajal-soft">{m.description}</span>
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className="hidden size-10 shrink-0 items-center justify-center rounded-full bg-kajal text-sandal sm:flex"
-                  >
-                    <PlayIcon />
+                    <span className="mt-1.5 inline-block rounded-full border border-sandal-edge px-2.5 py-0.5 text-[0.68rem] text-kajal-soft">
+                      {groupTitle(m.group)}
+                    </span>
                   </span>
                 </Link>
               </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+            );
+          })}
+        </ul>
+      </section>
 
       <section aria-labelledby="group-mantras" className="mt-10">
-        <h2 id="group-mantras" className="font-display text-[1.3rem] leading-tight">
+        <h2 id="group-mantras" className="text-[1.1rem] font-medium tracking-tight">
           Mantras
         </h2>
-        <p className="text-[1rem] text-kajal-soft">Sacred words to say aloud or in your mind</p>
-        <ul className="mt-4 grid gap-4 sm:grid-cols-2">
+        <p className="text-[0.85rem] text-kajal-soft">Sacred words to say aloud or in your mind</p>
+        <ul className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
           {MANTRAS.map((m) => (
             <li key={m.slug}>
               <Link
                 href={`/meditate/mantra/${m.slug}`}
-                className="tile flex h-full flex-col rounded-2xl border border-sandal-edge bg-sandal-deep px-6 py-5 hover:border-kesar"
+                className="gold-tile flex aspect-square flex-col justify-between overflow-hidden rounded-2xl p-3.5"
               >
-                <span lang="sa" className="font-display text-[1.25rem] leading-tight text-kesar-deep">
+                <span
+                  lang="sa"
+                  className={`truncate font-display leading-tight text-kesar-deep [text-shadow:0_0_18px_var(--glow)] ${
+                    m.sanskritName.length > 9 ? "text-[1.05rem]" : "text-[1.5rem]"
+                  }`}
+                >
                   {m.sanskritName}
                 </span>
-                <span className="mt-1 block font-display text-[1.15rem] leading-tight">{m.title}</span>
-                <span className="mt-1 block text-[0.95rem] leading-snug text-kajal-soft">{m.short}</span>
+                <span className="min-w-0">
+                  <span className="line-clamp-2 text-[0.95rem] font-medium leading-snug tracking-tight">{m.title}</span>
+                  <span className="mt-0.5 line-clamp-2 text-[0.72rem] leading-snug text-kajal-soft">{m.short}</span>
+                </span>
               </Link>
             </li>
           ))}
