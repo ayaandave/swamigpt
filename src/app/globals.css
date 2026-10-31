@@ -40,6 +40,9 @@
   --intro-edge: #9c7419; /* the opening's gold letters: ends, middle, the shine that sweeps */
   --intro-mid: #e3b341;
   --intro-shine: #fff6dc;
+  --ghat-line: #c99a2e; /* the Varanasi line drawing behind the home Om, and its passing shine */
+  --ghat-shine: #fff1c4;
+  --ghat-alpha: 0.55;
   color-scheme: dark;
 }
 @media (prefers-color-scheme: light) {
@@ -68,6 +71,9 @@
     --intro-edge: #6b4a00;
     --intro-mid: #b8860b;
     --intro-shine: #f0c75e;
+    --ghat-line: #b8860b;
+    --ghat-shine: #6b4a00;
+    --ghat-alpha: 0.85;
     color-scheme: light;
   }
 }
@@ -96,6 +102,9 @@
   --intro-edge: #6b4a00;
   --intro-mid: #b8860b;
   --intro-shine: #f0c75e;
+  --ghat-line: #b8860b;
+  --ghat-shine: #6b4a00;
+  --ghat-alpha: 0.85;
   color-scheme: light;
 }
 
@@ -186,6 +195,59 @@ html:not([data-welcomed]) body:has(.welcome-gate) {
 /* Above a question box it glows a little more */
 .om-hero {
   filter: drop-shadow(0 0 10px color-mix(in srgb, var(--om-glow) 45%, transparent));
+}
+
+/* ---------- The ghats behind the home Om (src/components/home/Ghats.tsx) ---------- */
+/* Full width (body clips the overflow), its water line just under the Om. It fades out at both
+   sides, toward the sky and down into the water. A soft shine drifts across now and then. */
+.ghats {
+  --ghat-h: 76px;
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: calc(100% - 14px - var(--ghat-h) * 118 / 150);
+  width: 100vw;
+  max-width: 1600px;
+  height: var(--ghat-h);
+  translate: -50% 0;
+  color: var(--ghat-line);
+  opacity: var(--ghat-alpha);
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 18%, #000 82%, transparent),
+    linear-gradient(to bottom, rgb(0 0 0 / 0.35), #000 45%, #000 78%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 18%, #000 82%, transparent),
+    linear-gradient(to bottom, rgb(0 0 0 / 0.35), #000 45%, #000 78%, transparent);
+  mask-composite: intersect;
+}
+@media (min-width: 640px) {
+  .ghats { --ghat-h: 100px; }
+}
+@media (min-width: 1024px) {
+  .ghats { --ghat-h: 124px; }
+}
+.ghats-shine {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ghats-shine {
+    display: block;
+    position: absolute;
+    inset: 0;
+    color: var(--ghat-shine);
+    -webkit-mask-image: linear-gradient(100deg, transparent 42%, #000 50%, transparent 58%);
+    mask-image: linear-gradient(100deg, transparent 42%, #000 50%, transparent 58%);
+    -webkit-mask-size: 300% 100%;
+    mask-size: 300% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    animation: ghat-shine 16s ease-in-out 2s infinite;
+  }
+}
+@keyframes ghat-shine {
+  0% { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+  55%, 100% { -webkit-mask-position: 0% 0; mask-position: 0% 0; }
 }
 
 /* ---------- The opening (src/components/BrandIntro.tsx, src/lib/intro.ts) ---------- */
