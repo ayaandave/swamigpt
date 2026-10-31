@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 import { PATHS, lessonHref, type LearningPath } from "@/lib/lessons";
 import { TEXTS } from "@/lib/scripture/texts";
 import { useProgress } from "@/lib/progress";
@@ -70,9 +69,16 @@ export default function LearnPage() {
 
       <Mala done={beads} />
 
-      {PATHS.map((p) => (
-        <CourseRow key={p.slug} path={p} done={doneIn(p)} next={nextIn(p)} />
-      ))}
+      <section aria-labelledby="courses-title" className="mt-10">
+        <h2 id="courses-title" className="text-[1.2rem] font-medium tracking-tight">
+          Courses
+        </h2>
+        <ul className="mt-3 grid grid-cols-2 gap-3">
+          {PATHS.map((p, i) => (
+            <CourseTile key={p.slug} path={p} done={doneIn(p)} wide={i === 0} />
+          ))}
+        </ul>
+      </section>
 
       <section id="read" aria-labelledby="read-title" className="mt-12 scroll-mt-6">
         <div className="flex items-baseline justify-between gap-4">
@@ -130,79 +136,44 @@ function Mala({ done }: { done: number }) {
   );
 }
 
-// One course: a heading, then its lessons as a row of square tiles you can swipe through.
-// The row starts at your next lesson, so it's always in view.
-function CourseRow({ path, done, next }: { path: LearningPath; done: number[]; next: number }) {
-  const row = useRef<HTMLUListElement>(null);
+// One course as a single floating box; its lessons live on the course page.
+// The first course spans the full row so five boxes sit evenly.
+function CourseTile({ path, done, wide }: { path: LearningPath; done: number[]; wide: boolean }) {
   const Icon = ICONS[path.slug] ?? LearnIcon;
   const finished = done.length >= path.totalLessons;
-
-  useEffect(() => {
-    const ul = row.current;
-    const tile = ul?.children[Math.max(0, next - 1)] as HTMLElement | undefined;
-    if (ul && tile && next > 1) ul.scrollLeft = tile.offsetLeft - ul.offsetLeft - 16;
-  }, [next]);
+  const status = finished
+    ? "Finished"
+    : done.length > 0
+      ? `${done.length} / ${path.totalLessons}`
+      : `${path.totalLessons} ${unit(path) === "Story" ? "stories" : `${unit(path).toLowerCase()}s`}`;
 
   return (
-    <section aria-labelledby={`course-${path.slug}`} className="mt-9">
-      <div className="flex items-baseline justify-between gap-4">
-        <h2 id={`course-${path.slug}`} className="text-[1.1rem] font-medium tracking-tight">
-          <Link href={`/learn/${path.slug}`} className="hover:text-kesar-deep">
-            {path.title}
-          </Link>
-        </h2>
-        <span className="shrink-0 font-mono text-[0.72rem] text-kajal-soft">
-          {finished ? "Finished" : `${done.length} / ${path.totalLessons}`}
-        </span>
-      </div>
-      <p className="text-[0.8rem] text-kajal-soft">{path.description}</p>
-      {done.length > 0 && (
-        <span className="mt-2 block h-[3px] overflow-hidden rounded-full bg-sandal-edge">
-          <span
-            className="block h-full rounded-full bg-kesar shadow-[0_0_8px_var(--glow)]"
-            style={{ width: `${Math.min(1, done.length / path.totalLessons) * 100}%` }}
-          />
-        </span>
-      )}
-
-      {/* Phones swipe through one row; wider screens have room to show every lesson as a grid */}
-      <ul
-        ref={row}
-        className="tile-row scrollbar-none -mx-4 mt-3 flex gap-2.5 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-4 sm:overflow-visible sm:px-0 md:grid-cols-5"
+    <li className={wide ? "col-span-2" : ""}>
+      <Link
+        href={`/learn/${path.slug}`}
+        className={`gold-tile flex h-full flex-col justify-between gap-6 rounded-3xl p-5 ${wide ? "min-h-[9.5rem]" : "min-h-[11rem]"}`}
       >
-        {path.lessons.map((l, i) => {
-          const isDone = done.includes(i);
-          const isNext = i === next;
-          return (
-            <li key={i} className="w-[7.4rem] shrink-0 sm:w-auto">
-              <Link
-                href={lessonHref(path.slug, i)}
-                aria-label={`${unit(path)} ${i + 1}: ${l.title}${isDone ? ", done" : isNext ? ", next" : ""}`}
-                className={`gold-tile flex aspect-square flex-col justify-between overflow-hidden rounded-2xl p-3 ${isNext ? "is-next" : ""} ${isDone ? "opacity-60" : ""}`}
-              >
-                <span
-                  className={`flex size-8 items-center justify-center rounded-[10px] ${isNext ? "bg-kesar text-black" : "gold-chip"}`}
-                >
-                  {isDone ? (
-                    <CheckIcon className="size-4" />
-                  ) : isNext ? (
-                    <PlayIcon className="size-4" />
-                  ) : (
-                    <Icon className="size-[1.1rem]" />
-                  )}
-                </span>
-                <span className="min-w-0">
-                  <span className={`block font-mono text-[0.65rem] ${isNext ? "text-kesar-deep" : "text-kajal-soft"}`}>
-                    {unit(path)} {i + 1}
-                    {isNext && done.length > 0 ? " · Next" : ""}
-                  </span>
-                  <span className="mt-0.5 line-clamp-3 text-[0.82rem] font-medium leading-snug">{l.title}</span>
-                </span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </section>
+        <span className="flex items-start justify-between gap-3">
+          <span className="gold-chip flex size-10 items-center justify-center rounded-xl">
+            {finished ? <CheckIcon className="size-5" /> : <Icon className="size-5" />}
+          </span>
+          <span className={`font-mono text-[0.72rem] ${done.length > 0 && !finished ? "text-kesar-deep" : "text-kajal-soft"}`}>
+            {status}
+          </span>
+        </span>
+        <span className="min-w-0">
+          <span className="block text-[1.1rem] font-medium leading-snug tracking-tight">{path.title}</span>
+          {wide && <span className="mt-1 block text-[0.85rem] text-kajal-soft">{path.description}</span>}
+          {done.length > 0 && (
+            <span className="mt-3 block h-[3px] overflow-hidden rounded-full bg-sandal-edge">
+              <span
+                className="block h-full rounded-full bg-kesar shadow-[0_0_8px_var(--glow)]"
+                style={{ width: `${Math.min(1, done.length / path.totalLessons) * 100}%` }}
+              />
+            </span>
+          )}
+        </span>
+      </Link>
+    </li>
   );
 }

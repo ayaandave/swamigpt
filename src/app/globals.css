@@ -365,13 +365,6 @@ html[data-intro] main {
     var(--sandal-deep);
   box-shadow: 0 24px 60px -34px var(--glow);
 }
-.tile-row {
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: 1rem;
-}
-.tile-row > * {
-  scroll-snap-align: start;
-}
 
 /* A 1px gold gradient edge around the main question box */
 .gold-edge {
