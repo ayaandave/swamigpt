@@ -3,7 +3,7 @@
 Paste these into App Store Connect. Character limits are Apple's.
 
 ## App information
-- **Name** (30): `SwamiGPT: Hindu Wisdom Guide`
+- **Name** (30): `SwamiGPT`
 - **Subtitle** (30): `Ask the Gita, learn, meditate`
 - **Bundle ID:** `com.swamigpt.app`
 - **SKU:** `swamigpt-ios-1`
