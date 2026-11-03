@@ -1,7 +1,7 @@
 // SwamiGPT's service worker: lets installed SwamiGPT open pages you've visited without a
 // connection, and shows a calm offline page otherwise. Answers, voice and sign-in always need the
 // network, so /api is never cached.
-const VERSION = "v2"; // v2: the Om icon replaced the leaf
+const VERSION = "v3"; // v2: the Om icon replaced the leaf; v3: the solid Om
 const PAGES = `pages-${VERSION}`;
 const ASSETS = `assets-${VERSION}`;
 
