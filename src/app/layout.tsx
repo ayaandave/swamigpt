@@ -5,6 +5,7 @@ import { settingsScript } from "@/lib/settings";
 import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/seo";
 import { BottomNav, Header } from "@/components/Chrome";
 import { WelcomeGate } from "@/components/WelcomeGate";
+import { AiConsent } from "@/components/AiConsent";
 import { BrandIntro } from "@/components/BrandIntro";
 import { INTRO_SCRIPT } from "@/lib/intro";
 import { AccountSync } from "@/components/AccountSync";
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main className="mx-auto w-full max-w-3xl px-4 pb-40 sm:px-6 md:pb-20">{children}</main>
         <BottomNav />
         <WelcomeGate />
+        <AiConsent />
         <BrandIntro />
         <AccountSync />
         <NativeBridge />

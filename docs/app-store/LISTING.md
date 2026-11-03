@@ -71,6 +71,8 @@ SwamiGPT is an AI guide, not a guru. It quotes real scripture and can still make
 ## Notes for the App Review team
 SwamiGPT is a free guide to Hindu scripture. No account is needed to try it: open the Ask tab and type a question (for example "I'm stressed about a test"). Guests get a few free questions a day.
 
+AI and your data (guideline 5.1.2): the first time you ask a question, a "Before you ask" screen explains that the question, the last few messages in the chat and the age group are sent to Anthropic (the maker of Claude) to write the answer, and asks "I agree" or "Not now". Nothing is sent before you agree; "Not now" keeps lessons, meditations and the library open.
+
 Native features to try:
 - Settings (the sliders icon, top right) → "Morning verse" turns on a daily notification with that day's verse.
 - Meditate → open any meditation and tap Begin, then lock the screen: the guided audio keeps playing.

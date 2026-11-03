@@ -6,6 +6,7 @@ import { CRISIS, CRISIS_HELP, type SwamiAnswer } from "./swami";
 import { PLUS } from "./plans";
 import { plusSold } from "./plus";
 import { accessToken, supabase } from "./supabase";
+import { requestAiConsent } from "./ai-consent";
 
 export type PastTurn = { question: string; answer: SwamiAnswer };
 
@@ -115,10 +116,19 @@ async function fetchAnswer(
   }
 }
 
+// Saying "Not now" to sending questions to the AI: nothing was sent
+const NO_CONSENT: SwamiAnswer = {
+  paragraphs: [
+    "That's all right. Nothing was sent. To answer, SwamiGPT needs to send your question to its AI helper, so ask again whenever you're ready and choose \"I agree\". The lessons, meditations and library are all open without it.",
+  ],
+  verses: [],
+  notice: "error",
+};
+
 // Every reply, even "that's all for today" or an error, shows the 988 card when the question
 // sounds like someone may be in danger. The check runs here on the phone, so it never depends
 // on the server, the daily limit or the AI.
 export async function askSwami(...args: Parameters<typeof fetchAnswer>): Promise<SwamiAnswer> {
-  const answer = await fetchAnswer(...args);
+  const answer = (await requestAiConsent()) ? await fetchAnswer(...args) : NO_CONSENT;
   return CRISIS.test(args[0]) && !answer.help ? { ...answer, help: CRISIS_HELP } : answer;
 }

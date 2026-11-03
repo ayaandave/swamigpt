@@ -20,8 +20,9 @@ export default function PrivacyPage() {
         <p>You can use all of SwamiGPT without signing in.</p>
         <ul>
           <li>
-            Your questions are sent to our AI provider to write the answer. We don&apos;t save them anywhere once
-            you get your answer.
+            Your questions are sent to our AI provider, Anthropic, to write the answer. We ask first, before your
+            first question is sent, and nothing is sent unless you agree. We don&apos;t save your questions anywhere
+            once you get your answer.
           </li>
           <li>
             Your settings (like text size, voice and age group) are saved only on your device.

@@ -18,6 +18,7 @@ export type Settings = {
   meditationVoice: VoiceId; // meditations are read by Dhyan ("sakshi") unless changed in the player
   avatar: string | null; // an id from lib/avatars, chosen on the account page
   dailyVerse: { on: boolean; time: string }; // the iPhone app's morning notification, "07:30"
+  aiConsent: boolean; // agreed that questions are sent to Anthropic's AI (asked before the first one)
 };
 
 const KEY = "swamigpt.settings";
@@ -32,6 +33,7 @@ const store = createLocalStore<Settings>(KEY, {
   meditationVoice: "sakshi",
   avatar: null,
   dailyVerse: { on: false, time: "07:30" },
+  aiConsent: false,
 });
 
 // "Match my phone" follows a phone's own light or dark setting; laptops and desktops (a mouse or
