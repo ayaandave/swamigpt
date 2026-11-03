@@ -32,9 +32,11 @@ export async function syncPlus(userId: string): Promise<boolean> {
   const plus = subscriber.entitlements?.[PLUS_ENTITLEMENT];
   // Billing trouble keeps Plus on through the store's grace period
   const ends = [plus?.expires_date, plus?.grace_period_expires_date].filter(Boolean).sort().at(-1) ?? null;
-  // Test purchases (Stripe test mode, TestFlight) never give real Plus on the live site
-  const sandbox = subscriber.subscriptions?.[plus?.product_identifier ?? ""]?.is_sandbox === true;
-  const testOnly = sandbox && process.env.VERCEL_ENV === "production";
+  // Stripe test purchases never give real Plus on the live site. Apple's are the exception: App
+  // Review and TestFlight testers buy with sandbox accounts in the app, which loads the live site,
+  // and only invited testers and Apple's reviewers can make them
+  const sub = subscriber.subscriptions?.[plus?.product_identifier ?? ""];
+  const testOnly = sub?.is_sandbox === true && sub.store !== "app_store" && process.env.VERCEL_ENV === "production";
   const active =
     Boolean(plus) && !testOnly && (plus!.expires_date === null || (ends !== null && new Date(ends) > new Date()));
 
