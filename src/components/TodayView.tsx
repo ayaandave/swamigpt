@@ -9,6 +9,7 @@ import { useIsClient } from "@/lib/store";
 import { caption, whoSays } from "@/lib/scripture/who";
 import { VerseCard } from "./VerseCard";
 import { ListenButton } from "./ListenButton";
+import { SaveVerseButton } from "./SaveVerseButton";
 
 const pill =
   "inline-flex min-h-14 items-center rounded-xl border border-kajal px-6 text-[1rem] font-semibold hover:bg-sandal-deep";
@@ -40,7 +41,8 @@ export function TodayView({ entries }: { entries: Daily[] }) {
 
       <p className="mt-8 max-w-[58ch] font-display text-[1.15rem] leading-relaxed">{daily.reflection}</p>
 
-      <div className="mt-6 flex flex-wrap gap-3">
+      <div className="mt-6 flex flex-wrap items-center gap-3">
+        <SaveVerseButton verse={verse} />
         <ListenButton
           save
           text={[`${whoSays(verse)}:`, verse.translation, verse.plain && `In plain words: ${verse.plain}`, daily.reflection, daily.question]

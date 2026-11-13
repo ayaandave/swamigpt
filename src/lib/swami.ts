@@ -8,11 +8,10 @@ export type SwamiAnswer = {
   verses: QuotedVerse[];
   help?: { text: string; href: string; label: string };
   practice?: { href: string; title: string; why: string }; // a meditation or lesson in the app
-  notice?: "limit" | "error"; // not a real answer: never saved to history
+  notice?: "limit" | "error" | "stopped"; // not a real answer: never saved to history
   signInPrompt?: boolean; // show "Sign in for more questions"
   plusPrompt?: boolean; // show "See SwamiGPT Plus"
   left?: number; // questions left today, from the server (not saved)
-  leftNote?: boolean; // show the gentle "questions left today" note (not saved)
   seal?: string; // proof SwamiGPT wrote this answer, so it can be shared (src/lib/share.ts)
 };
 

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { askSwami } from "@/lib/ask";
-import { STARTER_QUESTIONS } from "@/lib/mock/answers";
 import type { SwamiAnswer } from "@/lib/swami";
 import { useSettings, type Depth } from "@/lib/settings";
 import { saveTurn } from "@/lib/history";
@@ -11,16 +10,25 @@ import { useAuth } from "@/lib/supabase";
 import { useIsClient } from "@/lib/store";
 import { Om } from "./Om";
 import { VerseCard } from "./VerseCard";
-import { LeftNote, SeePlusButton } from "./PlusPaywall";
+import { QuestionsLeft, SeePlusButton } from "./PlusPaywall";
+import { SaveVerseButton } from "./SaveVerseButton";
+import { followUps, suggestedQuestions } from "@/lib/suggestions";
+import { markPractice } from "@/lib/practice";
+import { track } from "@/lib/events";
 import { whoSays } from "@/lib/scripture/who";
 import { ListenButton } from "./ListenButton";
 import { ShareButton } from "./ShareButton";
 import { ReportAnswer } from "./ReportAnswer";
-import { MicIcon, SendIcon } from "./icons";
+import { CheckIcon, MicIcon, SendIcon, StopIcon } from "./icons";
 
 // The longest question the server accepts (app/api/ask), so nothing typed is ever thrown away
 const MAX_QUESTION = 2000;
-type Turn = { id: number; question: string; depth: Depth; answer?: SwamiAnswer };
+type Turn = {
+  id: number;
+  question: string;
+  depth: Depth;
+  answer?: SwamiAnswer;
+};
 
 // initialDraft: a question handed over from elsewhere (e.g. a verse page), typed in but not sent.
 // autoAsk: a question to ask straight away (from the home screen).
@@ -34,7 +42,7 @@ export function AskSwami({
   autoAsk?: string;
   about?: string;
 }) {
-  const { depth: defaultDepth, ageGroup } = useSettings();
+  const { depth: defaultDepth, ageGroup, focus } = useSettings();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [draft, setDraft] = useState(initialDraft);
   const [, setSpeakingId] = useState<number | null>(null);
@@ -43,23 +51,64 @@ export function AskSwami({
   const nextId = useRef(1);
   const { user } = useAuth();
   const conversation = useRef<string | null>(null); // saved-history conversation, when signed in
+  const stopper = useRef<AbortController | null>(null);
+  const [left, setLeft] = useState<number | null>(null); // questions left today, from the server
+  const isClient = useIsClient();
 
   useEffect(() => {
     // Bring each new question to the top so the answer reads from its beginning
     lastRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [turns.length]);
 
-  const ask = async (question: string, depth: Depth = defaultDepth) => {
+  // retry: the id of a turn that failed or was stopped, asked again in place with the same words
+  const ask = async (question: string, depth: Depth = defaultDepth, retry?: number) => {
     const q = question.trim();
     if (!q || thinking) return;
-    const id = nextId.current++;
-    setDraft("");
-    const history = turns.flatMap((t) => (t.answer ? [{ question: t.question, answer: t.answer }] : []));
-    setTurns((t) => [...t, { id, question: q, depth }]);
-    const answer = await askSwami(q, depth, ageGroup, history, undefined, turns.length === 0 ? about : undefined);
+    const id = retry ?? nextId.current++;
+    if (!retry) setDraft("");
+    const earlier = retry ? turns.filter((t) => t.id < retry) : turns;
+    const history = earlier.flatMap((t) =>
+      t.answer && !t.answer.notice ? [{ question: t.question, answer: t.answer }] : [],
+    );
+    // The question shows straight away; only its answer is waited for
+    setTurns((t) =>
+      retry
+        ? t.map((turn) => (turn.id === id ? { id, question: q, depth } : turn))
+        : [...t, { id, question: q, depth }],
+    );
+    track("chat_sent", { signedIn: Boolean(user) });
+    const controller = new AbortController();
+    stopper.current = controller;
+    const { left: remaining, ...answer } = await askSwami(
+      q,
+      depth,
+      ageGroup,
+      history,
+      undefined,
+      earlier.length === 0 ? about : undefined,
+      controller.signal,
+    );
+    stopper.current = null;
+    if (remaining !== undefined) setLeft(remaining);
     setTurns((t) => t.map((turn) => (turn.id === id ? { ...turn, answer } : turn)));
+    if (!answer.notice) {
+      markPractice(); // a real conversation counts toward the day's practice
+      if (!turns.some((t) => t.answer && !t.answer.notice)) track("first_answer_completed");
+    }
     if (user && !answer.notice) conversation.current = await saveTurn(user.id, conversation.current, q, answer);
   };
+
+  // Tapping a suggestion fills the box to edit or send; it is never sent for them
+  const fill = (q: string) => {
+    setDraft(q);
+    requestAnimationFrame(() => {
+      const box = document.getElementById("ask") as HTMLTextAreaElement | null;
+      box?.focus();
+      box?.setSelectionRange(q.length, q.length);
+    });
+  };
+  const answered = turns.filter((t) => t.answer && !t.answer.notice).length;
+  const chips = suggestedQuestions(isClient ? focus : null, isClient ? new Date().getHours() : 12, answered);
 
   // Asked once, even though development mode runs effects twice
   const autoAsked = useRef(false);
@@ -79,17 +128,18 @@ export function AskSwami({
           <Om size={196} hero />
           <h1 className="mt-4 font-display text-[1.75rem] leading-[1.1] sm:mt-6 sm:text-[3.2rem]">Namaste.</h1>
           <p className="mt-3 max-w-[30ch] text-[1.1rem] text-kajal-soft">
-            Ask about anything in your life, or about the Gita, karma or meditation. Every answer comes from real scripture.
+            Ask about anything in your life, or about the Gita, karma or meditation. Every answer comes from real
+            scripture.
           </p>
           <div className="mt-6 w-full text-left sm:mt-8">
             <AskBox draft={draft} setDraft={setDraft} onAsk={ask} disabled={thinking} autoFocus />
             <p className="mt-6 mb-3 text-[0.9rem] font-semibold text-kajal-soft sm:mt-8">Or begin with one of these</p>
-            <ul className="grid gap-3 sm:grid-cols-2">
-              {STARTER_QUESTIONS.map((q) => (
+            <ul className="grid gap-3">
+              {chips.map((q) => (
                 <li key={q}>
                   <button
                     type="button"
-                    onClick={() => ask(q)}
+                    onClick={() => fill(q)}
                     className="w-full min-h-16 rounded-2xl border border-sandal-edge px-5 py-3 text-left font-display text-[1.1rem] leading-snug hover:border-kesar hover:bg-sandal-deep"
                   >
                     {q}
@@ -113,13 +163,15 @@ export function AskSwami({
                 {!turn.answer ? (
                   <div className="flex items-center gap-3">
                     <Om size={40} state="thinking" />
-                    <p className="text-[0.95rem] text-kajal-soft">Searching the scriptures…</p>
+                    <p className="text-[0.95rem] text-kajal-soft">Reflecting on the scriptures…</p>
                   </div>
                 ) : (
                   <Answer
                     turn={turn as Required<Turn>}
                     onSpeaking={(s) => setSpeakingId(s ? turn.id : null)}
                     onReask={(d) => ask(turn.question, d)}
+                    onRetry={() => ask(turn.question, turn.depth, turn.id)}
+                    onFollowUp={i === turns.length - 1 ? fill : undefined}
                     disabled={thinking}
                   />
                 )}
@@ -134,7 +186,9 @@ export function AskSwami({
               disabled={thinking}
               placeholder="Ask a follow-up"
               compact
+              onStop={thinking ? () => stopper.current?.abort() : undefined}
             />
+            {left !== null && <QuestionsLeft left={left} />}
           </div>
         </section>
       )}
@@ -152,14 +206,39 @@ function Answer({
   turn,
   onSpeaking,
   onReask,
+  onRetry,
+  onFollowUp,
   disabled,
 }: {
   turn: Required<Turn>;
   onSpeaking: (s: boolean) => void;
   onReask: (d: Depth) => void;
+  onRetry: () => void;
+  onFollowUp?: (q: string) => void; // only under the latest answer
   disabled: boolean;
 }) {
   const { answer, depth } = turn;
+  // Something went wrong or they pressed Stop: their question stays, and one tap asks it again
+  if (answer.notice === "error" || answer.notice === "stopped") {
+    return (
+      <div className="flex flex-col items-start gap-3">
+        {answer.paragraphs.map((p, i) => (
+          <p key={i} className="max-w-[62ch] text-[1rem] leading-[1.7] text-kajal-soft">
+            {p}
+          </p>
+        ))}
+        {answer.help && <HelpCard help={answer.help} />}
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={onRetry}
+          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-kesar px-5 text-[0.95rem] font-semibold text-kesar-deep hover:bg-sandal-deep disabled:opacity-50"
+        >
+          <span aria-hidden="true">↻</span> Tap to retry
+        </button>
+      </div>
+    );
+  }
   const spoken = [
     ...answer.paragraphs,
     ...answer.verses.map(({ verse, meaning }) => `${whoSays(verse)}: ${verse.translation} ${meaning}`),
@@ -173,15 +252,7 @@ function Answer({
           {p}
         </p>
       ))}
-      {answer.help && (
-        <a
-          href={answer.help.href}
-          className="flex min-h-16 flex-col justify-center rounded-2xl bg-sandal-deep border border-kesar/40 px-6 py-3 text-kajal"
-        >
-          <span className="text-[0.85rem]">{answer.help.text}</span>
-          <span className="text-[1.2rem] font-bold">{answer.help.label}</span>
-        </a>
-      )}
+      {answer.help && <HelpCard help={answer.help} />}
       {answer.signInPrompt && (
         <Link
           href="/login"
@@ -199,6 +270,7 @@ function Answer({
             <span className="font-medium text-kesar-deep">For you: </span>
             {meaning.replace(/^for you,?(\s+this means)?\s*[,:]?\s*/i, "")}
           </p>
+          {!answer.notice && <SaveVerseButton verse={verse} className="w-fit" />}
         </div>
       ))}
       {answer.practice && (
@@ -215,6 +287,16 @@ function Answer({
         {/* Not saved: an answer can repeat something personal, so its audio is never kept */}
         <ListenButton text={spoken} onSpeakingChange={onSpeaking} />
         {!answer.notice && <ShareButton question={turn.question} answer={answer} />}
+        {!answer.notice && (
+          <CopyButton
+            text={[
+              ...answer.paragraphs,
+              ...answer.verses.map(
+                ({ verse, meaning }) => `${whoSays(verse)}: "${verse.translation}" (${verse.source})\n${meaning}`,
+              ),
+            ].join("\n\n")}
+          />
+        )}
         <button
           type="button"
           disabled={disabled}
@@ -224,9 +306,60 @@ function Answer({
           {depth === "simpler" ? "Go deeper (uses 2)" : "Say it more simply"}
         </button>
       </div>
+      {onFollowUp && !answer.notice && (
+        <ul aria-label="Ask next" className="flex flex-wrap gap-2">
+          {followUps({
+            hasVerse: answer.verses.length > 0,
+            hasPractice: Boolean(answer.practice),
+          }).map((q) => (
+            <li key={q}>
+              <button
+                type="button"
+                onClick={() => onFollowUp(q)}
+                className="min-h-11 rounded-full border border-sandal-edge px-4 py-2 text-left text-[0.9rem] leading-snug hover:border-kesar hover:bg-sandal-deep"
+              >
+                {q}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
       {!answer.notice && <ReportAnswer question={turn.question} answer={answer} depth={depth} />}
-      {answer.leftNote && answer.left !== undefined && <LeftNote left={answer.left} />}
     </div>
+  );
+}
+
+function HelpCard({ help }: { help: NonNullable<SwamiAnswer["help"]> }) {
+  return (
+    <a
+      href={help.href}
+      className="flex min-h-16 flex-col justify-center rounded-2xl bg-sandal-deep border border-kesar/40 px-6 py-3 text-kajal"
+    >
+      <span className="text-[0.85rem]">{help.text}</span>
+      <span className="text-[1.2rem] font-bold">{help.label}</span>
+    </a>
+  );
+}
+
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        } catch {
+          // Clipboard blocked: nothing to do
+        }
+      }}
+      className="inline-flex min-h-14 items-center gap-2 rounded-xl border border-sandal-edge px-5 text-[1rem] font-semibold hover:border-kajal"
+    >
+      {copied ? <CheckIcon className="size-5" /> : null}
+      {copied ? "Copied" : "Copy"}
+    </button>
   );
 }
 
@@ -247,6 +380,7 @@ function AskBox({
   placeholder = "What is on your mind?",
   autoFocus,
   compact = false,
+  onStop,
 }: {
   draft: string;
   setDraft: (s: string) => void;
@@ -255,6 +389,7 @@ function AskBox({
   placeholder?: string;
   autoFocus?: boolean;
   compact?: boolean; // one slim row, for the box pinned under a conversation
+  onStop?: () => void; // while an answer is coming: the send button becomes Stop
 }) {
   const [listening, setListening] = useState(false);
   const recRef = useRef<SpeechRec | null>(null);
@@ -272,7 +407,12 @@ function AskBox({
     rec.lang = "en-US";
     rec.interimResults = true;
     rec.onresult = (e) => {
-      setDraft(Array.from(e.results).map((r) => r[0].transcript).join("").slice(0, MAX_QUESTION));
+      setDraft(
+        Array.from(e.results)
+          .map((r) => r[0].transcript)
+          .join("")
+          .slice(0, MAX_QUESTION),
+      );
     };
     rec.onend = () => setListening(false);
     recRef.current = rec;
@@ -330,14 +470,25 @@ function AskBox({
             <MicIcon />
           </button>
         )}
-        <button
-          type="submit"
-          disabled={disabled || !draft.trim()}
-          className="flex min-h-14 shrink-0 items-center gap-2 rounded-xl bg-kesar px-5 font-semibold text-on-kesar hover:bg-kesar-deep hover:text-sandal disabled:bg-sandal-deep disabled:text-kajal-soft"
-        >
-          <SendIcon className="size-6" />
-          <span className={compact ? "sr-only sm:not-sr-only" : undefined}>Ask</span>
-        </button>
+        {onStop ? (
+          <button
+            type="button"
+            onClick={onStop}
+            className="flex min-h-14 shrink-0 items-center gap-2 rounded-xl border border-kajal px-5 font-semibold hover:bg-sandal"
+          >
+            <StopIcon className="size-6" />
+            <span className={compact ? "sr-only sm:not-sr-only" : undefined}>Stop</span>
+          </button>
+        ) : (
+          <button
+            type="submit"
+            disabled={disabled || !draft.trim()}
+            className="flex min-h-14 shrink-0 items-center gap-2 rounded-xl bg-kesar px-5 font-semibold text-on-kesar hover:bg-kesar-deep hover:text-sandal disabled:bg-sandal-deep disabled:text-kajal-soft"
+          >
+            <SendIcon className="size-6" />
+            <span className={compact ? "sr-only sm:not-sr-only" : undefined}>Ask</span>
+          </button>
+        )}
       </div>
     </form>
   );
@@ -352,7 +503,8 @@ function Sources({ turn }: { turn: Turn }) {
   return (
     <p className="flex items-center gap-2 font-mono text-[0.75rem] text-kajal-soft">
       <span aria-hidden="true" className="size-1.5 rounded-full bg-kesar shadow-[0_0_8px_var(--kesar)]" />
-      Quoting {turn.answer.verses.length} {turn.answer.verses.length === 1 ? "passage" : "passages"} · {texts.join(", ")}
+      Quoting {turn.answer.verses.length} {turn.answer.verses.length === 1 ? "passage" : "passages"} ·{" "}
+      {texts.join(", ")}
     </p>
   );
 }

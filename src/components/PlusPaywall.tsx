@@ -7,20 +7,20 @@ import { plusSold, usePlus } from "@/lib/plus";
 import { VOICE_FALLBACK } from "@/lib/speak";
 import { accessToken, useAuth } from "@/lib/supabase";
 import { OmMark } from "./OmMark";
+import { track } from "@/lib/events";
 import { PlusPlans } from "./PlusPlans";
 
+// Short, outcome-first headlines; the line under each says exactly what Plus changes right now
 const TITLES: Record<PaywallReason, string> = {
   questions: "Keep asking today",
   voice: "Keep hearing Swamiji",
-  tap: "SwamiGPT Plus",
-  offer: "Go deeper with Plus",
+  tap: "Wisdom for whatever you're facing",
 };
 
 const LINES: Record<PaywallReason, string> = {
-  questions: `You've asked your ${PLUS.questions.free} questions for today. Plus lets you keep going.`,
+  questions: `You've used today's ${PLUS.questions.free} questions. Plus gives you up to ${PLUS.questions.plus} a day.`,
   voice: "You've used your answers read aloud for now, so the phone's own voice is reading. Plus gives you many more.",
   tap: "More questions each day, and Swamiji reads your answers aloud.",
-  offer: "Ask as much as your heart needs, and hear Swamiji read every answer aloud.",
 };
 
 const BENEFITS = [
@@ -28,6 +28,11 @@ const BENEFITS = [
   `Swamiji reads about ${PLUS.readAloud.plus} answers aloud a month`,
   "The same best answers as everyone. We never make free ones worse",
 ];
+
+const dismiss = (method: "x" | "maybe_later" | "outside" | "escape") => {
+  track("paywall_dismissed", { method });
+  closePaywall();
+};
 
 // The Plus popup (see lib/paywall for when it opens). Always easy to close: SwamiGPT stays free.
 export function PlusPaywall() {
@@ -57,8 +62,9 @@ export function PlusPaywall() {
 
   useEffect(() => {
     if (!reason) return;
+    track("paywall_viewed", { surface: reason === "tap" ? "button" : `gate_${reason}` });
     close.current?.focus();
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && closePaywall();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && dismiss("escape");
     window.addEventListener("keydown", onKey);
     const { overflow } = document.body.style;
     document.body.style.overflow = "hidden";
@@ -73,7 +79,7 @@ export function PlusPaywall() {
   return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center bg-kajal/50 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[max(0.75rem,env(safe-area-inset-top))] sm:items-center"
-      onClick={(e) => e.target === e.currentTarget && closePaywall()}
+      onClick={(e) => e.target === e.currentTarget && dismiss("outside")}
     >
       <div
         role="dialog"
@@ -84,9 +90,9 @@ export function PlusPaywall() {
         <button
           ref={close}
           type="button"
-          onClick={closePaywall}
+          onClick={() => dismiss("x")}
           aria-label="Close"
-          className="absolute right-3 top-3 z-10 flex size-11 items-center justify-center rounded-full text-[1.3rem] text-kajal-soft hover:bg-sandal hover:text-kajal"
+          className="absolute left-3 top-3 z-10 flex size-11 items-center justify-center rounded-full text-[1.3rem] text-kajal-soft hover:bg-sandal hover:text-kajal"
         >
           ✕
         </button>
@@ -108,6 +114,16 @@ export function PlusPaywall() {
           ))}
         </ul>
         <PlusPlans inPopup />
+        <p className="mt-4 text-center text-[0.85rem] text-kajal-soft">
+          Your conversations are private and never used to train public AI models. No ads, ever.
+        </p>
+        <button
+          type="button"
+          onClick={() => dismiss("maybe_later")}
+          className="mx-auto mt-2 flex min-h-11 items-center px-4 text-[0.95rem] text-kajal-soft underline-offset-4 hover:text-kajal hover:underline"
+        >
+          Maybe later
+        </button>
       </div>
     </div>
   );
@@ -142,18 +158,12 @@ export function SeePlusButton() {
   );
 }
 
-// The gentle note when 2 or fewer questions are left today
-export function LeftNote({ left }: { left: number }) {
+// A calm count of today's questions, under the question box: information, never a sales pitch
+export function QuestionsLeft({ left }: { left: number }) {
+  if (left < 0 || left > PLUS.questions.plus) return null;
   return (
-    <p className="max-w-[62ch] text-[0.9rem] text-kajal-soft">
-      {left === 1 ? "1 question" : `${left} questions`} left today. Plus gives you {PLUS.questions.plus} a day.{" "}
-      <button
-        type="button"
-        onClick={() => openPaywall("tap")}
-        className="font-semibold text-kesar-deep underline underline-offset-4"
-      >
-        See Plus
-      </button>
+    <p className="mt-2 text-center text-[0.8rem] text-kajal-soft" aria-live="polite">
+      {left === 0 ? "No questions left today. New ones come tomorrow." : `${left} ${left === 1 ? "question" : "questions"} left today`}
     </p>
   );
 }

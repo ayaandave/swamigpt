@@ -81,7 +81,7 @@ export default async function PassagePage(props: PageProps<"/read/[text]/[sectio
       {attribution(p) && <p className="mt-1 text-[1rem] text-kajal-soft">{attribution(p)}</p>}
 
       <div className="mt-6">
-        <VerseCard verse={p} />
+        <VerseCard verse={p} linkSource={false} />
       </div>
 
       <div className="mt-6 flex flex-wrap gap-3">

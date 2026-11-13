@@ -7,7 +7,7 @@ import { PLUS } from "./plans";
 import { plusSold } from "./plus";
 import { accessToken, supabase } from "./supabase";
 import { requestAiConsent } from "./ai-consent";
-import { openPaywall, takeLeftNote } from "./paywall";
+import { openPaywall } from "./paywall";
 
 export type PastTurn = { question: string; answer: SwamiAnswer };
 
@@ -28,6 +28,8 @@ async function hasPlus() {
   return Boolean(data) && (data!.expires_at === null || new Date(data!.expires_at) > new Date());
 }
 
+const STOPPED: SwamiAnswer = { paragraphs: ["You stopped this answer."], verses: [], notice: "stopped" };
+
 export type LessonContext = { title: string; text: string };
 
 async function fetchAnswer(
@@ -37,6 +39,7 @@ async function fetchAnswer(
   history: PastTurn[] = [],
   lesson?: LessonContext, // when asked from inside a lesson
   about?: string, // the library passage they were reading, by id
+  signal?: AbortSignal, // the Stop button
 ): Promise<SwamiAnswer> {
   try {
     // Signed-in people are counted by their account for the daily limit
@@ -44,6 +47,7 @@ async function fetchAnswer(
     const res = await fetch("/api/ask", {
       method: "POST",
       headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      signal,
       body: JSON.stringify({
         question,
         depth,
@@ -112,18 +116,10 @@ async function fetchAnswer(
       }
     }
     if (!res.ok) return SORRY;
-    const answer = (await res.json()) as SwamiAnswer;
-    // Signed in on the free plan with 2 or fewer left: a gentle note about Plus, once a day
-    const left = answer.left;
-    delete answer.left;
-    if (token && plusSold() && left !== undefined && left > 0 && left <= 2 && !(await hasPlus()) && takeLeftNote()) {
-      answer.leftNote = true;
-      answer.left = left;
-    }
-    // Free account: offer Plus once they've had a moment with the answer (lib/paywall decides how often)
-    if (token && plusSold() && !(await hasPlus())) setTimeout(() => openPaywall("offer"), 8000);
-    return answer;
-  } catch {
+    // `left` (questions left today) is shown as a quiet count under the box, and never saved
+    return (await res.json()) as SwamiAnswer;
+  } catch (e) {
+    if (signal?.aborted || (e instanceof DOMException && e.name === "AbortError")) return STOPPED;
     return SORRY;
   }
 }

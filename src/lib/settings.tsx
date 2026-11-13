@@ -7,6 +7,9 @@ export type Theme = "system" | "dark" | "light";
 export type VoiceId = "swamiji" | "amma" | "sakshi";
 export type Depth = "simpler" | "deeper";
 export type AgeGroup = "under13" | "13plus";
+// Asked once on the welcome screens; they shape the suggested questions and today's meditation
+export type Focus = "stress" | "school" | "relationships" | "faith" | "curious";
+export type Familiarity = "none" | "little" | "grew-up";
 
 export type Settings = {
   textSize: TextSize;
@@ -19,6 +22,9 @@ export type Settings = {
   avatar: string | null; // an id from lib/avatars, chosen on the account page
   dailyVerse: { on: boolean; time: string }; // the iPhone app's morning notification, "07:30"
   aiConsent: boolean; // agreed that questions are sent to Anthropic's AI (asked before the first one)
+  focus: Focus | null; // "What brings you here?"
+  familiarity: Familiarity | null; // "How well do you know the Gita?"
+  dailyMinutes: 1 | 5 | 10 | null; // "How much time do you have each day?"
 };
 
 const KEY = "swamigpt.settings";
@@ -34,6 +40,9 @@ const store = createLocalStore<Settings>(KEY, {
   avatar: null,
   dailyVerse: { on: false, time: "07:30" },
   aiConsent: false,
+  focus: null,
+  familiarity: null,
+  dailyMinutes: null,
 });
 
 // "Match my phone" follows a phone's own light or dark setting; laptops and desktops (a mouse or

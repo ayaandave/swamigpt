@@ -3,15 +3,20 @@
 import { useRouter } from "next/navigation";
 import { useId, useState } from "react";
 import { setPendingQuestion } from "@/lib/pending-question";
+import { useSettings } from "@/lib/settings";
+import { useIsClient } from "@/lib/store";
+import { suggestedQuestions } from "@/lib/suggestions";
 import { SendIcon } from "../icons";
 
-const EXAMPLES = ["I'm stressed about a test", "What is karma?", "How do I find my passion?", "Who is Krishna?"];
-
 // The home screen's question box: a gold-edged field that shows how many passages are ready to
-// search, and four example questions. Asking opens the chat with the question already sent.
+// search, and three questions suggested for them (from the welcome answers and the time of day).
+// A suggestion only fills the box; asking opens the chat with the question already sent.
 export function HomeAsk({ passages }: { passages?: number }) {
   const router = useRouter();
   const [draft, setDraft] = useState("");
+  const { focus } = useSettings();
+  const isClient = useIsClient();
+  const examples = suggestedQuestions(isClient ? focus : null, isClient ? new Date().getHours() : 12);
   const id = useId(); // the home page can show this box more than once
   const go = (q: string) => {
     const question = q.trim();
@@ -62,12 +67,15 @@ export function HomeAsk({ passages }: { passages?: number }) {
           </div>
         </div>
       </form>
-      <ul className="mt-3 grid grid-cols-2 gap-2">
-        {EXAMPLES.map((q) => (
+      <ul className="mt-3 flex flex-col gap-2">
+        {examples.map((q) => (
           <li key={q}>
             <button
               type="button"
-              onClick={() => go(q)}
+              onClick={() => {
+                setDraft(q);
+                document.getElementById(id)?.focus();
+              }}
               className="min-h-11 w-full rounded-xl border border-sandal-edge bg-sandal-deep px-3 py-2 text-left text-[0.875rem] leading-snug text-kajal hover:border-kesar/60"
             >
               {q}

@@ -248,6 +248,7 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
     const save = (p: Plan) =>
       p.yearly && monthly && monthly.amount > 0 ? Math.round((1 - p.amount / (monthly.amount * 12)) * 100) : 0;
     const per = (p: Plan) => (p.yearly ? "year" : "month");
+    const anyTrial = plans.some((p) => p.trialDays > 0);
     body = (
       <div className="flex flex-col gap-4">
         <div role="radiogroup" aria-label="Choose a plan" className="grid grid-cols-2 gap-3">
@@ -262,13 +263,13 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
                 aria-checked={on}
                 disabled={busy}
                 onClick={() => setPicked(p.id)}
-                className={`relative flex min-h-32 flex-col items-start rounded-2xl border-2 px-4 pb-4 pt-5 text-left transition-colors disabled:opacity-60 ${
-                  on ? "border-kesar bg-sandal" : "border-sandal-edge hover:border-kajal-soft"
+                className={`relative flex min-h-32 flex-col items-start rounded-2xl px-4 pb-4 pt-5 text-left transition-colors disabled:opacity-60 ${
+                  on ? "border-[3px] border-kesar" : "m-px border-2 border-sandal-edge hover:border-kajal-soft"
                 }`}
               >
-                {saving > 0 && (
+                {p.yearly && (
                   <span className="absolute -top-3 left-3 rounded-full bg-kesar px-2.5 py-0.5 text-[0.75rem] font-bold uppercase tracking-[0.06em] text-on-kesar">
-                    Save {saving}%
+                    {saving > 0 ? `Most popular · Save ${saving}%` : "Most popular"}
                   </span>
                 )}
                 <span className="flex items-center gap-2 text-[0.95rem] font-semibold">
@@ -281,8 +282,10 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
                 <span className="mt-2 text-[1.3rem] font-bold leading-tight">{p.price}</span>
                 <span className="text-[0.9rem] text-kajal-soft">a {per(p)}</span>
                 {p.yearly && p.perMonth && <span className="text-[0.85rem] text-kajal-soft">({p.perMonth} a month)</span>}
-                {p.trialDays > 0 && (
+                {p.trialDays > 0 ? (
                   <span className="mt-auto pt-2 text-[0.9rem] font-semibold text-kesar-deep">{p.trialDays} days free</span>
+                ) : (
+                  anyTrial && <span className="mt-auto pt-2 text-[0.9rem] text-kajal-soft">No free trial</span>
                 )}
               </button>
             );
@@ -302,8 +305,9 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
         )}
 
         <button type="button" disabled={busy} onClick={() => void buy(plan.id)} className={`${bigButton} ${gold}`}>
-          {plan.trialDays > 0 ? `Start ${plan.trialDays}-day free trial` : `Get Plus for ${plan.price} a ${per(plan)}`}
+          {plan.trialDays > 0 ? `Start ${plan.trialDays}-day free trial` : `Continue – ${plan.price} a ${per(plan)}`}
         </button>
+        <p className="-mt-2 text-center text-[0.9rem] font-semibold text-kajal-soft">Cancel anytime</p>
 
         <p className="text-[0.85rem] leading-[1.6] text-kajal-soft">
           {plan.trialDays > 0 ? `Free for ${plan.trialDays} days, then ${plan.price} a ${per(plan)}.` : `${plan.price} a ${per(plan)}.`}{" "}

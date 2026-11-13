@@ -50,6 +50,12 @@ export default function SettingsPage() {
   return (
     <div className="pt-8">
       <h1 className="text-[1.75rem] font-medium leading-tight tracking-tight">Settings</h1>
+      <Link
+        href="/saved"
+        className="mt-6 flex min-h-14 items-center justify-between rounded-2xl border border-sandal-edge px-5 font-semibold hover:border-kajal"
+      >
+        Saved verses <span aria-hidden="true">→</span>
+      </Link>
 
       <Choice
         title="Appearance"

@@ -13,6 +13,10 @@ import { dailyEntries } from "@/lib/daily";
 import { OldAskLink } from "@/components/home/OldAskLink";
 import { AskIcon, LearnIcon, MeditateIcon, ReadIcon } from "@/components/icons";
 import { ExampleAnswer } from "@/components/home/ExampleAnswer";
+import { TodayMeditation } from "@/components/home/TodayMeditation";
+import { MEDITATIONS } from "@/lib/meditations";
+
+const MEDITATION_SUMMARIES = MEDITATIONS.map(({ slug, title, minutes, description }) => ({ slug, title, minutes, description }));
 
 const TILES = [
   { href: "/ask", title: "Ask", line: "Real answers from the scriptures, for your question", Icon: AskIcon },
@@ -65,6 +69,8 @@ export default function Home() {
       <HomeHero>
         <HomeAsk passages={PASSAGES.length} />
       </HomeHero>
+      <TodayCard entries={dailyEntries()} />
+      <TodayMeditation meditations={MEDITATION_SUMMARIES} />
       <ContinueLesson />
       <PracticeStreak className="mt-6" />
 
@@ -82,7 +88,6 @@ export default function Home() {
         ))}
       </section>
 
-      <TodayCard entries={dailyEntries()} />
       <InstallApp />
 
       <section className="mt-14">

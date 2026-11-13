@@ -43,6 +43,20 @@ export function onPractice(l: (days: string[]) => void) {
   };
 }
 
+// Days in a row, counting back from today (or yesterday, if today isn't done yet). One missed day
+// a week is forgiven, so a single busy day never breaks it: calm, with no shame. `done(i)` says
+// whether the day i days ago had practice.
+export function countStreak(done: (daysAgo: number) => boolean): number {
+  let streak = 0;
+  let grace = -Infinity; // the day the last forgiven miss was
+  for (let i = done(0) ? 0 : 1; i < 1000; i++) {
+    if (done(i)) streak++;
+    else if ((streak > 0 || i === 1) && i - grace > 7 && done(i + 1)) grace = i;
+    else break;
+  }
+  return streak;
+}
+
 // Today's streak (still alive if the last practice was yesterday), the longest, and the last 7 days
 export function usePractice() {
   const { days } = store.useStore();
@@ -50,8 +64,7 @@ export function usePractice() {
   const isClient = useIsClient();
   if (!isClient) return { total: 0, streak: 0, longest: 0, week: [], practisedToday: false };
   const set = new Set(days);
-  let streak = 0;
-  for (let i = set.has(daysAgo(0)) ? 0 : 1; set.has(daysAgo(i)); i++) streak++;
+  const streak = countStreak((i) => set.has(daysAgo(i)));
   let longest = 0;
   let run = 0;
   let prev: Date | null = null;

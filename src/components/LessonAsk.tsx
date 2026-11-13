@@ -9,7 +9,7 @@ import type { SwamiAnswer } from "@/lib/swami";
 import { useAuth } from "@/lib/supabase";
 import { Om } from "./Om";
 import { VerseCard } from "./VerseCard";
-import { LeftNote, SeePlusButton } from "./PlusPaywall";
+import { SeePlusButton } from "./PlusPaywall";
 import { whoSays } from "@/lib/scripture/who";
 import { SendIcon } from "./icons";
 
@@ -162,7 +162,6 @@ function InlineAnswer({ answer }: { answer: SwamiAnswer }) {
           <span className="font-display text-[1.1rem]">{answer.practice.title}</span>
         </Link>
       )}
-      {answer.leftNote && answer.left !== undefined && <LeftNote left={answer.left} />}
     </div>
   );
 }
