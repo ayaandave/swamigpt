@@ -40,8 +40,8 @@ export function TodayCard({ entries }: { entries: Daily[] }) {
       <Link href="/today" className="block">
         <span className="text-[0.85rem] font-semibold uppercase tracking-[0.12em] text-flame">Today&apos;s verse</span>
         <span className="mt-2 block text-[0.95rem] text-kajal-soft">{whoSays(verse)}:</span>
-        <span className="mt-1 line-clamp-4 block font-display text-[1.15rem] leading-snug">{verse.translation}</span>
-        {verse.plain && <span className="mt-2 line-clamp-2 block text-[0.95rem] text-kajal-soft">{verse.plain}</span>}
+        <span className="mt-1 line-clamp-4 font-display text-[1.15rem] leading-snug">{verse.translation}</span>
+        {verse.plain && <span className="mt-2 line-clamp-2 text-[0.95rem] text-kajal-soft">{verse.plain}</span>}
         <span className="mt-2 block font-mono text-[0.75rem] text-kesar-deep">{caption(verse)} · read more →</span>
       </Link>
       <div className="mt-4 flex flex-wrap gap-2">

@@ -112,7 +112,7 @@ export function WelcomeGate() {
             <ul className="mt-5 flex flex-col gap-2 text-[1.05rem] text-kajal-soft">
               <li>Ask about your life, and get a calm answer.</li>
               <li>Every answer comes from real scripture.</li>
-              <li>Learn, meditate and grow, a few minutes a day.</li>
+              <li>Learn and meditate, a few minutes a day.</li>
             </ul>
             <button type="button" onClick={() => next()} className={`${primary} mt-10`}>
               Get started

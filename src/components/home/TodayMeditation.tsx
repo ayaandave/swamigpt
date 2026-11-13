@@ -29,7 +29,7 @@ export function TodayMeditation({ meditations }: { meditations: MeditationSummar
           Today&apos;s meditation · {m.minutes} min
         </span>
         <span className="mt-0.5 block font-display text-[1.1rem] leading-tight">{m.title}</span>
-        <span className="mt-0.5 block text-[0.9rem] leading-snug text-kajal-soft line-clamp-2">{m.description}</span>
+        <span className="mt-0.5 text-[0.9rem] leading-snug text-kajal-soft line-clamp-2">{m.description}</span>
       </span>
       <MeditateIcon className="ml-auto hidden size-7 shrink-0 text-kesar-deep sm:block" />
     </Link>
