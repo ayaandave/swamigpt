@@ -120,6 +120,8 @@ async function fetchAnswer(
       answer.leftNote = true;
       answer.left = left;
     }
+    // Free account: offer Plus once they've had a moment with the answer (lib/paywall decides how often)
+    if (token && plusSold() && !(await hasPlus())) setTimeout(() => openPaywall("offer"), 8000);
     return answer;
   } catch {
     return SORRY;

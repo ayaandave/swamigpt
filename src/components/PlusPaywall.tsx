@@ -13,12 +13,14 @@ const TITLES: Record<PaywallReason, string> = {
   questions: "Keep asking today",
   voice: "Keep hearing Swamiji",
   tap: "SwamiGPT Plus",
+  offer: "Go deeper with Plus",
 };
 
 const LINES: Record<PaywallReason, string> = {
   questions: `You've asked your ${PLUS.questions.free} questions for today. Plus lets you keep going.`,
   voice: "You've used your answers read aloud for now, so the phone's own voice is reading. Plus gives you many more.",
   tap: "More questions each day, and Swamiji reads your answers aloud.",
+  offer: "Ask as much as your heart needs, and hear Swamiji read every answer aloud.",
 };
 
 const BENEFITS = [
@@ -108,6 +110,22 @@ export function PlusPaywall() {
         <PlusPlans inPopup />
       </div>
     </div>
+  );
+}
+
+// The gold "Plus" button in the header, for anyone who doesn't have Plus yet
+export function HeaderPlusButton() {
+  const { ready, user } = useAuth();
+  const { plus } = usePlus();
+  if (!ready || !plusSold() || (user && plus !== false)) return null;
+  return (
+    <button
+      type="button"
+      onClick={() => openPaywall("tap")}
+      className="flex h-[44px] items-center justify-center gap-1 rounded-full bg-kesar px-[14px] text-[14px] font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
+    >
+      <span aria-hidden="true">✦</span> Plus
+    </button>
   );
 }
 

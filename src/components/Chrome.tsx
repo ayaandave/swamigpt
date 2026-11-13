@@ -8,6 +8,7 @@ import { OmMark } from "@/components/OmMark";
 import { AvatarBadge } from "./AvatarPicker";
 import { AskIcon, HomeIcon, LearnIcon, MeditateIcon, MoneyIcon, PersonIcon, SettingsIcon } from "./icons";
 import { useIsAdmin } from "@/lib/admin";
+import { HeaderPlusButton } from "./PlusPaywall";
 
 const SIZES: TextSize[] = ["regular", "large", "larger"];
 const SIZE_LABEL: Record<TextSize, string> = { regular: "Aa", large: "Aa+", larger: "Aa++" };
@@ -39,7 +40,7 @@ export function Header() {
     <header className="relative z-10 mx-auto flex w-full max-w-3xl items-center md:max-w-5xl justify-between gap-2 px-[16px] pt-[max(16px,env(safe-area-inset-top))] sm:px-6">
       <Link href="/" className="flex min-h-[44px] min-w-0 items-center gap-1.5 rounded-full" aria-label="SwamiGPT home">
         <OmMark size={34} />
-        <span className="font-display text-[20px] tracking-tight sm:text-[24px]">SwamiGPT</span>
+        <span className="hidden font-display text-[20px] tracking-tight min-[400px]:inline sm:text-[24px]">SwamiGPT</span>
       </Link>
       {/* On big screens the four sections sit up here; phones keep the tab bar at the bottom */}
       <nav aria-label="Main" className="hidden md:block">
@@ -63,6 +64,7 @@ export function Header() {
         </ul>
       </nav>
       <div className="flex shrink-0 items-center gap-[6px] sm:gap-2">
+        <HeaderPlusButton />
         <button
           type="button"
           onClick={() => update({ textSize: next })}

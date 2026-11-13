@@ -1,9 +1,9 @@
 "use client";
 
 // The Plus popup: opened at the moments Plus actually helps (today's questions are used up, or the
-// month's read-aloud has run out), never on a first visit and at most once a day on its own.
+// month's read-aloud has run out, or after an answer every few days), at most once a day on its own.
 // Tapping "See SwamiGPT Plus" always opens it. PlusPaywall shows it.
-export type PaywallReason = "questions" | "voice" | "tap";
+export type PaywallReason = "questions" | "voice" | "tap" | "offer";
 
 let open: PaywallReason | null = null;
 const listeners = new Set<() => void>();
@@ -12,7 +12,9 @@ const emit = () => listeners.forEach((l) => l());
 const today = () => new Date().toISOString().slice(0, 10);
 const SHOWN = "swami.paywall.shown"; // the last day it opened on its own
 const FIRST = "swami.firstSeen"; // the first day this browser used SwamiGPT
-const NOTE = "swami.paywall.note"; // the last day the "questions left" note showed
+const NOTE = "swami.paywall.note";
+const OFFER = "swami.paywall.offer"; // the last day the after-an-answer offer showed
+const OFFER_EVERY_DAYS = 3; // the last day the "questions left" note showed
 
 function read(key: string) {
   try {
@@ -35,7 +37,14 @@ export function markSeen() {
 }
 
 export function openPaywall(reason: PaywallReason) {
-  if (reason !== "tap") {
+  if (reason === "offer") {
+    // After an answer, while it's fresh: the first time, then every few days
+    const last = read(OFFER);
+    if (last && (Date.parse(today()) - Date.parse(last)) / 86400000 < OFFER_EVERY_DAYS) return;
+    if (read(SHOWN) === today()) return;
+    write(OFFER, today());
+    write(SHOWN, today());
+  } else if (reason !== "tap") {
     // Running out of questions is something they did, so it may show on day one; read-aloud waits
     const first = read(FIRST);
     if (reason === "voice" && (!first || first === today())) return;

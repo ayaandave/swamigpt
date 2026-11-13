@@ -66,6 +66,11 @@ const fromApple = (pkg: PurchasesPackage, usedTrials: Set<string>): Plan => {
   };
 };
 
+// Apple's store can stall without ever answering; give up after a while instead of showing nothing
+function timeout<T>(work: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([work, new Promise<T>((_, no) => setTimeout(() => no(new Error("timed out")), ms))]);
+}
+
 const gold = "bg-kesar text-on-kesar hover:bg-kesar-deep hover:text-sandal";
 const bigButton = "flex min-h-14 w-full items-center justify-center rounded-2xl px-6 text-[1.1rem] font-bold disabled:opacity-60";
 
@@ -84,6 +89,7 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
   const [manageUrl, setManageUrl] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     if (!plusSold() || !user) return;
@@ -95,17 +101,21 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
       setPicked((p) => p ?? sorted[0]?.id ?? null);
     };
     const loaded = isNativeApp()
-      ? applePackages(user.id).then(async (packages) => {
-          const used = await appleUsedTrials(
-            user.id,
-            packages.map((p) => p.product.identifier),
+      ? timeout(applePackages(user.id), 20000).then(async (packages) => {
+          // Only decides whether to show the trial; Apple's sheet has the final word
+          const used = await timeout(
+            appleUsedTrials(
+              user.id,
+              packages.map((p) => p.product.identifier),
+            ),
+            5000,
           ).catch(() => new Set<string>());
           if (!live) return;
           setApple(packages);
           setManageUrl(APPLE_MANAGE_URL);
           show(packages.map((p) => fromApple(p, used)));
         })
-      : purchases(user.id).then(async (p) => {
+      : timeout(purchases(user.id), 20000).then(async (p) => {
           const [offerings, info] = await Promise.all([p.getOfferings(), p.getCustomerInfo()]);
           if (!live) return;
           const packages = offerings.current?.availablePackages ?? [];
@@ -113,11 +123,14 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
           setManageUrl(info.managementURL);
           show(packages.map(fromWeb));
         });
-    loaded.catch(() => live && setProblem("Plans couldn't load. Please try again in a moment."));
+    loaded.catch((e) => {
+      console.error("Plus plans didn't load", e);
+      if (live) setProblem("Plans couldn't load. Please try again in a moment.");
+    });
     return () => {
       live = false;
     };
-  }, [user]);
+  }, [user, attempt]);
 
   // Paid: switch Plus on now instead of waiting for the webhook. If that step fails, the webhook
   // still turns Plus on shortly, so say so rather than asking them to pay again
@@ -216,7 +229,16 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
       </>
     );
   } else if (!plans) {
-    body = <div className="h-48" />;
+    body = problem ? (
+      <button type="button" onClick={() => {
+        setProblem(null);
+        setAttempt((a) => a + 1);
+      }} className={`${bigButton} ${gold}`}>
+        Try again
+      </button>
+    ) : (
+      <p className="flex h-32 items-center justify-center text-kajal-soft">Loading plans…</p>
+    );
   } else if (plans.length === 0) {
     body = <p>Plans are being set up. Please check back soon.</p>;
   } else {
