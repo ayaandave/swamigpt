@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { pageMeta } from "@/lib/seo";
 import { PlusPlans } from "@/components/PlusPlans";
@@ -50,18 +49,6 @@ export default function PlusPage() {
       </table>
 
       <PlusPlans />
-
-      <p className="mt-8 max-w-[60ch] text-[0.9rem] text-kajal-soft">
-        Cancel any time. Plus also helps keep SwamiGPT growing: new texts, lessons and recordings. See our{" "}
-        <Link href="/terms" className="underline underline-offset-2">
-          Terms
-        </Link>{" "}
-        and{" "}
-        <Link href="/privacy" className="underline underline-offset-2">
-          Privacy Policy
-        </Link>
-        .
-      </p>
     </div>
   );
 }

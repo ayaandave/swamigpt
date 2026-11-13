@@ -115,3 +115,19 @@ export async function takeSpeech(request: Request, chars: number, userId: string
   }
   return data === true;
 }
+
+// Whether a free account has used up its read-aloud for now, so the app can offer Plus when the
+// voice falls back to the phone's own. Mirrors the free limits in the database's use_voice
+// (2,000 characters a day, 6,000 over 30 days), with room for one more piece of audio.
+const FREE_VOICE = { day: 2000, month: 6000, piece: 350 };
+export async function voiceUsedUp(uid: string): Promise<boolean> {
+  if (!url || !secret) return false;
+  const sb = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
+  const since = new Date(Date.now() - 29 * 86_400_000).toISOString().slice(0, 10);
+  const { data, error } = await sb.from("speech_usage").select("day, chars").eq("who", `user:${uid}`).gte("day", since);
+  if (error || !data) return false;
+  const today = new Date().toISOString().slice(0, 10);
+  const month = data.reduce((sum, r) => sum + (r.chars as number), 0);
+  const day = data.filter((r) => r.day === today).reduce((sum, r) => sum + (r.chars as number), 0);
+  return day + FREE_VOICE.piece > FREE_VOICE.day || month + FREE_VOICE.piece > FREE_VOICE.month;
+}

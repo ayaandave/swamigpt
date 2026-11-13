@@ -27,6 +27,15 @@ export async function applePackages(userId: string) {
   return offerings.current?.availablePackages ?? [];
 }
 
+// Product ids whose free trial this Apple ID has already used (Apple gives each trial once).
+// When Apple can't say, the trial is shown and Apple's own purchase sheet has the final word.
+export async function appleUsedTrials(userId: string, productIds: string[]): Promise<Set<string>> {
+  const p = await purchases(userId);
+  const found = await p.checkTrialOrIntroductoryPriceEligibility({ productIdentifiers: productIds });
+  // 1 = INTRO_ELIGIBILITY_STATUS_INELIGIBLE
+  return new Set(Object.entries(found).filter(([, e]) => e.status === 1).map(([id]) => id));
+}
+
 // "cancelled" when they backed out; throws on a real failure
 export async function buyApple(userId: string, pkg: PurchasesPackage): Promise<"bought" | "cancelled"> {
   const p = await purchases(userId);

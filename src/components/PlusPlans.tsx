@@ -8,7 +8,7 @@ import { PLUS, plusSold, usePlus } from "@/lib/plus";
 import { isNativeApp } from "@/lib/native";
 import { useIsClient } from "@/lib/store";
 import { accessToken, useAuth } from "@/lib/supabase";
-import { APPLE_MANAGE_URL, applePackages, buyApple, restoreApple } from "@/lib/apple-purchases";
+import { APPLE_MANAGE_URL, appleUsedTrials, applePackages, buyApple, restoreApple } from "@/lib/apple-purchases";
 
 // Web checkout through RevenueCat (Stripe underneath). The iPhone app uses Apple's in-app purchase
 // instead (lib/apple-purchases), linked to the same account, so Plus bought in either place works in both.
@@ -23,39 +23,64 @@ async function purchases(userId: string) {
   return instance;
 }
 
-// One plan button, whichever store sells it
-type Plan = { id: string; title: string; price: string; perMonth: string | null; trial: boolean; yearly: boolean };
+// One plan, whichever store sells it
+type Plan = {
+  id: string;
+  price: string; // what they're actually charged each time, always shown biggest (Apple 3.1.2)
+  amount: number; // the same, as a number, to work out the yearly saving
+  perMonth: string | null;
+  trialDays: number; // 0 when there's no free trial (or they've had it)
+  yearly: boolean;
+};
+
+// "P1W" → 7, "P7D" → 7, "P1M" → 30
+const days = (iso: string | null | undefined) => {
+  const m = iso?.match(/^P(\d+)([DWMY])$/);
+  if (!m) return 0;
+  return Number(m[1]) * { D: 1, W: 7, M: 30, Y: 365 }[m[2] as "D" | "W" | "M" | "Y"];
+};
 
 const fromWeb = (pkg: Package): Plan => {
   const option = pkg.webBillingProduct.defaultSubscriptionOption;
   return {
     id: pkg.identifier,
-    title: pkg.webBillingProduct.title,
-    price: pkg.webBillingProduct.currentPrice.formattedPrice,
+    price: pkg.webBillingProduct.price.formattedPrice,
+    amount: pkg.webBillingProduct.price.amountMicros / 1e6,
     perMonth: option?.base.pricePerMonth?.formattedPrice ?? null,
-    trial: Boolean(option?.trial?.periodDuration),
+    trialDays: days(option?.trial?.periodDuration),
     yearly: pkg.packageType === "$rc_annual",
   };
 };
 
-const fromApple = (pkg: PurchasesPackage): Plan => ({
-  id: pkg.identifier,
-  title: pkg.product.title,
-  price: pkg.product.priceString,
-  perMonth: pkg.product.pricePerMonthString,
-  trial: pkg.product.introPrice?.price === 0,
-  yearly: pkg.packageType === "ANNUAL",
-});
+const UNIT_DAYS: Record<string, number> = { DAY: 1, WEEK: 7, MONTH: 30, YEAR: 365 };
+const fromApple = (pkg: PurchasesPackage, usedTrials: Set<string>): Plan => {
+  const intro = pkg.product.introPrice;
+  const free = intro && intro.price === 0 && !usedTrials.has(pkg.product.identifier);
+  return {
+    id: pkg.identifier,
+    price: pkg.product.priceString,
+    amount: pkg.product.price,
+    perMonth: pkg.product.pricePerMonthString,
+    trialDays: free ? intro.periodNumberOfUnits * (UNIT_DAYS[intro.periodUnit] ?? 0) : 0,
+    yearly: pkg.packageType === "ANNUAL",
+  };
+};
 
-const button =
-  "flex min-h-14 w-full items-center justify-between gap-3 rounded-2xl px-6 py-3 text-left text-[1.05rem] font-bold disabled:opacity-60";
+const gold = "bg-kesar text-on-kesar hover:bg-kesar-deep hover:text-sandal";
+const bigButton = "flex min-h-14 w-full items-center justify-center rounded-2xl px-6 text-[1.1rem] font-bold disabled:opacity-60";
 
-export function PlusPlans() {
+// The kind line under the plans
+export const KIND_LINE =
+  "We'd make SwamiGPT free if we could, but every answer, and every word Swamiji reads aloud, costs us a little.";
+
+export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
   const { ready, user } = useAuth();
   const isClient = useIsClient();
   const { plus, recheck } = usePlus();
-  const [web, setWeb] = useState<Package[] | null>(null);
+  const [plans, setPlans] = useState<Plan[] | null>(null);
   const [apple, setApple] = useState<PurchasesPackage[] | null>(null);
+  const [web, setWeb] = useState<Package[] | null>(null);
+  const [picked, setPicked] = useState<string | null>(null);
   const [manageUrl, setManageUrl] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
@@ -63,17 +88,30 @@ export function PlusPlans() {
   useEffect(() => {
     if (!plusSold() || !user) return;
     let live = true;
+    const show = (list: Plan[]) => {
+      // Yearly first, and picked to start with: it's the better deal
+      const sorted = [...list].sort((a, b) => Number(b.yearly) - Number(a.yearly));
+      setPlans(sorted);
+      setPicked((p) => p ?? sorted[0]?.id ?? null);
+    };
     const loaded = isNativeApp()
-      ? applePackages(user.id).then((packages) => {
+      ? applePackages(user.id).then(async (packages) => {
+          const used = await appleUsedTrials(
+            user.id,
+            packages.map((p) => p.product.identifier),
+          ).catch(() => new Set<string>());
           if (!live) return;
           setApple(packages);
           setManageUrl(APPLE_MANAGE_URL);
+          show(packages.map((p) => fromApple(p, used)));
         })
       : purchases(user.id).then(async (p) => {
           const [offerings, info] = await Promise.all([p.getOfferings(), p.getCustomerInfo()]);
           if (!live) return;
-          setWeb(offerings.current?.availablePackages ?? []);
+          const packages = offerings.current?.availablePackages ?? [];
+          setWeb(packages);
           setManageUrl(info.managementURL);
+          show(packages.map(fromWeb));
         });
     loaded.catch(() => live && setProblem("Plans couldn't load. Please try again in a moment."));
     return () => {
@@ -151,7 +189,6 @@ export function PlusPlans() {
 
   let body: React.ReactNode;
   const native = isClient && isNativeApp();
-  const packages = native ? apple : web;
   if (native && !plusSold()) {
     body = <p className="text-[1.05rem]">Everything in the SwamiGPT app is free.</p>;
   } else if (!plusSold()) {
@@ -162,7 +199,7 @@ export function PlusPlans() {
     body = (
       <>
         <p className="text-[1.05rem]">Sign in first (it&apos;s free), then come back here to choose a plan.</p>
-        <Link href="/login" className={`${button} mt-4 w-fit bg-kesar text-on-kesar hover:bg-kesar-deep hover:text-sandal`}>
+        <Link href="/login" className={`${bigButton} ${gold} mt-4 w-fit`}>
           Sign in
         </Link>
       </>
@@ -178,57 +215,110 @@ export function PlusPlans() {
         )}
       </>
     );
-  } else if (!packages) {
-    body = <div className="h-32" />;
+  } else if (!plans) {
+    body = <div className="h-48" />;
+  } else if (plans.length === 0) {
+    body = <p>Plans are being set up. Please check back soon.</p>;
   } else {
-    // Yearly first: it's the better deal
-    const plans = (native ? apple!.map(fromApple) : web!.map(fromWeb)).sort((a, b) => Number(b.yearly) - Number(a.yearly));
+    const plan = plans.find((p) => p.id === picked) ?? plans[0];
+    const monthly = plans.find((p) => !p.yearly);
+    // Honest saving: the yearly price against twelve months of the monthly one
+    const save = (p: Plan) =>
+      p.yearly && monthly && monthly.amount > 0 ? Math.round((1 - p.amount / (monthly.amount * 12)) * 100) : 0;
+    const per = (p: Plan) => (p.yearly ? "year" : "month");
     body = (
-      <div className="flex flex-col gap-3">
-        {plans.map((plan) => (
-          <button
-            key={plan.id}
-            type="button"
-            disabled={busy}
-            onClick={() => void buy(plan.id)}
-            className={`${button} ${plan.yearly ? "bg-kesar text-on-kesar hover:bg-kesar-deep hover:text-sandal" : "border border-sandal-edge hover:border-kajal"}`}
-          >
-            <span>
-              {plan.title}
-              {plan.trial && <span className="block text-[0.9rem] font-semibold opacity-80">Free trial first</span>}
-            </span>
-            <span className="text-right">
-              {plan.price}
-              {plan.yearly && plan.perMonth && (
-                <span className="block text-[0.85rem] font-semibold opacity-80">{plan.perMonth} a month</span>
-              )}
-            </span>
-          </button>
-        ))}
-        {plans.length === 0 && <p>Plans are being set up. Please check back soon.</p>}
-        {native && (
-          <>
-            <p className="mt-2 text-[0.9rem] leading-[1.6] text-kajal-soft">
-              Payment is charged to your Apple ID. Plus renews automatically at the same price unless you cancel at
-              least 24 hours before the end of the current period. With the yearly free trial, you&apos;re charged
-              when the trial ends. You can manage or cancel in your Apple ID settings.
-            </p>
+      <div className="flex flex-col gap-4">
+        <div role="radiogroup" aria-label="Choose a plan" className="grid grid-cols-2 gap-3">
+          {plans.map((p) => {
+            const on = p.id === plan.id;
+            const saving = save(p);
+            return (
+              <button
+                key={p.id}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                disabled={busy}
+                onClick={() => setPicked(p.id)}
+                className={`relative flex min-h-32 flex-col items-start rounded-2xl border-2 px-4 pb-4 pt-5 text-left transition-colors disabled:opacity-60 ${
+                  on ? "border-kesar bg-sandal" : "border-sandal-edge hover:border-kajal-soft"
+                }`}
+              >
+                {saving > 0 && (
+                  <span className="absolute -top-3 left-3 rounded-full bg-kesar px-2.5 py-0.5 text-[0.75rem] font-bold uppercase tracking-[0.06em] text-on-kesar">
+                    Save {saving}%
+                  </span>
+                )}
+                <span className="flex items-center gap-2 text-[0.95rem] font-semibold">
+                  <span
+                    aria-hidden="true"
+                    className={`inline-block size-4 rounded-full border-2 ${on ? "border-kesar bg-kesar shadow-[inset_0_0_0_2px_var(--color-sandal)]" : "border-kajal-soft"}`}
+                  />
+                  {p.yearly ? "Yearly" : "Monthly"}
+                </span>
+                <span className="mt-2 text-[1.3rem] font-bold leading-tight">{p.price}</span>
+                <span className="text-[0.9rem] text-kajal-soft">a {per(p)}</span>
+                {p.yearly && p.perMonth && <span className="text-[0.85rem] text-kajal-soft">({p.perMonth} a month)</span>}
+                {p.trialDays > 0 && (
+                  <span className="mt-auto pt-2 text-[0.9rem] font-semibold text-kesar-deep">{p.trialDays} days free</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {plan.trialDays > 0 && (
+          <ol className="flex flex-col gap-2 border-l-2 border-kesar/50 pl-4 text-[0.95rem]">
+            <li>
+              <span className="font-semibold">Today:</span> Plus starts, free.
+            </li>
+            <li>
+              <span className="font-semibold">Day {plan.trialDays}:</span> {plan.price} for the {per(plan)}, unless you
+              cancel before then.
+            </li>
+          </ol>
+        )}
+
+        <button type="button" disabled={busy} onClick={() => void buy(plan.id)} className={`${bigButton} ${gold}`}>
+          {plan.trialDays > 0 ? `Start ${plan.trialDays}-day free trial` : `Get Plus for ${plan.price} a ${per(plan)}`}
+        </button>
+
+        <p className="text-[0.85rem] leading-[1.6] text-kajal-soft">
+          {plan.trialDays > 0 ? `Free for ${plan.trialDays} days, then ${plan.price} a ${per(plan)}.` : `${plan.price} a ${per(plan)}.`}{" "}
+          {native
+            ? `Charged to your Apple ID${plan.trialDays > 0 ? " when the trial ends" : ""}. Renews automatically every ${per(plan)} at the same price unless you cancel at least 24 hours before the period ends. Manage or cancel in your Apple ID settings.`
+            : `Renews every ${per(plan)} until you cancel. Cancel any time.`}
+        </p>
+
+        <p className="flex flex-wrap gap-x-4 gap-y-1 text-[0.85rem] text-kajal-soft">
+          {native && (
             <button
               type="button"
               disabled={busy}
               onClick={() => void restore()}
-              className="w-fit font-semibold text-kesar-deep underline underline-offset-4 disabled:opacity-60"
+              className="font-semibold text-kesar-deep underline underline-offset-4 disabled:opacity-60"
             >
               Restore purchases
             </button>
-          </>
-        )}
+          )}
+          <Link href="/terms" className="underline underline-offset-2">
+            Terms of Use
+          </Link>
+          <Link href="/privacy" className="underline underline-offset-2">
+            Privacy Policy
+          </Link>
+        </p>
+
+        <p className="text-[0.85rem] italic leading-[1.6] text-kajal-soft">{KIND_LINE}</p>
       </div>
     );
   }
 
   return (
-    <section aria-label="Plans" className="mt-10 max-w-2xl rounded-2xl bg-sandal-deep px-6 py-6">
+    <section
+      aria-label="Plans"
+      className={inPopup ? "mt-5" : "mt-10 max-w-2xl rounded-2xl bg-sandal-deep px-6 py-6"}
+    >
       {body}
       {problem && (
         <p role="alert" className="mt-4 font-semibold text-kesar-deep">

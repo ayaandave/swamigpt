@@ -11,6 +11,7 @@ import { useAuth } from "@/lib/supabase";
 import { useIsClient } from "@/lib/store";
 import { Om } from "./Om";
 import { VerseCard } from "./VerseCard";
+import { LeftNote, SeePlusButton } from "./PlusPaywall";
 import { whoSays } from "@/lib/scripture/who";
 import { ListenButton } from "./ListenButton";
 import { ShareButton } from "./ShareButton";
@@ -189,14 +190,7 @@ function Answer({
           Sign in for more questions
         </Link>
       )}
-      {answer.plusPrompt && (
-        <Link
-          href="/plus"
-          className="flex min-h-14 w-fit items-center rounded-xl bg-kesar px-7 text-[1.05rem] font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
-        >
-          See SwamiGPT Plus
-        </Link>
-      )}
+      {answer.plusPrompt && <SeePlusButton />}
       {answer.verses.map(({ verse, meaning }) => (
         <div key={verse.id} className="mt-1 flex flex-col gap-3">
           <p className="text-[0.9rem] text-kajal-soft">{whoSays(verse)}:</p>
@@ -231,6 +225,7 @@ function Answer({
         </button>
       </div>
       {!answer.notice && <ReportAnswer question={turn.question} answer={answer} depth={depth} />}
+      {answer.leftNote && answer.left !== undefined && <LeftNote left={answer.left} />}
     </div>
   );
 }

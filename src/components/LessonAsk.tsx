@@ -9,6 +9,7 @@ import type { SwamiAnswer } from "@/lib/swami";
 import { useAuth } from "@/lib/supabase";
 import { Om } from "./Om";
 import { VerseCard } from "./VerseCard";
+import { LeftNote, SeePlusButton } from "./PlusPaywall";
 import { whoSays } from "@/lib/scripture/who";
 import { SendIcon } from "./icons";
 
@@ -144,14 +145,7 @@ function InlineAnswer({ answer }: { answer: SwamiAnswer }) {
           Sign in for more questions
         </Link>
       )}
-      {answer.plusPrompt && (
-        <Link
-          href="/plus"
-          className="flex min-h-12 w-fit items-center rounded-xl bg-kesar px-6 font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
-        >
-          See SwamiGPT Plus
-        </Link>
-      )}
+      {answer.plusPrompt && <SeePlusButton />}
       {answer.verses.map(({ verse, meaning }) => (
         <div key={verse.id} className="flex flex-col gap-3">
           <p className="font-display text-[1.1rem] text-kajal-soft">{whoSays(verse)}:</p>
@@ -168,6 +162,7 @@ function InlineAnswer({ answer }: { answer: SwamiAnswer }) {
           <span className="font-display text-[1.1rem]">{answer.practice.title}</span>
         </Link>
       )}
+      {answer.leftNote && answer.left !== undefined && <LeftNote left={answer.left} />}
     </div>
   );
 }

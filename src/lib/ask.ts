@@ -7,6 +7,7 @@ import { PLUS } from "./plans";
 import { plusSold } from "./plus";
 import { accessToken, supabase } from "./supabase";
 import { requestAiConsent } from "./ai-consent";
+import { openPaywall, takeLeftNote } from "./paywall";
 
 export type PastTurn = { question: string; answer: SwamiAnswer };
 
@@ -90,6 +91,7 @@ async function fetchAnswer(
             notice: "limit",
           };
         }
+        if (token && plusSold()) openPaywall("questions");
         return token
           ? {
               paragraphs: [
@@ -110,7 +112,15 @@ async function fetchAnswer(
       }
     }
     if (!res.ok) return SORRY;
-    return (await res.json()) as SwamiAnswer;
+    const answer = (await res.json()) as SwamiAnswer;
+    // Signed in on the free plan with 2 or fewer left: a gentle note about Plus, once a day
+    const left = answer.left;
+    delete answer.left;
+    if (token && plusSold() && left !== undefined && left > 0 && left <= 2 && !(await hasPlus()) && takeLeftNote()) {
+      answer.leftNote = true;
+      answer.left = left;
+    }
+    return answer;
   } catch {
     return SORRY;
   }

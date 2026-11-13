@@ -41,6 +41,9 @@ export const setVoiceTicket = (ticket: string | null) => {
   voiceTicket = ticket;
 };
 
+// Fired when Swamiji's voice falls back to the phone's own
+export const VOICE_FALLBACK = "swami:voice-fallback";
+
 // How far the browser's own voice has read, for speechProgress
 let browserRead: { at: number; of: number } | null = null;
 // Set when ElevenLabs fails (out of credits, at a read-aloud limit, down), so the next reads go
@@ -127,6 +130,8 @@ export function speak(text: string, voiceId: VoiceId, speed: number, handlers: H
       if (id !== session) return;
       // ElevenLabs unavailable: read the rest with the browser's voice instead
       elevenDownUntil = Date.now() + ELEVEN_RETRY_MS;
+      // Maybe the read-aloud limit: PlusPaywall checks, and offers Plus if so
+      window.dispatchEvent(new Event(VOICE_FALLBACK));
       stopSpeaking(false);
       owner = handlers;
       browserSpeak(parts.slice(i).join(" "), voiceId, speed, started ? { onEnd: handlers.onEnd } : handlers);

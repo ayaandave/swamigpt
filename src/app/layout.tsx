@@ -6,6 +6,7 @@ import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/seo";
 import { BottomNav, Header } from "@/components/Chrome";
 import { WelcomeGate } from "@/components/WelcomeGate";
 import { AiConsent } from "@/components/AiConsent";
+import { PlusPaywall } from "@/components/PlusPaywall";
 import { BrandIntro } from "@/components/BrandIntro";
 import { INTRO_SCRIPT } from "@/lib/intro";
 import { AccountSync } from "@/components/AccountSync";
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <BottomNav />
         <WelcomeGate />
         <AiConsent />
+        <PlusPaywall />
         <BrandIntro />
         <AccountSync />
         <NativeBridge />

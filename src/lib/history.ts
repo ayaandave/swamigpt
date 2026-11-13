@@ -26,7 +26,7 @@ export async function saveTurn(
   } else {
     await sb.from("conversations").update({ updated_at: new Date().toISOString() }).eq("id", id);
   }
-  const { error } = await sb.from("turns").insert({ conversation_id: id, user_id: userId, question, answer });
+  const { error } = await sb.from("turns").insert({ conversation_id: id, user_id: userId, question, answer: { ...answer, left: undefined, leftNote: undefined } });
   return error ? conversationId : id;
 }
 

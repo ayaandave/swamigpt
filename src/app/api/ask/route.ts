@@ -228,7 +228,8 @@ export async function POST(request: Request) {
         practice: answer.practice,
       });
     }
-    return Response.json(answer);
+    // How many questions are left today, so the app can mention Plus before they run out
+    return Response.json(left === null ? answer : { ...answer, left });
   } catch (error) {
     if (error instanceof Anthropic.AuthenticationError) {
       return Response.json({ error: "not_configured" }, { status: 503 });
