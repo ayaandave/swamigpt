@@ -91,8 +91,9 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
   const [problem, setProblem] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
 
+  const userId = user?.id;
   useEffect(() => {
-    if (!plusSold() || !user) return;
+    if (!plusSold() || !userId) return;
     let live = true;
     const show = (list: Plan[]) => {
       // Yearly first, and picked to start with: it's the better deal
@@ -101,11 +102,11 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
       setPicked((p) => p ?? sorted[0]?.id ?? null);
     };
     const loaded = isNativeApp()
-      ? timeout(applePackages(user.id), 20000).then(async (packages) => {
+      ? timeout(applePackages(userId), 20000).then(async (packages) => {
           // Only decides whether to show the trial; Apple's sheet has the final word
           const used = await timeout(
             appleUsedTrials(
-              user.id,
+              userId,
               packages.map((p) => p.product.identifier),
             ),
             5000,
@@ -115,7 +116,7 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
           setManageUrl(APPLE_MANAGE_URL);
           show(packages.map((p) => fromApple(p, used)));
         })
-      : timeout(purchases(user.id), 20000).then(async (p) => {
+      : timeout(purchases(userId), 20000).then(async (p) => {
           const [offerings, info] = await Promise.all([p.getOfferings(), p.getCustomerInfo()]);
           if (!live) return;
           const packages = offerings.current?.availablePackages ?? [];
@@ -130,7 +131,8 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
     return () => {
       live = false;
     };
-  }, [user, attempt]);
+  // Keyed on the id, not the user object: a sign-in refresh makes a new object and used to reload
+  }, [userId, attempt]);
 
   // Paid: switch Plus on now instead of waiting for the webhook. If that step fails, the webhook
   // still turns Plus on shortly, so say so rather than asking them to pay again
@@ -268,8 +270,8 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
                 }`}
               >
                 {p.yearly && (
-                  <span className="absolute -top-3 left-3 rounded-full bg-kesar px-2.5 py-0.5 text-[0.75rem] font-bold uppercase tracking-[0.06em] text-on-kesar">
-                    {saving > 0 ? `Most popular · Save ${saving}%` : "Most popular"}
+                  <span className="absolute -top-3 left-3 whitespace-nowrap rounded-full bg-kesar px-2.5 py-0.5 text-[0.75rem] font-bold uppercase tracking-[0.06em] text-on-kesar">
+                    Most popular
                   </span>
                 )}
                 <span className="flex items-center gap-2 text-[0.95rem] font-semibold">
@@ -282,6 +284,7 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
                 <span className="mt-2 text-[1.3rem] font-bold leading-tight">{p.price}</span>
                 <span className="text-[0.9rem] text-kajal-soft">a {per(p)}</span>
                 {p.yearly && p.perMonth && <span className="text-[0.85rem] text-kajal-soft">({p.perMonth} a month)</span>}
+                {saving > 0 && <span className="text-[0.85rem] font-semibold text-kesar-deep">Save {saving}%</span>}
                 {p.trialDays > 0 ? (
                   <span className="mt-auto pt-2 text-[0.9rem] font-semibold text-kesar-deep">{p.trialDays} days free</span>
                 ) : (

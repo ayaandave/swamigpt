@@ -9,20 +9,37 @@ import { PLUS } from "./plans";
 // Apple's own page for managing subscriptions (opens outside the app)
 export const APPLE_MANAGE_URL = "https://apps.apple.com/account/subscriptions";
 
-let configured = false;
-async function purchases(userId: string) {
+// RevenueCat must be set up exactly once. Two callers at the same moment (the paywall and the
+// Plus page, or a sign-in refresh) used to both run configure; the second replaced the first
+// mid-request and Apple's plans never arrived. Every caller now waits on the same setup, one at a time.
+//
+// The plugin comes back wrapped as { rc }: a Capacitor plugin answers to any method name, including
+// "then", so returning it bare from an async function makes JavaScript call Purchases.then(), which
+// fails. That was why "Plans couldn't load" in the app.
+type RC = typeof import("@revenuecat/purchases-capacitor").Purchases;
+let setup: Promise<void> | null = null;
+async function purchases(userId: string): Promise<{ rc: RC }> {
   const { Purchases } = await import("@revenuecat/purchases-capacitor");
-  if (!configured) {
-    await Purchases.configure({ apiKey: PLUS.iosKey, appUserID: userId });
-    configured = true;
-  } else if ((await Purchases.getAppUserID()).appUserID !== userId) {
-    await Purchases.logIn({ appUserID: userId });
-  }
-  return Purchases;
+  const prev = setup;
+  const next = (async () => {
+    if (!prev) {
+      await Purchases.configure({ apiKey: PLUS.iosKey, appUserID: userId });
+    } else {
+      await prev.catch(() => undefined);
+      if ((await Purchases.isConfigured()).isConfigured === false) {
+        await Purchases.configure({ apiKey: PLUS.iosKey, appUserID: userId });
+      } else if ((await Purchases.getAppUserID()).appUserID !== userId) {
+        await Purchases.logIn({ appUserID: userId });
+      }
+    }
+  })();
+  setup = next;
+  await next;
+  return { rc: Purchases };
 }
 
 export async function applePackages(userId: string) {
-  const p = await purchases(userId);
+  const { rc: p } = await purchases(userId);
   const offerings = await p.getOfferings();
   return offerings.current?.availablePackages ?? [];
 }
@@ -30,7 +47,7 @@ export async function applePackages(userId: string) {
 // Product ids whose free trial this Apple ID has already used (Apple gives each trial once).
 // When Apple can't say, the trial is shown and Apple's own purchase sheet has the final word.
 export async function appleUsedTrials(userId: string, productIds: string[]): Promise<Set<string>> {
-  const p = await purchases(userId);
+  const { rc: p } = await purchases(userId);
   const found = await p.checkTrialOrIntroductoryPriceEligibility({ productIdentifiers: productIds });
   // 1 = INTRO_ELIGIBILITY_STATUS_INELIGIBLE
   return new Set(Object.entries(found).filter(([, e]) => e.status === 1).map(([id]) => id));
@@ -38,7 +55,7 @@ export async function appleUsedTrials(userId: string, productIds: string[]): Pro
 
 // "cancelled" when they backed out; throws on a real failure
 export async function buyApple(userId: string, pkg: PurchasesPackage): Promise<"bought" | "cancelled"> {
-  const p = await purchases(userId);
+  const { rc: p } = await purchases(userId);
   try {
     await p.purchasePackage({ aPackage: pkg });
     return "bought";
@@ -50,6 +67,6 @@ export async function buyApple(userId: string, pkg: PurchasesPackage): Promise<"
 
 // Asks Apple for this Apple ID's past purchases and links them to this account
 export async function restoreApple(userId: string) {
-  const p = await purchases(userId);
+  const { rc: p } = await purchases(userId);
   await p.restorePurchases();
 }
