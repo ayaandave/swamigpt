@@ -1,5 +1,6 @@
-// Daily question limits: 8 a day for guests, 10 for free accounts, 20 with Plus, and a ceiling for
-// the whole site (set in the database's take_question function). Server only: the server works out
+// Daily question limits: 3 a day for guests, 5 for free accounts, 20 with Plus, and a ceiling for
+// the whole site that Plus members are never stopped by (all set in the database's take_question
+// function). Server only: the server works out
 // who is asking, so nobody can claim to be someone else or skip the count. On the live site, if the
 // limits can't be checked, paid answers and voices are refused rather than left unlimited.
 import "server-only";
@@ -89,6 +90,20 @@ export async function takeQuestion(request: Request): Promise<number | null> {
     return fallbackTake(who);
   }
   return data as number;
+}
+
+// Gives back questions that were counted but never answered (the search or the AI failed), so a
+// failed answer doesn't cost someone part of their day. Never throws: a refund that fails is only logged.
+export async function returnQuestion(request: Request, count = 1): Promise<void> {
+  if (!LIVE || !url || !secret) return;
+  try {
+    const { who } = await whoIsAsking(request);
+    const sb = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
+    const { error } = await sb.rpc("return_question", { p_who: who, p_count: count });
+    if (error) console.error("question refund failed", error.message);
+  } catch (error) {
+    console.error("question refund failed", error);
+  }
 }
 
 // Limits on new voice audio, in characters (about one ElevenLabs credit each), set by plan in the

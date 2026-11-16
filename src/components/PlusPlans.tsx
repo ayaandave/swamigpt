@@ -274,7 +274,7 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
               >
                 {p.yearly && (
                   <span className="absolute -top-3 left-3 whitespace-nowrap rounded-full bg-kesar px-2.5 py-0.5 text-[0.75rem] font-bold uppercase tracking-[0.06em] text-on-kesar">
-                    Most popular
+                    Best value
                   </span>
                 )}
                 <span className="flex items-center gap-2 text-[0.95rem] font-semibold">

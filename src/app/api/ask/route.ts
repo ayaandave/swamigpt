@@ -12,7 +12,7 @@ import { attribution, getPassageById } from "@/lib/scripture/library";
 import { searchPassages } from "@/lib/scripture/search";
 import { SWAMI_SYSTEM_PROMPT } from "@/lib/swami-prompt";
 import { CRISIS, CRISIS_HELP, type SwamiAnswer } from "@/lib/swami";
-import { takeQuestion } from "@/lib/limits";
+import { returnQuestion, takeQuestion } from "@/lib/limits";
 import { sealAnswer } from "@/lib/share";
 
 const Body = z.object({
@@ -137,9 +137,17 @@ export async function POST(request: Request) {
   }
   // Deeper study thinks harder and reads more (about three times the cost), so it uses a second
   // question when one is left. With only one left, the deeper answer still comes, as the last one.
+  let taken = left === null ? 0 : 1;
   if (depth === "deeper" && left !== null && left > 0) {
-    await takeQuestion(request).catch(() => null);
+    const second = await takeQuestion(request).catch(() => null);
+    if (second !== null && second >= 0) taken = 2;
   }
+  // No answer came back (the search or the AI failed): give the question back, so a failure on
+  // our side doesn't cost them part of their day
+  const failed = async (error: string, status: number) => {
+    if (taken) await returnQuestion(request, taken);
+    return Response.json({ error }, { status });
+  };
 
   // Search on the follow-up plus the previous question, so "what about at work?" still finds something
   const searchText = [lesson?.title, reading?.translation, history.at(-1)?.question, question].filter(Boolean).join("\n");
@@ -148,7 +156,7 @@ export async function POST(request: Request) {
     console.error("search failed", error);
     return null;
   });
-  if (!found) return Response.json({ error: "failed" }, { status: 502 });
+  if (!found) return failed("failed", 502);
   // The passage they were reading always goes in first, so "this passage" can't be mistaken for
   // another text's verse with the same number
   const passages = reading ? [reading, ...found.filter((p) => p.id !== reading.id)].slice(0, mode.passages) : found;
@@ -193,7 +201,7 @@ export async function POST(request: Request) {
     logCost(res.usage, res.model);
     const reply = res.stop_reason === "refusal" ? null : res.parsed_output;
     if (!reply) {
-      return Response.json({ error: "no_answer" }, { status: 502 });
+      return failed("no_answer", 502);
     }
 
     const answer: SwamiAnswer = {
@@ -233,12 +241,12 @@ export async function POST(request: Request) {
     return Response.json(left === null ? answer : { ...answer, left });
   } catch (error) {
     if (error instanceof Anthropic.AuthenticationError) {
-      return Response.json({ error: "not_configured" }, { status: 503 });
+      return failed("not_configured", 503);
     }
     if (error instanceof Anthropic.RateLimitError) {
-      return Response.json({ error: "busy" }, { status: 429 });
+      return failed("busy", 429);
     }
     console.error("ask failed", error);
-    return Response.json({ error: "failed" }, { status: 502 });
+    return failed("failed", 502);
   }
 }

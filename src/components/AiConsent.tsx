@@ -39,6 +39,10 @@ export function AiConsent() {
           Anthropic uses it only to write your answer and does not train its AI on it. We never sell it. Please
           don&apos;t share private details like your full name, address or phone number.
         </p>
+        <p className="mt-3 text-[1.05rem] text-kajal-soft">
+          If you tap to hear an answer read aloud, its text goes to <strong>ElevenLabs</strong>, the company that
+          makes the voice.
+        </p>
         <Link href="/privacy" className="mt-3 inline-block text-[0.95rem] underline underline-offset-4">
           Read the privacy policy
         </Link>

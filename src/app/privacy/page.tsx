@@ -44,7 +44,10 @@ export default function PrivacyPage() {
         <p>If you make an account, we also keep:</p>
         <ul>
           <li>Your email address and a protected copy of your password, so you can sign in.</li>
-          <li>Your conversations (questions and answers), so you can come back to them.</li>
+          <li>
+            Your conversations (questions and answers), so you can come back to them. They are stored in our
+            database, where the small team that runs SwamiGPT is able to see them.
+          </li>
           <li>Your settings, your age group and your lesson progress, so they follow you to every device.</li>
           <li>Daily counts of questions and read-aloud audio, linked to your account.</li>
           <li>If you join SwamiGPT Plus: which plan you have and when it renews.</li>
