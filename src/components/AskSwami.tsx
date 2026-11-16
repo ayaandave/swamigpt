@@ -140,7 +140,7 @@ export function AskSwami({
                   <button
                     type="button"
                     onClick={() => fill(q)}
-                    className="w-full min-h-16 rounded-2xl border border-sandal-edge px-5 py-3 text-left font-display text-[1.1rem] leading-snug hover:border-kesar hover:bg-sandal-deep"
+                    className="w-full min-h-14 rounded-2xl border border-sandal-edge bg-sandal-deep px-5 py-3 text-left text-[1rem] leading-snug hover:border-kesar/60"
                   >
                     {q}
                   </button>
@@ -157,7 +157,10 @@ export function AskSwami({
               ref={i === turns.length - 1 ? lastRef : undefined}
               className="flex scroll-mt-6 flex-col gap-3"
             >
-              <h2 className="font-display text-[1.1rem] leading-snug">{turn.question}</h2>
+              {/* Their words sit on the right, like a message they sent; the answer reads from the left */}
+              <h2 className="max-w-[88%] self-end rounded-2xl rounded-br-md border border-sandal-edge bg-sandal-deep px-4 py-2.5 text-[1rem] font-normal leading-snug tracking-normal">
+                {turn.question}
+              </h2>
               <Sources turn={turn} />
               <div className="flex flex-col items-start gap-3">
                 {!turn.answer ? (
@@ -283,7 +286,7 @@ function Answer({
           <span className="text-[1rem] text-kajal-soft">{answer.practice.why}</span>
         </Link>
       )}
-      <div className="flex flex-wrap items-center gap-3 pt-1">
+      <div className="flex flex-wrap items-center gap-2 pt-1">
         {/* Not saved: an answer can repeat something personal, so its audio is never kept */}
         <ListenButton text={spoken} onSpeakingChange={onSpeaking} />
         {!answer.notice && <ShareButton question={turn.question} answer={answer} />}
@@ -301,7 +304,7 @@ function Answer({
           type="button"
           disabled={disabled}
           onClick={() => onReask(depth === "simpler" ? "deeper" : "simpler")}
-          className="min-h-14 rounded-xl border border-sandal-edge px-6 text-[1rem] font-semibold hover:border-kajal disabled:opacity-50"
+          className="min-h-11 rounded-full border border-sandal-edge px-4 text-[0.95rem] font-semibold hover:border-kajal disabled:opacity-50"
         >
           {depth === "simpler" ? "Go deeper (uses 2)" : "Say it more simply"}
         </button>
@@ -355,7 +358,7 @@ function CopyButton({ text }: { text: string }) {
           // Clipboard blocked: nothing to do
         }
       }}
-      className="inline-flex min-h-14 items-center gap-2 rounded-xl border border-sandal-edge px-5 text-[1rem] font-semibold hover:border-kajal"
+      className="inline-flex min-h-11 items-center gap-2 rounded-full border border-sandal-edge px-4 text-[0.95rem] font-semibold hover:border-kajal"
     >
       {copied ? <CheckIcon className="size-5" /> : null}
       {copied ? "Copied" : "Copy"}

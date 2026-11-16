@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSettings } from "@/lib/settings";
 import { useIsClient } from "@/lib/store";
 import { todaysMeditation } from "@/lib/suggestions";
-import { MeditateIcon } from "../icons";
+import { MeditateIcon, PlayIcon } from "../icons";
 
 export type MeditationSummary = { slug: string; title: string; minutes: number; description: string };
 
@@ -21,8 +21,8 @@ export function TodayMeditation({ meditations }: { meditations: MeditationSummar
       href={`/meditate/${m.slug}`}
       className="tile mt-4 flex items-center gap-4 rounded-2xl border border-sandal-edge bg-sandal-deep px-5 py-4 text-kajal hover:border-kesar/50"
     >
-      <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-kesar text-on-kesar" aria-hidden="true">
-        ▶
+      <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-kesar text-on-kesar shadow-[0_0_22px_-4px_var(--glow)]" aria-hidden="true">
+        <PlayIcon className="size-5 translate-x-px" />
       </span>
       <span className="min-w-0">
         <span className="block text-[0.8rem] font-semibold uppercase tracking-[0.12em] text-kesar-deep">

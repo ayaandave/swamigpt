@@ -9,7 +9,7 @@ import { useIsClient } from "@/lib/store";
 import { SaveVerseButton } from "../SaveVerseButton";
 
 const action =
-  "inline-flex min-h-11 items-center rounded-full border border-sandal-edge px-4 text-[0.95rem] font-semibold hover:border-kajal";
+  "inline-flex min-h-11 items-center justify-center rounded-full border border-sandal-edge px-3 text-[0.9rem] font-semibold hover:border-kajal";
 
 // Today's verse, the anchor of the home screen: the verse, its plain meaning, and save / share /
 // reflect. The full page has the Sanskrit, the reflection and the question for the day.
@@ -44,8 +44,8 @@ export function TodayCard({ entries }: { entries: Daily[] }) {
         {verse.plain && <span className="mt-2 line-clamp-2 text-[0.95rem] text-kajal-soft">{verse.plain}</span>}
         <span className="mt-2 block font-mono text-[0.75rem] text-kesar-deep">{caption(verse)} · read more →</span>
       </Link>
-      <div className="mt-4 flex flex-wrap gap-2">
-        <SaveVerseButton verse={verse} />
+      <div className="mt-5 grid grid-cols-[auto_1fr_1fr] gap-2">
+        <SaveVerseButton verse={verse} className="justify-center whitespace-nowrap px-3.5! text-[0.9rem]!" />
         <button type="button" onClick={() => void share()} className={action}>
           {shared ? "Link copied" : "Share"}
         </button>

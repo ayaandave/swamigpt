@@ -179,7 +179,64 @@ html:not([data-welcomed]) body:has(.welcome-gate) {
 
 ::selection {
   background: var(--kesar);
-  color: var(--kajal);
+  color: var(--on-kesar);
+}
+
+/* Paragraphs avoid a lonely last word; headings break into even lines */
+p {
+  text-wrap: pretty;
+}
+h1,
+h2 {
+  text-wrap: balance;
+}
+
+/* Touch: no grey flash on tap; instead everything you can press gives a little under the finger */
+a,
+button,
+label {
+  -webkit-tap-highlight-color: transparent;
+}
+@layer base {
+  button,
+  a[class*="rounded"] {
+    transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease, color 160ms ease,
+      opacity 160ms ease, box-shadow 200ms ease;
+  }
+  button:active:not(:disabled),
+  a[class*="rounded"]:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Each screen settles in softly instead of snapping (src/app/template.tsx) */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.page-in {
+  animation: page-in 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* A quiet scrollbar on computers */
+@media (hover: hover) and (pointer: fine) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--sandal-edge) transparent;
+  }
+}
+
+/* The tab you are on: a short gold line above it, on the phone's bottom bar */
+.tab-mark {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: 28px;
+  height: 2px;
+  margin-left: -14px;
+  border-radius: 2px;
+  background: var(--kesar);
+  box-shadow: 0 0 10px var(--kesar);
 }
 
 /* ---------- The Om (SwamiGPT's mark, src/components/Om.tsx) ---------- */

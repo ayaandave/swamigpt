@@ -42,7 +42,7 @@ export function ListenButton({ text, onSpeakingChange, onDark = false, save = fa
       type="button"
       onClick={toggle}
       aria-pressed={playing}
-      className={`inline-flex min-h-14 items-center gap-3 rounded-xl px-6 text-[1rem] font-semibold transition-colors ${
+      className={`inline-flex min-h-12 items-center gap-2.5 rounded-full px-5 text-[1rem] font-semibold transition-colors ${
         playing
           ? "bg-kajal text-sandal"
           : onDark

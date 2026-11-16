@@ -40,7 +40,8 @@ export function Header() {
     <header className="relative z-10 mx-auto flex w-full max-w-3xl items-center md:max-w-5xl justify-between gap-2 px-[16px] pt-[max(16px,env(safe-area-inset-top))] sm:px-6">
       <Link href="/" className="flex min-h-[44px] min-w-0 items-center gap-1.5 rounded-full" aria-label="SwamiGPT home">
         <OmMark size={34} />
-        <span className="hidden font-display text-[20px] tracking-tight min-[400px]:inline sm:text-[24px]">SwamiGPT</span>
+        {/* Hidden on small tablets, where the four section links need the room */}
+        <span className="hidden font-display text-[20px] tracking-tight min-[400px]:inline sm:text-[24px] md:hidden lg:inline">SwamiGPT</span>
       </Link>
       {/* On big screens the four sections sit up here; phones keep the tab bar at the bottom */}
       <nav aria-label="Main" className="hidden md:block">
@@ -52,8 +53,8 @@ export function Header() {
                 <Link
                   href={href}
                   aria-current={active ? "page" : undefined}
-                  className={`flex min-h-[44px] items-center rounded-xl px-4 text-[16px] font-semibold ${
-                    active ? "text-kesar-deep" : "text-kajal-soft hover:text-kajal"
+                  className={`flex min-h-[44px] items-center rounded-full px-4 text-[16px] font-semibold ${
+                    active ? "bg-sandal-deep text-kesar-deep" : "text-kajal-soft hover:text-kajal"
                   }`}
                 >
                   {label}
@@ -106,10 +107,11 @@ export function BottomNav() {
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`flex min-h-16 flex-col items-center justify-center gap-1 text-[0.75rem] font-medium ${
+                className={`relative flex min-h-16 flex-col items-center justify-center gap-1 text-[0.75rem] font-medium ${
                   active ? "text-kesar-deep" : "text-kajal-soft hover:text-kajal"
                 }`}
               >
+                {active && <span aria-hidden="true" className="tab-mark" />}
                 <Icon className="size-6" />
                 {label}
               </Link>

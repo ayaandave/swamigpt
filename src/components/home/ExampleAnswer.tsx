@@ -25,7 +25,7 @@ export function ExampleAnswer() {
       <p id="example" className="text-[0.85rem] font-semibold uppercase tracking-[0.14em] text-kesar-deep">
         A real answer from SwamiGPT
       </p>
-      <p className="mt-3 border-l-4 border-kesar pl-5 font-display text-[1.3rem] leading-snug sm:text-[1.9rem]">
+      <p className="mt-3 border-l-2 border-kesar pl-5 font-display text-[1.3rem] leading-snug sm:text-[1.9rem]">
         &ldquo;{QUESTION}&rdquo;
       </p>
       <div className="mt-6 flex max-w-[62ch] flex-col gap-4 text-[1.1rem] leading-[1.75]">
@@ -37,8 +37,9 @@ export function ExampleAnswer() {
       <div className="mt-3">
         <VerseCard verse={{ id: p.id, source: p.source, translation: QUOTE, translator: p.translator }} />
       </div>
-      <p className="mt-4 max-w-[62ch] border-l-4 border-tulsi pl-5 text-[1.1rem] font-semibold leading-[1.7] text-tulsi">
-        {MEANING}
+      <p className="mt-4 max-w-[62ch] text-[1.1rem] leading-[1.7]">
+        <span className="font-medium text-kesar-deep">For you: </span>
+        {MEANING.replace(/^For you, this means that /, "")}
       </p>
       <p className="mt-4 text-[0.9rem] text-kajal-soft">
         Shortened. The full answer went on to a short prayer to say before sleeping, and a three-minute calming

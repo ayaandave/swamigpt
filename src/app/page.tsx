@@ -78,8 +78,10 @@ export default function Home() {
 
       <section aria-label="What you can do" className="mt-12 grid grid-cols-2 gap-2.5 [perspective:900px] sm:gap-3">
         {TILES.map(({ href, title, line, Icon }) => (
-          <Link key={href} href={href} className="tile flex min-h-36 flex-col justify-between rounded-2xl border border-sandal-edge bg-sandal-deep p-4 text-kajal hover:border-kesar/50">
-            <Icon className="size-7 text-kesar-deep" />
+          <Link key={href} href={href} className="tile flex min-h-36 flex-col gap-4 rounded-2xl border border-sandal-edge bg-sandal-deep p-4 text-kajal hover:border-kesar/50">
+            <span className="gold-chip flex size-10 items-center justify-center rounded-xl">
+              <Icon className="size-5" />
+            </span>
             <span>
               <span className="block font-display text-[1.1rem] leading-tight">{title}</span>
               <span className="mt-1 block text-[0.85rem] leading-snug text-kajal-soft">{line}</span>
