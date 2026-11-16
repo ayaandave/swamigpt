@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { JsonLd, pageMeta } from "@/lib/seo";
 import { FAQ, faqData } from "@/lib/faq";
+import { CONTACT } from "@/components/LegalPage";
 
 export const metadata: Metadata = pageMeta({
   title: "Sources & safety · SwamiGPT",
@@ -148,6 +149,17 @@ export default function SourcesPage() {
           </li>
           <li>In an emergency, call your local emergency number.</li>
         </ul>
+      </section>
+
+      <section id="contact" className="mt-10">
+        <h2 className="font-display text-[1.3rem]">Contact us</h2>
+        <p className="mt-2 max-w-[62ch] text-[1.05rem] leading-[1.7]">
+          Questions, problems, or help with SwamiGPT Plus? Email{" "}
+          <a href={`mailto:${CONTACT}`} className="font-semibold text-kesar-deep underline underline-offset-4">
+            {CONTACT}
+          </a>
+          . We usually reply within two days.
+        </p>
       </section>
 
       <p className="mt-10">

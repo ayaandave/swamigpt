@@ -102,7 +102,8 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
       setPicked((p) => p ?? sorted[0]?.id ?? null);
     };
     const loaded = isNativeApp()
-      ? timeout(applePackages(userId), 20000).then(async (packages) => {
+      ? // Apple's store can take 15-20s to answer the first time; give it room before giving up
+        timeout(applePackages(userId), 45000).then(async (packages) => {
           // Only decides whether to show the trial; Apple's sheet has the final word
           const used = await timeout(
             appleUsedTrials(
@@ -239,7 +240,9 @@ export function PlusPlans({ inPopup = false }: { inPopup?: boolean }) {
         Try again
       </button>
     ) : (
-      <p className="flex h-32 items-center justify-center text-kajal-soft">Loading plans…</p>
+      <p className="flex h-32 items-center justify-center text-center text-kajal-soft">
+        Loading plans… This can take a few seconds.
+      </p>
     );
   } else if (plans.length === 0) {
     body = <p>Plans are being set up. Please check back soon.</p>;
