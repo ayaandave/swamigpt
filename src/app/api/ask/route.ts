@@ -58,8 +58,8 @@ const PRACTICE_LIST = [...PRACTICES].map(([slug, p]) => `- ${slug}: "${p.title}"
 const OUTPUT_RULES = `
 
 Output format:
-- paragraphs: your answer as short plain-text paragraphs (no markdown, no headings, no bullet characters). Do not quote verse text here; the app shows quoted verses on their own.
-- verses: the passages you quote (up to two in simpler mode, up to four in deeper mode), each by its id exactly as given, with "meaning": one sentence. In simpler mode it starts "For you, this means" and connects it to their situation; in deeper mode it says what the passage shows about the question. The translations are over a century old, so this line also puts it in today's words.
+- paragraphs: your answer as short plain-text paragraphs (no markdown, no headings, no bullet characters). Do not quote verse text here; the app shows quoted verses on their own, after your paragraphs. In a life answer the closing question is the last paragraph, by itself.
+- verses: the passages you quote (at most one in simpler mode, up to four in deeper mode; none if nothing fits, and none in a crisis), each by its id exactly as given, with "meaning": one sentence. In simpler mode it starts "For you, this means" and connects it to their situation; in deeper mode it says what the passage shows about the question. The translations are over a century old, so this line also puts it in today's words.
 - practice: the slug of one meditation or lesson from the list below that helps right now, with "why": one short line saying why, written to them. null if none fits.
 - crisis: true only if the person may be at risk of harming themselves or others.
 
@@ -88,7 +88,8 @@ const MODEL = TEST_MODE ? "claude-sonnet-5-5" : "claude-opus-5-5";
 const EFFORT: "low" | "medium" = TEST_MODE ? "low" : "medium";
 // Deeper study is for serious students: think hard and read more, even while testing
 const DEEPER = { effort: "high" as const, passages: 14, commentary: 1200, maxVerses: 4 };
-const SIMPLER = { effort: EFFORT, passages: 8, commentary: 500, maxVerses: 2 };
+// Simple mode quotes one verse: one that fits beats two that almost fit
+const SIMPLER = { effort: EFFORT, passages: 8, commentary: 500, maxVerses: 1 };
 
 // Dollars per million tokens, for the cost log
 const PRICES: Record<string, { input: number; output: number; cacheRead: number }> = {

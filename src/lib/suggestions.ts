@@ -53,7 +53,7 @@ export function followUps({ hasVerse, hasPractice }: { hasVerse: boolean; hasPra
   return [
     hasVerse ? "What does this verse mean, word by word?" : "Can you say more about that?",
     hasPractice ? "How do I make this a daily habit?" : "Give me a 3-minute practice for this",
-    "What can I do about this today?",
+    "Tell me a story about this", // a story lands where an argument doesn't
   ];
 }
 

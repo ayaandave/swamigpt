@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { countStreak } from "../src/lib/practice";
 import { followUps, suggestedQuestions, todaysMeditation } from "../src/lib/suggestions";
 import { MEDITATIONS } from "../src/lib/meditations";
+import { CRISIS } from "../src/lib/swami";
 
 // days: which days ago had practice (0 = today)
 const streak = (...days: number[]) => countStreak((i) => days.includes(i));
@@ -31,5 +32,22 @@ describe("suggestions", () => {
   it("picks a real meditation", () => {
     for (const m of [null, 1, 5, 10] as const)
       for (const h of [8, 22]) expect(MEDITATIONS.some((x) => x.slug === todaysMeditation("relationships", m, h))).toBe(true);
+  });
+});
+
+describe("crisis words", () => {
+  it("catches plain and indirect wording", () => {
+    for (const q of [
+      "I don't want to be here anymore",
+      "What does the Gita say about suicide?",
+      "Sometimes I cut myself when it gets too much",
+      "everyone would be better off without me",
+      "i dont want to live",
+    ])
+      expect(CRISIS.test(q), q).toBe(true);
+  });
+  it("leaves ordinary questions alone", () => {
+    for (const q of ["I'm stressed about a test", "What is karma?", "I cut my finger cooking", "I want to live a better life"])
+      expect(CRISIS.test(q), q).toBe(false);
   });
 });

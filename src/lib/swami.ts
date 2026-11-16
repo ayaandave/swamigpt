@@ -16,5 +16,6 @@ export type SwamiAnswer = {
 };
 
 // Checked in code as well as by Claude, so the help card never depends on the model noticing
-export const CRISIS = /suicid|kill myself|end my life|want to die|self.harm|hurt myself/i;
+export const CRISIS =
+  /suicid|kill(ing)? myself|end(ing)? my life|end it all|want to die|wanna die|self.harm|hurt(ing)? myself|cut(ting)? myself|don.?t want to (be here|live|be alive|exist)|no reason to live|better off without me|overdos/i;
 export const CRISIS_HELP = { text: "Talk to someone now", href: "tel:988", label: "Call or text 988" };
