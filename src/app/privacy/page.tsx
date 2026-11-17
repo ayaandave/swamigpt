@@ -36,6 +36,11 @@ export default function PrivacyPage() {
             If you tap &ldquo;Report this answer&rdquo;, we keep that question, the answer and anything you add, so a
             person can check it. If you have an account, the report is linked to it and deleted with it.
           </li>
+          <li>
+            If you tap 👍 under an answer, we keep only that it helped and which verses it quoted. If you tap 👎, we
+            also keep that question and the answer, so a person can see how to do better. With an account, this is
+            linked to it and deleted with it.
+          </li>
         </ul>
       </section>
 

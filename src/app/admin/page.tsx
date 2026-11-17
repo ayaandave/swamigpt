@@ -195,6 +195,10 @@ export default function MoneyPage() {
               />
               <Stat label="Accounts" value={usage.accounts?.toLocaleString() ?? "—"} />
               <Stat label="Reports to review" value={usage.reportsToReview?.toLocaleString() ?? "—"} />
+              <Stat
+                label="Helpful, last 30 days"
+                value={usage.helpful == null || usage.notHelpful == null ? "—" : `👍 ${usage.helpful} · 👎 ${usage.notHelpful}`}
+              />
             </dl>
             <h3 className="mt-8 text-[1rem] font-semibold">Questions answered, last 30 days</h3>
             <Bars

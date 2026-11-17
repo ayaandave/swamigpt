@@ -19,6 +19,7 @@ import { whoSays } from "@/lib/scripture/who";
 import { ListenButton } from "./ListenButton";
 import { ShareButton } from "./ShareButton";
 import { ReportAnswer } from "./ReportAnswer";
+import { AnswerFeedback } from "./AnswerFeedback";
 import { CheckIcon, MicIcon, SendIcon, StopIcon } from "./icons";
 
 // The longest question the server accepts (app/api/ask), so nothing typed is ever thrown away
@@ -327,6 +328,8 @@ function Answer({
           ))}
         </ul>
       )}
+      {/* Not under a crisis answer: that one is about getting help, not rating */}
+      {!answer.notice && !answer.help && <AnswerFeedback question={turn.question} answer={answer} depth={depth} />}
       {!answer.notice && <ReportAnswer question={turn.question} answer={answer} depth={depth} />}
     </div>
   );

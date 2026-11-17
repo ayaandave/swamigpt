@@ -12,6 +12,7 @@ type Events = {
   paywall_viewed: { surface: string };
   paywall_dismissed: { method: "x" | "maybe_later" | "outside" | "escape" };
   verse_saved: Record<string, never>;
+  answer_rated: { helpful: boolean };
 };
 
 export function track<E extends keyof Events>(name: E, data?: Events[E]) {

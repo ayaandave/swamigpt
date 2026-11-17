@@ -63,6 +63,9 @@ export type Money = {
         accounts: number | null;
         plusMembers: number | null;
         reportsToReview: number | null;
+        // 👍/👎 under answers in the last 30 days (null if the table isn't there yet)
+        helpful: number | null;
+        notHelpful: number | null;
       }
     | { ok: false; problem: string };
   fixed: typeof FIXED_COSTS;
@@ -213,12 +216,14 @@ async function siteUsage(monthStart: Date): Promise<Money["usage"]> {
   if (!url || !secret) return { ok: false, problem: "Supabase keys aren't set." };
   const sb = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
   const since = new Date(Date.now() - 30 * 86400_000);
-  const [questions, speech, users, plus, reports] = await Promise.all([
+  const [questions, speech, users, plus, reports, up, down] = await Promise.all([
     sb.from("question_usage").select("day, count").eq("who", "site").gte("day", isoDay(since)),
     sb.from("speech_usage").select("day, chars").eq("who", "site").gte("day", isoDay(since)),
     sb.auth.admin.listUsers({ page: 1, perPage: 1 }),
     sb.from("plus_members").select("user_id", { count: "exact", head: true }),
     sb.from("answer_reports").select("id", { count: "exact", head: true }).eq("reviewed", false),
+    sb.from("answer_feedback").select("id", { count: "exact", head: true }).eq("rating", 1).gte("created_at", since.toISOString()),
+    sb.from("answer_feedback").select("id", { count: "exact", head: true }).eq("rating", -1).gte("created_at", since.toISOString()),
   ]);
   if (questions.error || speech.error) return { ok: false, problem: "Couldn't read the daily counts from Supabase." };
   const days = new Map<string, { questions: number; voiceChars: number }>();
@@ -236,5 +241,7 @@ async function siteUsage(monthStart: Date): Promise<Money["usage"]> {
     accounts: typeof total === "number" ? total : null,
     plusMembers: plus.error ? null : plus.count,
     reportsToReview: reports.error ? null : reports.count,
+    helpful: up.error ? null : up.count,
+    notHelpful: down.error ? null : down.count,
   };
 }
