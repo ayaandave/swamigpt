@@ -63,3 +63,13 @@ describe("accountsIn", () => {
     expect(accountsIn({ app_user_id: "$RCAnonymousID:abc", aliases: [a] })).toEqual([a]);
   });
 });
+
+describe("noCountSwitch", () => {
+  it("reads ?nocount=1 and ?nocount=0 from a page address", async () => {
+    const { noCountSwitch } = await import("@/lib/no-count");
+    expect(noCountSwitch("https://www.swamigpt.com/?nocount=1")).toBe(true);
+    expect(noCountSwitch("https://www.swamigpt.com/ask?x=2&nocount=0#top")).toBe(false);
+    expect(noCountSwitch("https://www.swamigpt.com/ask?nocount=12")).toBe(null);
+    expect(noCountSwitch("https://www.swamigpt.com/learn")).toBe(null);
+  });
+});
