@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createLocalStore } from "@/lib/store";
+import { APP_STORE_URL } from "@/lib/seo";
 
 type InstallEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> };
 
@@ -46,15 +47,28 @@ export function InstallApp() {
 
   return (
     <section aria-label="Install SwamiGPT" className="mt-10 rounded-2xl border border-sandal-edge px-6 py-5">
-      <p className="font-display text-[1.15rem] leading-tight">Keep SwamiGPT on your home screen</p>
       {kind === "android" ? (
-        <p className="mt-1 text-[1rem] text-kajal-soft">It opens like an app, full screen, in one tap.</p>
+        <>
+          <p className="font-display text-[1.15rem] leading-tight">Keep SwamiGPT on your home screen</p>
+          <p className="mt-1 text-[1rem] text-kajal-soft">It opens like an app, full screen, in one tap.</p>
+        </>
       ) : (
-        <p className="mt-1 text-[1rem] leading-relaxed text-kajal-soft">
-          Tap the <strong>Share</strong> button at the bottom of Safari, then <strong>Add to Home Screen</strong>.
-        </p>
+        <>
+          <p className="font-display text-[1.15rem] leading-tight">SwamiGPT is on the App Store</p>
+          <p className="mt-1 text-[1rem] leading-relaxed text-kajal-soft">
+            Get the free iPhone app, with daily verse reminders.
+          </p>
+        </>
       )}
       <div className="mt-4 flex flex-wrap gap-3">
+        {kind === "ios" && (
+          <a
+            href={APP_STORE_URL}
+            className="inline-flex min-h-12 items-center rounded-xl bg-kesar px-6 font-bold text-on-kesar hover:bg-kesar-deep hover:text-sandal"
+          >
+            Get the app
+          </a>
+        )}
         {kind === "android" && (
           <button
             type="button"

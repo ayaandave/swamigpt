@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Geist, Geist_Mono, Tiro_Devanagari_Sanskrit } from "next/font/google";
 import { settingsScript } from "@/lib/settings";
-import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/seo";
+import { APP_STORE_ID, HOME_DESCRIPTION, HOME_TITLE } from "@/lib/seo";
 import { BottomNav, Header } from "@/components/Chrome";
 import { WelcomeGate } from "@/components/WelcomeGate";
 import { AiConsent } from "@/components/AiConsent";
@@ -30,6 +30,8 @@ export const metadata: Metadata = {
   description: HOME_DESCRIPTION,
   // Opens full-screen, like an app, when added to an iPhone home screen
   appleWebApp: { capable: true, title: "SwamiGPT", statusBarStyle: "default" },
+  // Safari on iPhone shows a small "Open in the App Store" banner at the top of the site
+  itunes: { appId: APP_STORE_ID },
 };
 
 export const viewport: Viewport = {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ALT_NAMES, HOME_DESCRIPTION, HOME_TITLE, JsonLd, ORGANIZATION, SITE, SITE_NAME, pageMeta } from "@/lib/seo";
+import { ALT_NAMES, APP_STORE_URL, HOME_DESCRIPTION, HOME_TITLE, JsonLd, ORGANIZATION, SITE, SITE_NAME, pageMeta } from "@/lib/seo";
 import { Suspense } from "react";
 import { HomeHero } from "@/components/home/HomeHero";
 import { HomeAsk } from "@/components/home/HomeAsk";
@@ -52,6 +52,19 @@ const SITE_DATA = {
       description: HOME_DESCRIPTION,
       applicationCategory: "EducationalApplication",
       operatingSystem: "Any (web browser)",
+      isAccessibleForFree: true,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      publisher: { "@id": `${SITE}/#organization` },
+    },
+    {
+      "@type": "MobileApplication",
+      name: SITE_NAME,
+      alternateName: ALT_NAMES,
+      url: APP_STORE_URL,
+      installUrl: APP_STORE_URL,
+      description: HOME_DESCRIPTION,
+      applicationCategory: "EducationalApplication",
+      operatingSystem: "iOS",
       isAccessibleForFree: true,
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
       publisher: { "@id": `${SITE}/#organization` },
