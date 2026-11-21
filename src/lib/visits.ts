@@ -39,8 +39,11 @@ async function query(kind: "visits" | "events", mode: "aggregate" | "count", par
 
 const num = (v: unknown) => (typeof v === "number" ? v : Number(v) || 0);
 
+// Biggest first, with Vercel's "Others" (everything past the limit) always last
 function slices(rows: Row[], name: (r: Row) => string): Slice[] {
-  return rows.map((r) => ({ name: name(r), visitors: num(r.visitors), pageviews: num(r.pageviews) }));
+  return rows
+    .map((r) => ({ name: name(r), visitors: num(r.visitors), pageviews: num(r.pageviews) }))
+    .sort((a, b) => Number(a.name === "Others") - Number(b.name === "Others") || b.visitors - a.visitors);
 }
 
 // A small per-server cache, so flipping between tabs doesn't call Vercel every time
@@ -54,9 +57,11 @@ export async function getVisits(days: 7 | 30 | number): Promise<Visits> {
   const hit = cache.get(days);
   if (hit && Date.now() - hit.at < FRESH_MS) return hit.visits;
 
-  const until = new Date();
-  // Whole days: from the start of the first day (UTC), so the daily bars are complete
-  const since = new Date(Date.UTC(until.getUTCFullYear(), until.getUTCMonth(), until.getUTCDate() - (days - 1)));
+  const now = new Date();
+  // Whole days in UTC: from the start of the first day to the end of today (Vercel rounds the end
+  // of a count down to the day, so asking for "now" would leave today out)
+  const since = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - (days - 1)));
+  const until = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1) - 1);
   const range = { since: since.toISOString(), until: until.toISOString() };
   const by = (dims: string[], limit = 8) => query("visits", "aggregate", { ...range, by: dims, limit: String(limit) });
 
@@ -84,7 +89,7 @@ export async function getVisits(days: 7 | 30 | number): Promise<Visits> {
 
     const visits: Visits = {
       ok: true,
-      updatedAt: until.toISOString(),
+      updatedAt: now.toISOString(),
       days,
       visitors: num(t.visitors),
       pageviews: num(t.pageviews),
@@ -93,7 +98,7 @@ export async function getVisits(days: 7 | 30 | number): Promise<Visits> {
       referrers: slices(rows(referrers), (r) => String(r.referrerHostname ?? "")),
       pages: slices(rows(pages), (r) => String(r.route ?? r.requestPath ?? "")),
       devices: slices(rows(devices), (r) => String(r.deviceType ?? "")),
-      systems: slices(rows(systems), (r) => [r.osName, r.browserName].filter(Boolean).join(" · ")),
+      systems: slices(rows(systems), (r) => (r.osName === "Others" ? "Others" : [r.osName, r.browserName].filter(Boolean).join(" · "))),
       events: rows(events).map((r) => ({ name: String(r.eventName ?? ""), visitors: num(r.visitors), count: num(r.count) })),
     };
     cache.set(days, { at: Date.now(), visits });
