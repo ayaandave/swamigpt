@@ -209,13 +209,15 @@ label {
   }
 }
 
-/* Each screen settles in softly instead of snapping (src/app/template.tsx) */
+/* Each screen settles in softly instead of snapping (src/app/template.tsx).
+   Fade only, and nothing left on the page once it ends: a transform here would trap full-screen
+   layers (meditation player, Plus popup, AI consent) inside this box and they'd show blank. */
 @keyframes page-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 .page-in {
-  animation: page-in 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: page-in 320ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
 }
 
 /* A quiet scrollbar on computers */
