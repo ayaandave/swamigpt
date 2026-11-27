@@ -6,28 +6,33 @@ import { useSettings, type TextSize } from "@/lib/settings";
 import { accountsEnabled, useAuth } from "@/lib/supabase";
 import { OmMark } from "@/components/OmMark";
 import { AvatarBadge } from "./AvatarPicker";
-import { AskIcon, HomeIcon, LearnIcon, MeditateIcon, MoneyIcon, PersonIcon, SettingsIcon } from "./icons";
+import { AskIcon, ChartIcon, HomeIcon, LearnIcon, MeditateIcon, MoneyIcon, PersonIcon, SettingsIcon } from "./icons";
 import { useIsAdmin } from "@/lib/admin";
 import { HeaderPlusButton } from "./PlusPaywall";
 
 const SIZES: TextSize[] = ["regular", "large", "larger"];
 const SIZE_LABEL: Record<TextSize, string> = { regular: "Aa", large: "Aa+", larger: "Aa++" };
 
-const TABS = [
+type Tab = { href: string; label: string; short?: string; Icon: typeof MoneyIcon; also: string[] };
+
+const TABS: Tab[] = [
   { href: "/", label: "Home", Icon: HomeIcon, also: ["/today"] }, // today's verse is reached from home
-  { href: "/ask", label: "Ask", Icon: AskIcon, also: [] as string[] },
+  { href: "/ask", label: "Ask", Icon: AskIcon, also: [] },
   { href: "/learn", label: "Learn", Icon: LearnIcon, also: ["/read"] }, // the scripture library lives under Learn
   { href: "/meditate", label: "Meditate", Icon: MeditateIcon, also: [] },
 ];
 
-// The owner also gets the private money page as a tab (shown only when the server says so)
-const MONEY_TAB = { href: "/admin", label: "Money", Icon: MoneyIcon, also: [] as string[] };
+// The owner also gets SwamiGPT HQ, the private dashboard, as a tab (shown only when the server says so)
+const OWNER_TABS: Tab[] = [{ href: "/admin", label: "HQ", Icon: ChartIcon, also: [] }];
 function useTabs() {
-  return useIsAdmin() ? [...TABS, MONEY_TAB] : TABS;
+  return useIsAdmin() ? [...TABS, ...OWNER_TABS] : TABS;
 }
 
+// "/" matches only itself (plus its "also" pages), so every page doesn't light up Home
 const isActive = (path: string, href: string, also: string[]) =>
-  href === "/" ? path === "/" || also.some((p) => path.startsWith(p)) : [href, ...also].some((p) => path.startsWith(p));
+  href === "/"
+    ? path === href || also.some((p) => path.startsWith(p))
+    : [href, ...also].some((p) => path.startsWith(p));
 
 export function Header() {
   const path = usePathname();
@@ -99,8 +104,8 @@ export function BottomNav() {
       aria-label="Main"
       className="fixed inset-x-0 bottom-0 z-30 border-t md:hidden border-sandal-edge bg-sandal/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl"
     >
-      <ul className={`mx-auto grid max-w-3xl ${tabs.length === 5 ? "grid-cols-5" : "grid-cols-4"}`}>
-        {tabs.map(({ href, label, Icon, also }) => {
+      <ul className={`mx-auto grid max-w-3xl ${tabs.length === 6 ? "grid-cols-6" : "grid-cols-4"}`}>
+        {tabs.map(({ href, label, short, Icon, also }) => {
           const active = isActive(path, href, also);
           return (
             <li key={href}>
@@ -113,7 +118,7 @@ export function BottomNav() {
               >
                 {active && <span aria-hidden="true" className="tab-mark" />}
                 <Icon className="size-6" />
-                {label}
+                {short ?? label}
               </Link>
             </li>
           );
