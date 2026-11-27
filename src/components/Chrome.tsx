@@ -22,19 +22,15 @@ const TABS: Tab[] = [
   { href: "/meditate", label: "Meditate", Icon: MeditateIcon, also: [] },
 ];
 
-// The owner also gets the private money and analytics pages as tabs (shown only when the server says so)
-const OWNER_TABS: Tab[] = [
-  { href: "/admin", label: "Money", Icon: MoneyIcon, also: [] },
-  { href: "/admin/analytics", label: "Analytics", short: "Stats", Icon: ChartIcon, also: [] },
-];
+// The owner also gets SwamiGPT HQ, the private dashboard, as a tab (shown only when the server says so)
+const OWNER_TABS: Tab[] = [{ href: "/admin", label: "HQ", Icon: ChartIcon, also: [] }];
 function useTabs() {
   return useIsAdmin() ? [...TABS, ...OWNER_TABS] : TABS;
 }
 
-// "/" and "/admin" match only themselves (plus their "also" pages), so /admin/analytics lights up
-// its own tab, not Money's
+// "/" matches only itself (plus its "also" pages), so every page doesn't light up Home
 const isActive = (path: string, href: string, also: string[]) =>
-  href === "/" || href === "/admin"
+  href === "/"
     ? path === href || also.some((p) => path.startsWith(p))
     : [href, ...also].some((p) => path.startsWith(p));
 
