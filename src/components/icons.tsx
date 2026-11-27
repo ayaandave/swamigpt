@@ -140,6 +140,14 @@ export const MoneyIcon = ({ className }: P) => (
   </svg>
 );
 
+// A rising line over a baseline: visitor analytics
+export const ChartIcon = ({ className }: P) => (
+  <svg {...base} className={className}>
+    <path d="M4 20h16" />
+    <path d="M5 16l4.5-5 3.5 3 6-7" />
+  </svg>
+);
+
 // Two arrows chasing each other: karma, what we do comes back
 export const KarmaIcon = ({ className }: P) => (
   <svg {...base} className={className}>
